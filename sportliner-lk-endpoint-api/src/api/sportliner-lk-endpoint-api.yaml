@@ -1,0 +1,288 @@
+openapi: 3.0.3
+
+info:
+  title: crm-endpoint-api
+  description: CRM Endpoint API
+  version: 1.0.0
+
+servers:
+  - url: /crm-api
+    description: Local server
+
+security:
+  - bearerAuth: [ ]
+
+tags:
+  - name: auth
+    description: Authentication operations
+  - name: meta
+    description: Base meta services
+
+paths:
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      security: [ ]
+      operationId: login
+      summary: Login into system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCredentials'
+      responses:
+        200:
+          description: Authentication response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        403:
+          description: Access forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      #      security: []
+      operationId: logout
+      summary: Logout from system
+      parameters:
+        - in: query
+          name: automatic
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Successfully logged out
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /auth/refresh:
+    post:
+      tags:
+        - auth
+      security: [ ]
+      operationId: refresh
+      summary: Refresh auth token
+      responses:
+        200:
+          description: Response with auth tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /version:
+    get:
+      operationId: getVersions
+      tags:
+        - meta
+      security: [ ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Versions'
+
+components:
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    AuthCredentials:
+      type: object
+      description: Credentials for authentication
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+
+    AuthResponse:
+      type: object
+      description: Authentication response
+      required:
+        - sessionTimeout
+      properties:
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - MUST_CHANGE_PASSWORD
+        token:
+          $ref: '#/components/schemas/AuthToken'
+        info:
+          $ref: '#/components/schemas/AuthInfo'
+        sessionTimeout:
+          type: integer
+
+    AuthInfo:
+      type: object
+      required:
+        - id
+        - username
+        - firstName
+        - lastName
+        - authorities
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        avatarId:
+          type: string
+        authorities:
+          type: array
+          items:
+            type: string
+
+    AuthToken:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+
+    Versions:
+      type: object
+      description: Details about system versions
+      properties:
+        version:
+          description: Application version
+          type: string
+
+    BaseError:
+      type: object
+      required:
+        - message
+        - type
+      properties:
+        message:
+          type: string
+        type:
+          $ref: '#/components/schemas/BaseErrorType'
+      discriminator:
+        propertyName: type
+        mapping:
+          AUTHENTICATION: '#/components/schemas/AuthenticationError'
+          UNIQUENESS_VIOLATION: '#/components/schemas/UniquenessViolationError'
+          REFERENCE_VIOLATION: '#/components/schemas/ReferenceViolationError'
+          DATA_VALIDATION: '#/components/schemas/DataValidationError'
+          OBJECT_NOT_FOUND: '#/components/schemas/ObjectNotFoundError'
+          CLIENT_VERSION_REJECTED: '#/components/schemas/ClientVersionRejectedError'
+          INTEGRATION: '#/components/schemas/IntegrationError'
+          INTERNAL: '#/components/schemas/InternalError'
+
+    BaseErrorType:
+      type: string
+      enum:
+        - AUTHENTICATION
+        - UNIQUENESS_VIOLATION
+        - REFERENCE_VIOLATION
+        - DATA_VALIDATION
+        - OBJECT_NOT_FOUND
+        - CLIENT_VERSION_REJECTED
+        - INTEGRATION
+        - INTERNAL
+
+    AuthenticationError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - reason
+          properties:
+            reason:
+              type: string
+              description: Error reason
+              enum:
+                - INVALID_CREDENTIALS
+                - ACCOUNT_BLOCKED
+                - INSUFFICIENT_PRIVILEGES
+
+    UniquenessViolationError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+
+    ReferenceViolationError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+
+    DataValidationError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            details:
+              type: array
+              items:
+                $ref: '#/components/schemas/DataValidationErrorItem'
+
+    DataValidationErrorItem:
+      type: object
+      properties:
+        sheet:
+          type: string
+        cell:
+          type: string
+        message:
+          type: string
+
+    ObjectNotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+
+    ClientVersionRejectedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+
+    IntegrationError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+
+    InternalError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'

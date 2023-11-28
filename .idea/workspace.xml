@@ -4,39 +4,185 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87860a68-0dd9-40c1-a826-6d2d85b208cc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.adoc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-database/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-database/src/main/java/by/sportliner/lk/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-ednpoint/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-ednpoint/src/main/java/by/sportliner/lk/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint-api/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint-api/src/main/java/by/sportliner/lk/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/version.txt" afterDir="false" />
+    <list default="true" id="87860a68-0dd9-40c1-a826-6d2d85b208cc" name="Changes" comment="init some modules">
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/SportlinerLkCoreConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/AbstractDataObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/UserAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/UserAuthority.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/UserRole.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/query.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/repository/UserAccountRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthenticationConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthenticationRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthenticationResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthenticationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/AuthenticationServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/JwtMeta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/JwtRevokeValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/JwtService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/JwtServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/UserDetailsAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/UserDetailsPasswordServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/security/UserDetailsServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/support/jpa/type/PgUuidAsStringType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/support/json/json/JacksonObjectMappers.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-database/database/create_constraints.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-database/database/create_tables.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint-api/src/api/sportliner-lk-endpoint-api.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/openapi-generator-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthApi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthCredentialsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthInfoDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthTokenDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthenticationErrorAllOfDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/AuthenticationErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/BaseErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/BaseErrorTypeDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/ClientVersionRejectedErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/DataValidationErrorAllOfDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/DataValidationErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/DataValidationErrorItemDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/IntegrationErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/InternalErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/MetaApi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/ObjectNotFoundErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/ReferenceViolationErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/UniquenessViolationErrorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/VersionsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/EndpointApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/EndpointSecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/EndpointWebMvcConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/SportlinerLkApiMeta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/common/RefreshTokenCookieHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/common/RequestLoggingFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/controller/AuthApiController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/controller/MetaApiController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/resources/application-build.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-core/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-core/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-database/src/main/java/by/sportliner/lk/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-ednpoint/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-ednpoint/src/main/java/by/sportliner/lk/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-endpoint-api/src/main/java/by/sportliner/lk/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="module" />
+    </option>
+  </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/sportliner-lk-ednpoint">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="application" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build setup" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="dev" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="documentation" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sportliner-lk" type="f1a62948:ProjectNode" />
+                <item name="sportliner-lk-ednpoint" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="help" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="HTTP Request" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -52,17 +198,133 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "jdk.selected.JAVA_MODULE": "17",
+    "last_opened_file_path": "D:/Projects/sportliner-lk",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "spring.configuration.checksum": "4e13d8513138cc8683e28d2bf4ad50fe",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\sportliner-lk\sportliner-lk-database\database" />
+      <recent name="D:\Projects\sportliner-lk\sportliner-lk-ednpoint\src\main\resources" />
+      <recent name="D:\Projects\sportliner-lk\sportliner-lk-ednpoint" />
+      <recent name="D:\Projects\sportliner-lk\sportliner-lk-endpoint-api\src\api" />
+      <recent name="D:\Projects\sportliner-lk\sportliner-lk-core\src\main\java\by\sportliner\lk\support\json" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="by.sportliner.lk.endpoint" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="by.sportliner.lk.endpoint.controller" />
+      <recent name="by.sportliner.lk" />
+    </key>
+  </component>
+  <component name="RunManager" selected="HTTP Request.All in query">
+    <configuration name="sportliner-lk [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="sportliner-lk:sportliner-lk-ednpoint [startEndpoint]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/sportliner-lk-ednpoint" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="startEndpoint" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="All in query" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/query.http">
+      <method v="2" />
+    </configuration>
+    <configuration name="EndpointApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="by.sportliner.lk.sportliner-lk.sportliner-lk-endpoint.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="by.sportliner.lk.endpoint.EndpointApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EndpointApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="sportliner-lk.sportliner-lk-ednpoint.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="by.sportliner.lk.endpoint.EndpointApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="D:\Projects\sportliner-lk\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="D:\Projects\sportliner-lk\sportliner-lk-endpoint-api\src\api\sportliner-endpoint-api.yaml" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.All in query" />
+        <item itemvalue="Gradle.sportliner-lk:sportliner-lk-ednpoint [startEndpoint]" />
+        <item itemvalue="Gradle.sportliner-lk [build]" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -71,11 +333,35 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1700722497247</updated>
-      <workItem from="1700722498590" duration="683000" />
+      <workItem from="1700722498590" duration="2090000" />
+      <workItem from="1700915878287" duration="612000" />
+      <workItem from="1700976816282" duration="2711000" />
+      <workItem from="1701027024056" duration="1999000" />
+      <workItem from="1701054370359" duration="4722000" />
+      <workItem from="1701059256931" duration="1319000" />
+      <workItem from="1701063084152" duration="1177000" />
+      <workItem from="1701111451332" duration="3614000" />
+      <workItem from="1701157775330" duration="2209000" />
+      <workItem from="1701197236618" duration="645000" />
     </task>
+    <task id="LOCAL-00001" summary="init some modules">
+      <created>1700723312071</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1700723312071</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init some modules" />
+    <option name="LAST_COMMIT_MESSAGE" value="init some modules" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/sportliner_lk$sportliner_lk_sportliner_lk_ednpoint__startEndpoint_.ic" NAME="sportliner-lk:sportliner-lk-ednpoint [startEndpoint] Coverage Results" MODIFIED="1701113979260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

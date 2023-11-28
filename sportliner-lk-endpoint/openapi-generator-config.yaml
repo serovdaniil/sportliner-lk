@@ -1,0 +1,25 @@
+# OpenAPI Generator Config
+#
+# Refer to:
+# https://openapi-generator.tech/docs/configuration/
+# https://openapi-generator.tech/docs/generators/spring
+
+sourceFolder: ''
+modelNameSuffix: Dto
+removeEnumValuePrefix: false
+java8: true
+useSpringBoot3: true
+dateLibrary: custom
+hideGenerationTimestamp: true
+interfaceOnly: true
+skipDefaultInterface: true
+unhandledException: true
+useTags: true
+enablePostProcessFile: true
+booleanGetterPrefix: is
+useBeanValidation: true
+schemaMappings:
+  DateTime: java.time.Instant
+typeMappings:
+  DateTime: java.time.Instant
+
