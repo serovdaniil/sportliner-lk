@@ -37,6 +37,7 @@ create TABLE user_account (
     id                       UUID        NOT NULL,
     username                 TEXT        NOT NULL,
     password                 TEXT        NOT NULL,
+    password_must_be_changed BOOLEAN     NOT NULL,
     password_timestamp       TIMESTAMPTZ NOT NULL,
     role                     TEXT        NOT NULL,
     email                    TEXT        NOT NULL,

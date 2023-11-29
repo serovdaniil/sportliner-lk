@@ -22,7 +22,9 @@ public class SportlinerLkApiMeta {
                 apiPath("/version")
             ).permitAll()
 
-            .requestMatchers(apiPath("/**")).permitAll();
+            .requestMatchers(
+                apiPath("/users")
+            ).hasAuthority(scope(UserAuthority.ADMINISTRATIVE));
     }
 
     private static String apiPath(String path) {

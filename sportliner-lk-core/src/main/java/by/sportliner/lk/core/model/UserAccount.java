@@ -33,6 +33,12 @@ public class UserAccount extends AbstractDataObject {
     private String password;
 
     /**
+     * Whether password should be changed for some reason.
+     */
+    @Column(name = "password_must_be_changed", nullable = false)
+    private boolean passwordMustBeChanged;
+
+    /**
      * Timestamp of current password.
      */
     @Column(name = "password_timestamp", nullable = false)
@@ -108,6 +114,14 @@ public class UserAccount extends AbstractDataObject {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isPasswordMustBeChanged() {
+        return passwordMustBeChanged;
+    }
+
+    public void setPasswordMustBeChanged(boolean passwordMustBeChanged) {
+        this.passwordMustBeChanged = passwordMustBeChanged;
     }
 
     public Instant getPasswordTimestamp() {
@@ -200,8 +214,9 @@ public class UserAccount extends AbstractDataObject {
 
     public String getFullName() {
         return Stream.<String>builder()
-            .add(firstName)
             .add(lastName)
+            .add(firstName)
+            .add(password)
             .build()
             .filter(Objects::nonNull)
             .collect(Collectors.joining(" "));

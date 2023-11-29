@@ -17,6 +17,8 @@ tags:
     description: Authentication operations
   - name: meta
     description: Base meta services
+  - name: users
+    description: User operations
 
 paths:
 
@@ -87,6 +89,93 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /users:
+    get:
+      tags:
+        - users
+      operationId: getUsers
+      summary: Get users accounts
+      responses:
+        200:
+          description: List of user accounts
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/UserAccountListItem"
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    post:
+      tags:
+        - users
+      operationId: createUser
+      summary: Create User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAccount'
+      responses:
+        201:
+          description: Successfully created
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /users/{id}:
+    get:
+      tags:
+        - users
+      operationId: getUserAccount
+      summary: Get user account by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: User account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+        404:
+          description: Property not found
+    put:
+      tags:
+        - users
+      operationId: updateUserAccount
+      summary: Update user account by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAccount'
+      responses:
+        201:
+          description: Successfully updated
         401:
           description: Not authenticated
         403:
@@ -185,6 +274,87 @@ components:
           type: string
         expires_in:
           type: integer
+
+    UserAccount:
+      type: object
+      description: User account
+      required:
+        - id
+        - username
+        - passwordMustBeChanged
+        - role
+        - email
+        - phone
+        - firstName
+        - patronymic
+        - lastName
+        - createTimestamp
+      properties:
+        id:
+          type: string
+          readOnly: true
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        passwordMustBeChanged:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/UserRole'
+        email:
+          type: string
+        phone:
+          type: string
+        firstName:
+          type: string
+        patronymic:
+          type: string
+        lastName:
+          type: string
+        createTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        updateTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        loginTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+
+    UserAccountListItem:
+      type: object
+      description: User account
+      required:
+        - id
+        - fullName
+        - role
+        - email
+        - phone
+      properties:
+        id:
+          type: string
+          readOnly: true
+        username:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        email:
+          type: string
+        phone:
+          type: string
+        fullName:
+          type: string
+
+    UserRole:
+      type: string
+      enum:
+        - ADMIN
+        - TRAINER
+        - PARENT
 
     Versions:
       type: object
