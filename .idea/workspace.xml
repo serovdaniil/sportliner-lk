@@ -4,20 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87860a68-0dd9-40c1-a826-6d2d85b208cc" name="Changes" comment="added authorization to the application">
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/service/EntityNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/service/UserAccountService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/service/UserAccountServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/UserAccountDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/UserAccountListItemDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/UserRoleDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/UsersApi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/controller/UsersApiController.java" afterDir="false" />
+    <list default="true" id="87860a68-0dd9-40c1-a826-6d2d85b208cc" name="Changes" comment="added api and user get function">
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/BranchOffice.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/ClassSchedule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/repository/BranchOfficeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/service/BranchOfficeService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/service/BranchOfficeServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/support/jpa/type/BranchOfficeAddressJsonbType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/BranchOfficeAddressDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/BranchOfficeApi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/BranchOfficeDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/BranchOfficeListItemDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/ClassScheduleDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/DayOfWeekDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/generated/by/sportliner/lk/endpoint/api/UserAccountItemDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/controller/BranchOfficeApiController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/UserAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/model/UserAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/repository/UserAccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-core/src/main/java/by/sportliner/lk/core/repository/UserAccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-database/database/create_constraints.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-database/database/create_constraints.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sportliner-lk-database/database/create_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-database/database/create_tables.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sportliner-lk-endpoint-api/src/api/sportliner-lk-endpoint-api.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-endpoint-api/src/api/sportliner-lk-endpoint-api.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sportliner-lk-endpoint/openapi-generator-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/openapi-generator-config.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/SportlinerLkApiMeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/java/by/sportliner/lk/endpoint/SportlinerLkApiMeta.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/sportliner-lk-endpoint/src/main/resources/application.properties" afterDir="false" />
     </list>
@@ -74,9 +80,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="HTTP Request" />
         <option value="Interface" />
         <option value="Class" />
-        <option value="HTTP Request" />
       </list>
     </option>
   </component>
@@ -133,6 +139,7 @@
       <recent name="by.sportliner.lk.endpoint" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="by.sportliner.lk.core.support.jpa.type" />
       <recent name="by.sportliner.lk.endpoint.controller" />
       <recent name="by.sportliner.lk" />
     </key>
@@ -256,7 +263,8 @@
       <workItem from="1701111451332" duration="3614000" />
       <workItem from="1701157775330" duration="2209000" />
       <workItem from="1701197236618" duration="3537000" />
-      <workItem from="1701247058587" duration="4351000" />
+      <workItem from="1701247058587" duration="17075000" />
+      <workItem from="1701314223132" duration="2332000" />
     </task>
     <task id="LOCAL-00001" summary="init some modules">
       <created>1700723312071</created>
@@ -272,7 +280,14 @@
       <option name="project" value="LOCAL" />
       <updated>1701198006856</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added api and user get function">
+      <created>1701257203970</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701257203970</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,7 +296,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init some modules" />
     <MESSAGE value="added authorization to the application" />
-    <option name="LAST_COMMIT_MESSAGE" value="added authorization to the application" />
+    <MESSAGE value="added api and user get function" />
+    <option name="LAST_COMMIT_MESSAGE" value="added api and user get function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

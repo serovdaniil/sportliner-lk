@@ -50,3 +50,18 @@ create TABLE user_account (
     login_timestamp          TIMESTAMPTZ NULL,
     CONSTRAINT pk_user_account PRIMARY KEY (id)
 );
+
+CREATE TABLE branch_office (
+    id         UUID  NOT NULL,
+    name       TEXT  NOT NULL,
+    address    JSONB NOT NULL,
+    trainer_id UUID  NOT NULL,
+    CONSTRAINT pk_branch_office PRIMARY KEY (id)
+);
+
+CREATE TABLE class_schedule (
+    branch_office_id UUID  NOT NULL,
+    day              TEXT  NOT NULL,
+    time             time  NOT NULL,
+    CONSTRAINT pk_class_schedule PRIMARY KEY (branch_office_id, day, time)
+);

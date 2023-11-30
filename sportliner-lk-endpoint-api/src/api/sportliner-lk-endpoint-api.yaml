@@ -19,6 +19,8 @@ tags:
     description: Base meta services
   - name: users
     description: User operations
+  - name: branchOffice
+    description: Branch office operations
 
 paths:
 
@@ -176,6 +178,111 @@ paths:
       responses:
         201:
           description: Successfully updated
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /branchOffices:
+    get:
+      tags:
+        - branchOffice
+      operationId: getBranchOffices
+      summary: Get branch offices
+      responses:
+        200:
+          description: List of branch offices
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/BranchOfficeListItem"
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    post:
+      tags:
+        - branchOffice
+      operationId: createBranchOffice
+      summary: Create branch office
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BranchOffice'
+      responses:
+        201:
+          description: Successfully created
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /branchOffices/{id}:
+    get:
+      tags:
+        - branchOffice
+      operationId: getBranchOffice
+      summary: Get branch office by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Branch office
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchOffice'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+        404:
+          description: Property not found
+    put:
+      tags:
+        - branchOffice
+      operationId: updateBranchOffice
+      summary: Update branch office by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BranchOffice'
+      responses:
+        201:
+          description: Successfully updated
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    delete:
+      tags:
+        - branchOffice
+      operationId: deleteBranchOffice
+      summary: Delete branch office by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successfully deleted
         401:
           description: Not authenticated
         403:
@@ -349,12 +456,122 @@ components:
         fullName:
           type: string
 
+    UserAccountItem:
+      type: object
+      description: User account item
+      required:
+        - id
+        - fullName
+      properties:
+        id:
+          type: string
+          readOnly: true
+        fullName:
+          type: string
+          readOnly: true
+
     UserRole:
       type: string
       enum:
         - ADMIN
         - TRAINER
         - PARENT
+
+    BranchOfficeListItem:
+      type: object
+      description: Branch office list item
+      required:
+        - id
+        - name
+        - address
+        - trainer
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        address:
+          type: string
+        trainer:
+          type: string
+
+    BranchOffice:
+      type: object
+      description: Branch office
+      required:
+        - id
+        - name
+        - address
+        - trainer
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          description: Name
+          type: string
+        address:
+          description: Address
+          $ref: '#/components/schemas/BranchOfficeAddress'
+        trainer:
+          description: Trainer
+          $ref: '#/components/schemas/UserAccountItem'
+        classSchedules:
+          description: Class schedules
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassSchedule'
+
+    BranchOfficeAddress:
+      type: object
+      description: Branch office address
+      required:
+        - city
+        - street
+        - buildingNumber
+      properties:
+        city:
+          type: string
+        street:
+          type: string
+        buildingNumber:
+          type: integer
+
+    ClassSchedule:
+      type: object
+      description: Class schedule
+      required:
+        - id
+        - day
+        - time
+      properties:
+        id:
+          type: string
+          readOnly: true
+        day:
+          description: Day
+          $ref: '#/components/schemas/DayOfWeek'
+        time:
+          description: Time
+          $ref: '#/components/schemas/LocalTime'
+
+    DayOfWeek:
+      description: Day of week
+      type: string
+      enum:
+        - MONDAY
+        - TUESDAY
+        - WEDNESDAY
+        - THURSDAY
+        - FRIDAY
+        - SATURDAY
+        - SUNDAY
+
+    LocalTime:
+      type: string
+      description: Time
+      format: LocalTime
 
     Versions:
       type: object

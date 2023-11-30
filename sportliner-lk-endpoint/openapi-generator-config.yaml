@@ -20,6 +20,7 @@ booleanGetterPrefix: is
 useBeanValidation: true
 schemaMappings:
   DateTime: java.time.Instant
+  LocalTime: java.time.LocalTime
 typeMappings:
   DateTime: java.time.Instant
 
