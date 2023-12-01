@@ -1,0 +1,172 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* prevents the error overlay from showing */
+body > iframe {
+    display: none;
+}
+
+:root {
+    --color-primary: #013a7b;
+    --color-light-primary: #5994d8;
+    --color-background: #ffffff;
+    --color-shadow: #f0f1f2;
+    --color-warning: #cc9900;
+    --color-disabled-background: #cccccc;
+    --color-disabled-border: #999999;
+    --color-disabled-text: #666666;
+    --color-lightgray: #fafafa;
+
+    --width-sider: 0px;
+    --height-header: 0;
+}
+
+.App {
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+.dp-header {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background);
+    box-shadow: 0 2px 0px var(--color-shadow);
+    z-index: 10;
+    position: sticky;
+    /*margin-left: var(--width-sider);*/
+    top: 0;
+    right: 0;
+    height: auto;
+    padding: 0 24px 0 24px;
+    line-height: 26px;
+}
+
+.dp-header__logo {
+    width: 56px;
+    height: 48px;
+    margin-top: 8px;
+}
+
+.dp-subheader {
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.dp-sider {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 100%;
+    overflow: auto;
+}
+
+.dp-sider_menu {
+    overflow: auto;
+}
+
+.dp-content-block {
+    margin-top: var(--height-header);
+    margin-left: var(--width-sider);
+}
+
+.dp-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    color: var(--color-primary);
+    padding: 0 5px;
+    overflow: auto;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.dp-auth-form {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    min-width: 400px;
+    border-radius: 10px;
+    padding: 20px;
+    gap: 10px;
+    margin-bottom: 20vh;
+    background: linear-gradient(
+            86.47deg,
+            var(--color-background) 1.44%,
+            rgba(255, 255, 255, 0.723958) 31.5%,
+            rgba(255, 255, 255, 0.510417) 54.75%,
+            rgba(255, 255, 255, 0) 110.32%
+    ),
+    rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+.dp-overlay_spinner-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dp-menu_link.ant-menu-title-content {
+    background: transparent;
+    border: none;
+    padding: 0 !important;
+    font-family: arial, sans-serif;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: underline;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.dp-menu_link.ant-menu-title-content:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.dp-menu-group {
+    color: var(--color-background);
+}
+
+.dp-row {
+    background-color: var(--color-background);
+    border-radius: 3px;
+    padding: 5px 24px 5px 24px;
+    width: 100%;
+    margin: 5px 0 0 0;
+    overflow-x: auto;
+}
+
+.dp-compressed-list {
+    width: 100%;
+}
+
+
+.dp-compressed-table {
+    width: 100%;
+}
+
+.dp-compressed-table .ant-table-cell {
+    padding: 4px 10px 4px 10px;
+    vertical-align: baseline;
+}
+
+.dp-compressed-table .ant-table-cell .ant-input-affix-wrapper {
+    text-align-last: right;
+    padding: 0;
+}
+
+.dp-compressed-table .ant-table-thead .ant-table-cell {
+    padding: 15px 10px 15px 10px;
+    font-weight: bold;
+}

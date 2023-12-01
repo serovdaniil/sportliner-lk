@@ -1,0 +1,10 @@
+# OpenAPI Generator Config
+#
+# Refer to:
+# https://openapi-generator.tech/docs/configuration/
+# https://openapi-generator.tech/docs/generators/typescript-fetch
+
+typescriptThreePlus: true
+enumNameSuffix: ''
+enumPropertyNaming: original
+removeEnumValuePrefix: false

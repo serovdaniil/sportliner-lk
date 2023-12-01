@@ -1,12 +1,12 @@
 openapi: 3.0.3
 
 info:
-  title: crm-endpoint-api
-  description: CRM Endpoint API
+  title: Sportliner-lk-endpoint-api
+  description: Sportliner LK Endpoint API
   version: 1.0.0
 
 servers:
-  - url: /crm-api
+  - url: /sportliner-lk-api
     description: Local server
 
 security:

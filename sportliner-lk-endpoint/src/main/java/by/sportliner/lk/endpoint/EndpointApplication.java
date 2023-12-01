@@ -1,6 +1,6 @@
 package by.sportliner.lk.endpoint;
 
-import by.sportliner.lk.SportlinerLkCoreConfiguration;
+import by.sportliner.lk.core.SportlinerLkCoreConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
