@@ -35,10 +35,10 @@ export interface BranchOfficeAddress {
     street: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof BranchOfficeAddress
      */
-    buildingNumber: number;
+    buildingNumber: string;
 }
 
 export function BranchOfficeAddressFromJSON(json: any): BranchOfficeAddress {

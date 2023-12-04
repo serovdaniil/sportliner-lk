@@ -1,9 +1,11 @@
 package by.sportliner.lk.core.model;
 
 import by.sportliner.lk.core.support.jpa.type.BranchOfficeAddressJsonbType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -25,13 +27,6 @@ public class BranchOffice extends AbstractDataObject {
     @Column(name = "address", nullable = false)
     @Type(BranchOfficeAddressJsonbType.class)
     private BranchOfficeAddress address;
-
-    /**
-     * Trainer.
-     */
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "owner_id")
-    private UserAccount trainer;
 
     /**
      * Class schedules.
@@ -56,14 +51,6 @@ public class BranchOffice extends AbstractDataObject {
         this.address = address;
     }
 
-    public UserAccount getTrainer() {
-        return trainer;
-    }
-
-    public void setTrainer(UserAccount trainer) {
-        this.trainer = trainer;
-    }
-
     public List<ClassSchedule> getClassSchedules() {
         return classSchedules;
     }
@@ -72,13 +59,13 @@ public class BranchOffice extends AbstractDataObject {
         this.classSchedules = classSchedules;
     }
 
-    public static class BranchOfficeAddress {
+    public static class BranchOfficeAddress implements Serializable {
 
         private String city;
 
         private String street;
 
-        private int buildingNumber;
+        private String buildingNumber;
 
         public String getCity() {
             return city;
@@ -96,19 +83,20 @@ public class BranchOffice extends AbstractDataObject {
             this.street = street;
         }
 
-        public int getBuildingNumber() {
+        public String getBuildingNumber() {
             return buildingNumber;
         }
 
-        public void setBuildingNumber(int buildingNumber) {
+        public void setBuildingNumber(String buildingNumber) {
             this.buildingNumber = buildingNumber;
         }
 
+        @JsonIgnore
         public String getFullAddress() {
             return "${city}, ${street}, ${buildingNumber}"
                 .replace("${city}", city)
                 .replace("${street}", street)
-                .replace("${buildingNumber}", String.valueOf(buildingNumber));
+                .replace("${buildingNumber}", buildingNumber);
         }
     }
 }

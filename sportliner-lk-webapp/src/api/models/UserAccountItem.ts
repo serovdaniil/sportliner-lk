@@ -26,13 +26,13 @@ export interface UserAccountItem {
      * @type {string}
      * @memberof UserAccountItem
      */
-    readonly id: string;
+    id: string;
     /**
      * 
      * @type {string}
      * @memberof UserAccountItem
      */
-    readonly fullName: string;
+    fullName: string;
 }
 
 export function UserAccountItemFromJSON(json: any): UserAccountItem {
@@ -63,6 +63,8 @@ export function UserAccountItemToJSONTyped(value?: UserAccountItem | null, ignor
     }
     return {
         
+        'id': value.id,
+        'fullName': value.fullName,
     };
 }
 

@@ -48,6 +48,10 @@ public class BranchOfficeApiController implements BranchOfficeApi {
                 .map(it -> new ClassScheduleDto()
                     .day(DayOfWeekDto.valueOf(it.getDay().name()))
                     .time(it.getTime())
+                    .trainer(new UserAccountItemDto()
+                        .id(it.getTrainer().getId())
+                        .fullName(it.getTrainer().getFullName())
+                    )
                 )
                 .toList()
             )
@@ -86,7 +90,6 @@ public class BranchOfficeApiController implements BranchOfficeApi {
 
     private void updateFields(BranchOffice target, BranchOfficeDto dto) {
         target.setName(dto.getName());
-        target.setTrainer(userAccountService.getUserAccountById(dto.getTrainer().getId()));
 
         BranchOffice.BranchOfficeAddress address = new BranchOffice.BranchOfficeAddress();
 
@@ -103,6 +106,7 @@ public class BranchOfficeApiController implements BranchOfficeApi {
 
                 classSchedule.setDay(DayOfWeek.valueOf(it.getDay().name()));
                 classSchedule.setTime(it.getTime());
+                classSchedule.setTrainer(userAccountService.getUserAccountById(it.getTrainer().getId()));
 
                 return classSchedule;
             })

@@ -39,12 +39,6 @@ export interface BranchOfficeListItem {
      * @memberof BranchOfficeListItem
      */
     address: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BranchOfficeListItem
-     */
-    trainer: string;
 }
 
 export function BranchOfficeListItemFromJSON(json: any): BranchOfficeListItem {
@@ -60,7 +54,6 @@ export function BranchOfficeListItemFromJSONTyped(json: any, ignoreDiscriminator
         'id': json['id'],
         'name': json['name'],
         'address': json['address'],
-        'trainer': json['trainer'],
     };
 }
 
@@ -79,7 +72,6 @@ export function BranchOfficeListItemToJSONTyped(value?: BranchOfficeListItem | n
         
         'name': value.name,
         'address': value.address,
-        'trainer': value.trainer,
     };
 }
 

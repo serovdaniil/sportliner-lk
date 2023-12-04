@@ -15,3 +15,17 @@ export const requiredWithTrimValidator = (message = 'Поле обязатель
         return reject(message ?? 'Поле обязательно');
     },
 });
+
+export const timeRequired = (message = 'Поле обязательно'): Rule => ({
+    required: true,
+    message,
+    validator(rule, value: any | undefined): Promise<void> | void {
+        const time = value.format('HH:mm');
+
+        if (time && time.trim().length > 0) {
+            return Promise.resolve();
+        }
+
+        return reject(message ?? 'Поле обязательно');
+    },
+});

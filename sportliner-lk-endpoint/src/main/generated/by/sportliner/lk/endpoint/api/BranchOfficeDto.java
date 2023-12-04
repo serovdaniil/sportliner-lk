@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import by.sportliner.lk.endpoint.api.BranchOfficeAddressDto;
 import by.sportliner.lk.endpoint.api.ClassScheduleDto;
-import by.sportliner.lk.endpoint.api.UserAccountItemDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -37,9 +36,6 @@ public class BranchOfficeDto {
 
   @JsonProperty("address")
   private BranchOfficeAddressDto address;
-
-  @JsonProperty("trainer")
-  private UserAccountItemDto trainer;
 
   @JsonProperty("classSchedules")
   @Valid
@@ -102,25 +98,6 @@ public class BranchOfficeDto {
     this.address = address;
   }
 
-  public BranchOfficeDto trainer(UserAccountItemDto trainer) {
-    this.trainer = trainer;
-    return this;
-  }
-
-  /**
-   * Get trainer
-   * @return trainer
-  */
-  @NotNull @Valid 
-  @Schema(name = "trainer", requiredMode = Schema.RequiredMode.REQUIRED)
-  public UserAccountItemDto getTrainer() {
-    return trainer;
-  }
-
-  public void setTrainer(UserAccountItemDto trainer) {
-    this.trainer = trainer;
-  }
-
   public BranchOfficeDto classSchedules(List<ClassScheduleDto> classSchedules) {
     this.classSchedules = classSchedules;
     return this;
@@ -160,13 +137,12 @@ public class BranchOfficeDto {
     return Objects.equals(this.id, branchOffice.id) &&
         Objects.equals(this.name, branchOffice.name) &&
         Objects.equals(this.address, branchOffice.address) &&
-        Objects.equals(this.trainer, branchOffice.trainer) &&
         Objects.equals(this.classSchedules, branchOffice.classSchedules);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, address, trainer, classSchedules);
+    return Objects.hash(id, name, address, classSchedules);
   }
 
   @Override
@@ -176,7 +152,6 @@ public class BranchOfficeDto {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    address: ").append(toIndentedString(address)).append("\n");
-    sb.append("    trainer: ").append(toIndentedString(trainer)).append("\n");
     sb.append("    classSchedules: ").append(toIndentedString(classSchedules)).append("\n");
     sb.append("}");
     return sb.toString();

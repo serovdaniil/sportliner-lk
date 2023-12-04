@@ -1,4 +1,4 @@
-package by.sportliner.lk;
+package by.sportliner.lk.core;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;

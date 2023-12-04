@@ -31,7 +31,7 @@ public class BranchOfficeAddressDto {
   private String street;
 
   @JsonProperty("buildingNumber")
-  private Integer buildingNumber;
+  private String buildingNumber;
 
   public BranchOfficeAddressDto city(String city) {
     this.city = city;
@@ -71,7 +71,7 @@ public class BranchOfficeAddressDto {
     this.street = street;
   }
 
-  public BranchOfficeAddressDto buildingNumber(Integer buildingNumber) {
+  public BranchOfficeAddressDto buildingNumber(String buildingNumber) {
     this.buildingNumber = buildingNumber;
     return this;
   }
@@ -82,11 +82,11 @@ public class BranchOfficeAddressDto {
   */
   @NotNull 
   @Schema(name = "buildingNumber", requiredMode = Schema.RequiredMode.REQUIRED)
-  public Integer getBuildingNumber() {
+  public String getBuildingNumber() {
     return buildingNumber;
   }
 
-  public void setBuildingNumber(Integer buildingNumber) {
+  public void setBuildingNumber(String buildingNumber) {
     this.buildingNumber = buildingNumber;
   }
 

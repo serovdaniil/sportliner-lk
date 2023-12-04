@@ -6,8 +6,9 @@ module.exports = function (app) {
     app.use(
         '/sportliner-lk-api',
         createProxyMiddleware({
-            target: 'http://localhost:8084',
+            target: 'http://localhost:8081',
             changeOrigin: true,
         })
     );
 };
+''

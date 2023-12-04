@@ -24,6 +24,13 @@ public class ClassSchedule {
     @Column(name = "time")
     private LocalTime time;
 
+    /**
+     * Trainer.
+     */
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "trainer_id")
+    private UserAccount trainer;
+
     public DayOfWeek getDay() {
         return day;
     }
@@ -39,4 +46,13 @@ public class ClassSchedule {
     public void setTime(LocalTime time) {
         this.time = time;
     }
+
+    public UserAccount getTrainer() {
+        return trainer;
+    }
+
+    public void setTrainer(UserAccount trainer) {
+        this.trainer = trainer;
+    }
+
 }

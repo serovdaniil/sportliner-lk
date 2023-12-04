@@ -57,7 +57,7 @@ const PageHeader: React.FC<AuthorizedPageHeaderProps> = (props: AuthorizedPageHe
         <Layout.Header className="dp-header" id="dp-header" style={{zIndex: 1000}}>
             <Row justify="space-between" style={{width: '100%'}}>
                 <Row align="middle">
-                    <Image src={logo}/>
+                    <Image src={logo} preview={false}/>
                 </Row>
 
                 <Typography.Title level={1} style={{color: '#013A7B'}}>

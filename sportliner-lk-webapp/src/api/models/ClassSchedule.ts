@@ -18,6 +18,10 @@ import {
     DayOfWeekFromJSON,
     DayOfWeekFromJSONTyped,
     DayOfWeekToJSON,
+    UserAccountItem,
+    UserAccountItemFromJSON,
+    UserAccountItemFromJSONTyped,
+    UserAccountItemToJSON,
 } from './';
 
 
@@ -32,7 +36,7 @@ export interface ClassSchedule {
      * @type {string}
      * @memberof ClassSchedule
      */
-    readonly id: string;
+    readonly id?: string;
     /**
      * 
      * @type {DayOfWeek}
@@ -45,6 +49,12 @@ export interface ClassSchedule {
      * @memberof ClassSchedule
      */
     time: string;
+    /**
+     * 
+     * @type {UserAccountItem}
+     * @memberof ClassSchedule
+     */
+    trainer: UserAccountItem;
 }
 
 export function ClassScheduleFromJSON(json: any): ClassSchedule {
@@ -57,9 +67,10 @@ export function ClassScheduleFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'id': json['id'],
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'day': DayOfWeekFromJSON(json['day']),
         'time': json['time'],
+        'trainer': UserAccountItemFromJSON(json['trainer']),
     };
 }
 
@@ -78,6 +89,7 @@ export function ClassScheduleToJSONTyped(value?: ClassSchedule | null, ignoreDis
         
         'day': DayOfWeekToJSON(value.day),
         'time': value.time,
+        'trainer': UserAccountItemToJSON(value.trainer),
     };
 }
 

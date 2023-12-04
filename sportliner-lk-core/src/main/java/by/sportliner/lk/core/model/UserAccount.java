@@ -216,7 +216,7 @@ public class UserAccount extends AbstractDataObject {
         return Stream.<String>builder()
             .add(lastName)
             .add(firstName)
-            .add(password)
+            .add(patronymic)
             .build()
             .filter(Objects::nonNull)
             .collect(Collectors.joining(" "));

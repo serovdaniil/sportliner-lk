@@ -22,10 +22,6 @@ import {
     ClassScheduleFromJSON,
     ClassScheduleFromJSONTyped,
     ClassScheduleToJSON,
-    UserAccountItem,
-    UserAccountItemFromJSON,
-    UserAccountItemFromJSONTyped,
-    UserAccountItemToJSON,
 } from './';
 
 
@@ -54,12 +50,6 @@ export interface BranchOffice {
      */
     address: BranchOfficeAddress;
     /**
-     * 
-     * @type {UserAccountItem}
-     * @memberof BranchOffice
-     */
-    trainer: UserAccountItem;
-    /**
      * Class schedules
      * @type {Array<ClassSchedule>}
      * @memberof BranchOffice
@@ -80,7 +70,6 @@ export function BranchOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'],
         'name': json['name'],
         'address': BranchOfficeAddressFromJSON(json['address']),
-        'trainer': UserAccountItemFromJSON(json['trainer']),
         'classSchedules': !exists(json, 'classSchedules') ? undefined : ((json['classSchedules'] as Array<any>).map(ClassScheduleFromJSON)),
     };
 }
@@ -100,7 +89,6 @@ export function BranchOfficeToJSONTyped(value?: BranchOffice | null, ignoreDiscr
         
         'name': value.name,
         'address': BranchOfficeAddressToJSON(value.address),
-        'trainer': UserAccountItemToJSON(value.trainer),
         'classSchedules': value.classSchedules === undefined ? undefined : ((value.classSchedules as Array<any>).map(ClassScheduleToJSON)),
     };
 }

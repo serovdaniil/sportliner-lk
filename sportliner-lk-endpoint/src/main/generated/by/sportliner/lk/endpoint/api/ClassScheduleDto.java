@@ -3,6 +3,7 @@ package by.sportliner.lk.endpoint.api;
 import java.net.URI;
 import java.util.Objects;
 import by.sportliner.lk.endpoint.api.DayOfWeekDto;
+import by.sportliner.lk.endpoint.api.UserAccountItemDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -35,6 +36,9 @@ public class ClassScheduleDto {
   @JsonProperty("time")
   private java.time.LocalTime time;
 
+  @JsonProperty("trainer")
+  private UserAccountItemDto trainer;
+
   public ClassScheduleDto id(String id) {
     this.id = id;
     return this;
@@ -45,7 +49,7 @@ public class ClassScheduleDto {
    * @return id
   */
   
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   public String getId() {
     return id;
   }
@@ -92,6 +96,25 @@ public class ClassScheduleDto {
     this.time = time;
   }
 
+  public ClassScheduleDto trainer(UserAccountItemDto trainer) {
+    this.trainer = trainer;
+    return this;
+  }
+
+  /**
+   * Get trainer
+   * @return trainer
+  */
+  @NotNull @Valid 
+  @Schema(name = "trainer", requiredMode = Schema.RequiredMode.REQUIRED)
+  public UserAccountItemDto getTrainer() {
+    return trainer;
+  }
+
+  public void setTrainer(UserAccountItemDto trainer) {
+    this.trainer = trainer;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -103,12 +126,13 @@ public class ClassScheduleDto {
     ClassScheduleDto classSchedule = (ClassScheduleDto) o;
     return Objects.equals(this.id, classSchedule.id) &&
         Objects.equals(this.day, classSchedule.day) &&
-        Objects.equals(this.time, classSchedule.time);
+        Objects.equals(this.time, classSchedule.time) &&
+        Objects.equals(this.trainer, classSchedule.trainer);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, day, time);
+    return Objects.hash(id, day, time, trainer);
   }
 
   @Override
@@ -118,6 +142,7 @@ public class ClassScheduleDto {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    day: ").append(toIndentedString(day)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
+    sb.append("    trainer: ").append(toIndentedString(trainer)).append("\n");
     sb.append("}");
     return sb.toString();
   }

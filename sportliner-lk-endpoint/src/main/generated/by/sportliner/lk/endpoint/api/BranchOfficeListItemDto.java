@@ -33,9 +33,6 @@ public class BranchOfficeListItemDto {
   @JsonProperty("address")
   private String address;
 
-  @JsonProperty("trainer")
-  private String trainer;
-
   public BranchOfficeListItemDto id(String id) {
     this.id = id;
     return this;
@@ -93,25 +90,6 @@ public class BranchOfficeListItemDto {
     this.address = address;
   }
 
-  public BranchOfficeListItemDto trainer(String trainer) {
-    this.trainer = trainer;
-    return this;
-  }
-
-  /**
-   * Get trainer
-   * @return trainer
-  */
-  @NotNull 
-  @Schema(name = "trainer", requiredMode = Schema.RequiredMode.REQUIRED)
-  public String getTrainer() {
-    return trainer;
-  }
-
-  public void setTrainer(String trainer) {
-    this.trainer = trainer;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -123,13 +101,12 @@ public class BranchOfficeListItemDto {
     BranchOfficeListItemDto branchOfficeListItem = (BranchOfficeListItemDto) o;
     return Objects.equals(this.id, branchOfficeListItem.id) &&
         Objects.equals(this.name, branchOfficeListItem.name) &&
-        Objects.equals(this.address, branchOfficeListItem.address) &&
-        Objects.equals(this.trainer, branchOfficeListItem.trainer);
+        Objects.equals(this.address, branchOfficeListItem.address);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, address, trainer);
+    return Objects.hash(id, name, address);
   }
 
   @Override
@@ -139,7 +116,6 @@ public class BranchOfficeListItemDto {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    address: ").append(toIndentedString(address)).append("\n");
-    sb.append("    trainer: ").append(toIndentedString(trainer)).append("\n");
     sb.append("}");
     return sb.toString();
   }

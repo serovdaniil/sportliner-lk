@@ -21,6 +21,8 @@ tags:
     description: User operations
   - name: branchOffice
     description: Branch office operations
+  - name: catalog
+    description: Some common operations
 
 paths:
 
@@ -288,6 +290,25 @@ paths:
         403:
           description: Access forbidden
 
+  /trainers:
+    get:
+      tags:
+        - catalog
+      operationId: getTrainers
+      summary: Get trainers
+      responses:
+        200:
+          description: List of trainers
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/UserAccountItem"
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
   /version:
     get:
       operationId: getVersions
@@ -465,10 +486,8 @@ components:
       properties:
         id:
           type: string
-          readOnly: true
         fullName:
           type: string
-          readOnly: true
 
     UserRole:
       type: string
@@ -484,7 +503,6 @@ components:
         - id
         - name
         - address
-        - trainer
       properties:
         id:
           type: string
@@ -492,8 +510,6 @@ components:
         name:
           type: string
         address:
-          type: string
-        trainer:
           type: string
 
     BranchOffice:
@@ -503,7 +519,6 @@ components:
         - id
         - name
         - address
-        - trainer
       properties:
         id:
           type: string
@@ -514,9 +529,6 @@ components:
         address:
           description: Address
           $ref: '#/components/schemas/BranchOfficeAddress'
-        trainer:
-          description: Trainer
-          $ref: '#/components/schemas/UserAccountItem'
         classSchedules:
           description: Class schedules
           type: array
@@ -536,15 +548,16 @@ components:
         street:
           type: string
         buildingNumber:
-          type: integer
+          type: string
 
     ClassSchedule:
       type: object
       description: Class schedule
       required:
-        - id
         - day
         - time
+        - trainer
+        - ageType
       properties:
         id:
           type: string
@@ -555,6 +568,9 @@ components:
         time:
           description: Time
           $ref: '#/components/schemas/LocalTime'
+        trainer:
+          description: Trainer
+          $ref: '#/components/schemas/UserAccountItem'
 
     DayOfWeek:
       description: Day of week

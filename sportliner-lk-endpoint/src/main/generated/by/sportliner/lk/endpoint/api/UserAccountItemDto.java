@@ -39,8 +39,8 @@ public class UserAccountItemDto {
    * Get id
    * @return id
   */
-  
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getId() {
     return id;
   }
@@ -58,8 +58,8 @@ public class UserAccountItemDto {
    * Get fullName
    * @return fullName
   */
-  
-  @Schema(name = "fullName", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "fullName", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getFullName() {
     return fullName;
   }

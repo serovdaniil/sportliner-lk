@@ -2,12 +2,12 @@ import {
     ApiResponse,
     AuthApi,
     BaseError,
-    BaseErrorType,
+    BaseErrorType, BranchOfficeApi, CatalogApi,
     Configuration,
     ErrorContext,
     HTTPQuery,
     Middleware,
-    ResponseContext,
+    ResponseContext, UsersApi,
 } from 'api';
 
 import {auth} from 'app/App';
@@ -171,3 +171,9 @@ export async function extractBlobWithFilename(response: ApiResponse<Blob>): Prom
 }
 
 export const authApi = new AuthApi(configuration);
+
+export const branchOfficeApi = new BranchOfficeApi(configuration);
+
+export const usersApi = new UsersApi(configuration);
+
+export const catalogApi = new CatalogApi(configuration);
