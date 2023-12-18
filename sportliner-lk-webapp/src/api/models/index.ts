@@ -25,6 +25,7 @@ export * from './ObjectNotFoundError';
 export * from './ReferenceViolationError';
 export * from './UniquenessViolationError';
 export * from './UserAccount';
+export * from './UserAccountCriteria';
 export * from './UserAccountItem';
 export * from './UserAccountListItem';
 export * from './UserRole';

@@ -26,6 +26,7 @@ import {UserRole} from "../../../../api";
 import DateUtils from "../../../utils/DateUtils";
 import ChildForm from "./ChildForm";
 import AppNotification from "../../notification/AppNotification";
+import {formatUserRole} from "../list/UserAccountCriteriaBlock";
 
 const PAGE_TITLE = "Редактирование пользователя";
 const {Panel} = Collapse;
@@ -77,19 +78,6 @@ const UserEditPage: FC<Props> = (props: Props) => {
     }
 
     const isNewUser = props.userAccountId == null;
-
-    const formatUserRole = (role: UserRole): string => {
-        switch (role) {
-            case UserRole.ADMIN:
-                return "Администратор";
-            case UserRole.TRAINER:
-                return "Тренер";
-            case UserRole.PARENT:
-                return "Законный представитель";
-            default:
-                throw new Error("Unexpected role: " + role);
-        }
-    };
 
     const hasPassword = () => {
         if (!isNewUser) {
@@ -420,6 +408,7 @@ const UserEditPage: FC<Props> = (props: Props) => {
                                         <ChildForm
                                             child={child}
                                             branchOffices={store.branchOffices}
+                                            form={form}
                                         />
                                     </Panel>
 

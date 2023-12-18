@@ -5,6 +5,7 @@
  */
 package by.sportliner.lk.endpoint.api;
 
+import by.sportliner.lk.endpoint.api.UserAccountCriteriaDto;
 import by.sportliner.lk.endpoint.api.UserAccountDto;
 import by.sportliner.lk.endpoint.api.UserAccountListItemDto;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -137,6 +138,7 @@ public interface UsersApi {
     /**
      * GET /users : Get users accounts
      *
+     * @param criteria  (required)
      * @return List of user accounts (status code 200)
      *         or Not authenticated (status code 401)
      *         or Access forbidden (status code 403)
@@ -162,7 +164,7 @@ public interface UsersApi {
         produces = { "application/json" }
     )
     ResponseEntity<List<UserAccountListItemDto>> getUsers(
-        
+        @NotNull @Parameter(name = "criteria", description = "", required = true, in = ParameterIn.QUERY) @Valid UserAccountCriteriaDto criteria
     ) throws Exception;
 
 

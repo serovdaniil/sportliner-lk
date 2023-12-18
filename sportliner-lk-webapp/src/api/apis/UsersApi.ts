@@ -16,11 +16,14 @@
 import * as runtime from '../runtime';
 import type {
   UserAccount,
+  UserAccountCriteria,
   UserAccountListItem,
 } from '../models';
 import {
     UserAccountFromJSON,
     UserAccountToJSON,
+    UserAccountCriteriaFromJSON,
+    UserAccountCriteriaToJSON,
     UserAccountListItemFromJSON,
     UserAccountListItemToJSON,
 } from '../models';
@@ -35,6 +38,10 @@ export interface DeleteUserRequest {
 
 export interface GetUserAccountRequest {
     id: string;
+}
+
+export interface GetUsersRequest {
+    criteria: UserAccountCriteria;
 }
 
 export interface UpdateUserAccountRequest {
@@ -165,8 +172,16 @@ export class UsersApi extends runtime.BaseAPI {
     /**
      * Get users accounts
      */
-    async getUsersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserAccountListItem>>> {
+    async getUsersRaw(requestParameters: GetUsersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserAccountListItem>>> {
+        if (requestParameters.criteria === null || requestParameters.criteria === undefined) {
+            throw new runtime.RequiredError('criteria','Required parameter requestParameters.criteria was null or undefined when calling getUsers.');
+        }
+
         const queryParameters: any = {};
+
+        if (requestParameters.criteria !== undefined) {
+            queryParameters['criteria'] = requestParameters.criteria;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -191,8 +206,8 @@ export class UsersApi extends runtime.BaseAPI {
     /**
      * Get users accounts
      */
-    async getUsers(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserAccountListItem>> {
-        const response = await this.getUsersRaw(initOverrides);
+    async getUsers(requestParameters: GetUsersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserAccountListItem>> {
+        const response = await this.getUsersRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

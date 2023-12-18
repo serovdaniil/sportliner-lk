@@ -14,6 +14,8 @@ export class UserEditPageStore {
     private _branchOffices: BranchOfficeItem[] = [];
 
     constructor() {
+        this._userAccount = new UserAttributes({});
+
         makeObservable(this);
     }
 
@@ -33,8 +35,6 @@ export class UserEditPageStore {
             const userAccount = await usersApi.getUserAccount({id: userAccountId});
 
             this._userAccount = new UserAttributes(userAccount);
-        } else {
-            this._userAccount = new UserAttributes({});
         }
 
         this._userAccountId = userAccountId;

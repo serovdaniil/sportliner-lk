@@ -5,10 +5,12 @@ import by.sportliner.lk.core.model.UserAccount;
 import by.sportliner.lk.core.model.UserRole;
 import by.sportliner.lk.core.service.BranchOfficeService;
 import by.sportliner.lk.core.service.ChildService;
+import by.sportliner.lk.core.service.UserAccountCriteria;
 import by.sportliner.lk.core.service.UserAccountService;
 import by.sportliner.lk.endpoint.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
@@ -32,7 +34,7 @@ public class UsersApiController implements UsersApi {
         UserAccount userAccount = new UserAccount();
 
         userAccount.setUsername(userAccountDto.getUsername());
-        userAccount.setPassword(userAccountDto.getPassword());
+        userAccount.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(userAccountDto.getPassword()));
         userAccount.setPasswordMustBeChanged(true);
         userAccount.setPasswordTimestamp(Instant.now());
         userAccount.setRole(UserRole.valueOf(userAccountDto.getRole().name()));
@@ -94,8 +96,10 @@ public class UsersApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<UserAccountListItemDto>> getUsers() {
-        return ResponseEntity.ok(userAccountService.getUserAccounts().stream()
+    public ResponseEntity<List<UserAccountListItemDto>> getUsers(UserAccountCriteriaDto criteria) {
+        UserAccountCriteria userAccountCriteria = convert(criteria);
+
+        return ResponseEntity.ok(userAccountService.getUserAccounts(userAccountCriteria).stream()
             .map(userAccount -> new UserAccountListItemDto()
                 .id(userAccount.getId())
                 .username(userAccount.getUsername())
@@ -113,7 +117,7 @@ public class UsersApiController implements UsersApi {
         UserAccount userAccount = userAccountService.getUserAccountById(id);
 
         if (userAccountDto.getPassword() != null) {
-            userAccount.setPassword(userAccountDto.getPassword());
+            userAccount.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(userAccountDto.getPassword()));
             userAccount.setPasswordMustBeChanged(true);
             userAccount.setPasswordTimestamp(Instant.now());
         }
@@ -166,6 +170,16 @@ public class UsersApiController implements UsersApi {
 
                 return child;
             }).collect(Collectors.toList());
+    }
+
+    private UserAccountCriteria convert(UserAccountCriteriaDto criteriaDto) {
+        UserAccountCriteria criteria = new UserAccountCriteria();
+
+        criteria.setLastName(criteriaDto.getLastName());
+        criteria.setRole(criteriaDto.getRole() != null ? UserRole.valueOf(criteriaDto.getRole().name()) : null);
+        criteria.setPayAttention(criteriaDto.isPayAttention());
+
+        return criteria;
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserAccountService {
 
-    List<UserAccount> getUserAccounts();
+    List<UserAccount> getUserAccounts(UserAccountCriteria criteria);
 
     UserAccount getUserAccountById(String id);
 

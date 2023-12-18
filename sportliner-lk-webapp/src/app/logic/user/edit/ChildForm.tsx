@@ -3,7 +3,7 @@ import {observer} from "mobx-react";
 import React, {FC} from "react";
 import {ChildAttributes} from "./ChildAttributes";
 import {maxValueValidator, minValueValidator, requiredWithTrimValidator} from "../../Validators";
-import {BranchOfficeItem, Tariff} from "../../../../api";
+import {BranchOfficeItem} from "../../../../api";
 import LocalDatePicker from "../../../components/LocalDatePicker/LocalDatePicker";
 import TextArea from "antd/es/input/TextArea";
 

@@ -9,6 +9,7 @@ import React, {FC, useEffect, useState} from 'react';
 import UserListTable from "./UserListTable";
 import {UserListPageStore} from "./UserListPageStore";
 import {AppRoutes} from "../../../AppRoutes";
+import UserAccountCriteriaBlock from "./UserAccountCriteriaBlock";
 
 const PAGE_TITLE = "Список пользователей";
 
@@ -46,10 +47,17 @@ const UserListPage: FC = () => {
             title={PAGE_TITLE}
             content={(
                 <Space style={{float: 'right'}}>
-                    <Button className="dp-button" type="primary" onClick={createNewBranchOffice}>Добавить нового пользователя</Button>
+                    <Button className="dp-button" type="primary" onClick={createNewBranchOffice}>Добавить нового
+                        пользователя</Button>
                 </Space>
             )}
         >
+            <Row className="dp-row">
+                <UserAccountCriteriaBlock
+                    model={store.criteriaModel}
+                />
+            </Row>
+
             <Row className="dp-row">
                 <UserListTable
                     content={store.users}

@@ -7,6 +7,7 @@ import {isEventFromInteractiveChild} from 'app/utils/DomUtils';
 import {isNothingSelectedOnPage} from 'app/utils/WindowUtils';
 import React from 'react';
 import {AppRoutes} from "../../../AppRoutes";
+import {formatUserRole} from "./UserAccountCriteriaBlock";
 
 interface UserTableProps {
     content: UserAccountListItem[];
@@ -15,19 +16,6 @@ interface UserTableProps {
 
 const UserListTable: React.FC<UserTableProps> = (props: UserTableProps) => {
     const navigator = useNavigator();
-
-    const formatUserRole = (role: UserRole): string => {
-        switch (role) {
-            case UserRole.ADMIN:
-                return "Администратор";
-            case UserRole.PARENT:
-                return "Родитель";
-            case UserRole.TRAINER:
-                return "Тренер";
-            default:
-                throw new Error("Unexpected role: " + role);
-        }
-    };
 
     const columns: ColumnsType<UserAccountListItem> = [
         {

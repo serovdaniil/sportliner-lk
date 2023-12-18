@@ -54,9 +54,13 @@ export class BranchOfficeEditPageStore {
     }
 
     public getClassSchedules(): ClassSchedule[] {
-        let classSchedules = [];
+        let classSchedules = [] as ClassSchedule[];
 
-        Object.values(DayOfWeek).map((day) => classSchedules = classSchedules.concat(this._dayToClassSchedules.get(day)!))
+        Object.values(DayOfWeek).map((day) => {
+            const schedules = this._dayToClassSchedules.get(day)!;
+
+            classSchedules.concat(...schedules)
+        })
 
         return classSchedules;
     }

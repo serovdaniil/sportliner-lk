@@ -104,6 +104,13 @@ paths:
         - users
       operationId: getUsers
       summary: Get users accounts
+      parameters:
+        - name: criteria
+          in: query
+          required: true
+          style: form
+          schema:
+            $ref: '#/components/schemas/UserAccountCriteria'
       responses:
         200:
           description: List of user accounts
@@ -579,6 +586,16 @@ components:
         - ADMIN
         - TRAINER
         - PARENT
+
+    UserAccountCriteria:
+      type: object
+      properties:
+        lastName:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        payAttention:
+          type: boolean
 
     BranchOfficeListItem:
       type: object
