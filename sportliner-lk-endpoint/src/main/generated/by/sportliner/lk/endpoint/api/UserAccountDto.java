@@ -2,11 +2,14 @@ package by.sportliner.lk.endpoint.api;
 
 import java.net.URI;
 import java.util.Objects;
+import by.sportliner.lk.endpoint.api.ChildDto;
 import by.sportliner.lk.endpoint.api.UserRoleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -68,6 +71,16 @@ public class UserAccountDto {
   @JsonProperty("loginTimestamp")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private java.time.Instant loginTimestamp;
+
+  @JsonProperty("payAttention")
+  private Boolean payAttention;
+
+  @JsonProperty("reason")
+  private String reason;
+
+  @JsonProperty("children")
+  @Valid
+  private List<ChildDto> children = null;
 
   public UserAccountDto id(String id) {
     this.id = id;
@@ -316,6 +329,71 @@ public class UserAccountDto {
     this.loginTimestamp = loginTimestamp;
   }
 
+  public UserAccountDto payAttention(Boolean payAttention) {
+    this.payAttention = payAttention;
+    return this;
+  }
+
+  /**
+   * Whether attention to the user is required
+   * @return payAttention
+  */
+  @NotNull 
+  @Schema(name = "payAttention", description = "Whether attention to the user is required", requiredMode = Schema.RequiredMode.REQUIRED)
+  public Boolean isPayAttention() {
+    return payAttention;
+  }
+
+  public void setPayAttention(Boolean payAttention) {
+    this.payAttention = payAttention;
+  }
+
+  public UserAccountDto reason(String reason) {
+    this.reason = reason;
+    return this;
+  }
+
+  /**
+   * The reason why attention is required
+   * @return reason
+  */
+  
+  @Schema(name = "reason", description = "The reason why attention is required", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
+
+  public UserAccountDto children(List<ChildDto> children) {
+    this.children = children;
+    return this;
+  }
+
+  public UserAccountDto addChildrenItem(ChildDto childrenItem) {
+    if (this.children == null) {
+      this.children = new ArrayList<>();
+    }
+    this.children.add(childrenItem);
+    return this;
+  }
+
+  /**
+   * Children who will attend the classes
+   * @return children
+  */
+  @Valid 
+  @Schema(name = "children", description = "Children who will attend the classes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public List<ChildDto> getChildren() {
+    return children;
+  }
+
+  public void setChildren(List<ChildDto> children) {
+    this.children = children;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -337,12 +415,15 @@ public class UserAccountDto {
         Objects.equals(this.lastName, userAccount.lastName) &&
         Objects.equals(this.createTimestamp, userAccount.createTimestamp) &&
         Objects.equals(this.updateTimestamp, userAccount.updateTimestamp) &&
-        Objects.equals(this.loginTimestamp, userAccount.loginTimestamp);
+        Objects.equals(this.loginTimestamp, userAccount.loginTimestamp) &&
+        Objects.equals(this.payAttention, userAccount.payAttention) &&
+        Objects.equals(this.reason, userAccount.reason) &&
+        Objects.equals(this.children, userAccount.children);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, password, passwordMustBeChanged, role, email, phone, firstName, patronymic, lastName, createTimestamp, updateTimestamp, loginTimestamp);
+    return Objects.hash(id, username, password, passwordMustBeChanged, role, email, phone, firstName, patronymic, lastName, createTimestamp, updateTimestamp, loginTimestamp, payAttention, reason, children);
   }
 
   @Override
@@ -362,6 +443,9 @@ public class UserAccountDto {
     sb.append("    createTimestamp: ").append(toIndentedString(createTimestamp)).append("\n");
     sb.append("    updateTimestamp: ").append(toIndentedString(updateTimestamp)).append("\n");
     sb.append("    loginTimestamp: ").append(toIndentedString(loginTimestamp)).append("\n");
+    sb.append("    payAttention: ").append(toIndentedString(payAttention)).append("\n");
+    sb.append("    reason: ").append(toIndentedString(reason)).append("\n");
+    sb.append("    children: ").append(toIndentedString(children)).append("\n");
     sb.append("}");
     return sb.toString();
   }

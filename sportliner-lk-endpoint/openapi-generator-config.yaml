@@ -19,6 +19,7 @@ enablePostProcessFile: true
 booleanGetterPrefix: is
 useBeanValidation: true
 schemaMappings:
+  LocalDate: java.time.LocalDate
   DateTime: java.time.Instant
   LocalTime: java.time.LocalTime
 typeMappings:

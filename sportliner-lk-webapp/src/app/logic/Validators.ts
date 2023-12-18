@@ -29,3 +29,93 @@ export const timeRequired = (message = 'Поле обязательно'): Rule 
         return reject(message ?? 'Поле обязательно');
     },
 });
+
+export const emailValidator = (message?: string): Rule => ({
+    validator(rule, value: string | undefined): Promise<void> | void {
+        if (!value) {
+            return reject(message ?? 'Пожалуйста, введите корректный email');
+        }
+        // eslint-disable-next-line max-len
+        const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const isEmailValid = emailRegExp.test(String(value).toLowerCase());
+
+        if (!isEmailValid) {
+            return reject(message ?? 'Пожалуйста, введите корректный email');
+        }
+
+        return Promise.resolve();
+    },
+});
+
+export const usernameValidator = (): Rule => ({
+    validator(rule, value: string): Promise<void> | void {
+        if (value == null) {
+            return reject('Логин должен содержать от 5 до 20 символов');
+        }
+
+        if (value.length < 5 || value.length > 20) {
+            return reject('Логин должен содержать от 5 до 20 символов');
+        }
+        if (!/^[A-Za-z0-9._-]+$/.test(value)) {
+            return reject('Логин должен содержать только латинские буквы, цифры и символы. - _');
+        }
+
+        return Promise.resolve();
+    },
+});
+
+export const trueValidator = (value: () => boolean, message?: string): Rule => ({
+    validator(): Promise<void> | void {
+        if (value() === true) {
+            return Promise.resolve();
+        }
+
+        return reject(message ?? 'Ожидалось true');
+    },
+});
+
+export const phoneValidator = (message?: string): Rule => ({
+    validator(rule, value: string | undefined): Promise<void> | void {
+        if (!value) {
+            return reject(message ?? 'Пожалуйста, введите корректный телефонный номер');
+        }
+
+        const emailRegExp = /^\+375 \((17|29|33|44)\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/;
+        const isEmailValid = emailRegExp.test(String(value).toLowerCase());
+
+        if (!isEmailValid) {
+            return reject(message ?? 'Пожалуйста, введите корректный телефонный номер');
+        }
+
+        return Promise.resolve();
+    },
+});
+
+export const minValueValidator = (minValue: number, message?: string): Rule => ({
+    validator(rule, value: string | undefined): Promise<void> | void {
+        if (value == null) {
+            return Promise.resolve();
+        }
+
+        if (Number(value) < minValue) {
+            return reject(message ?? `Минимальное значение для данного поля ${minValue}`);
+        }
+
+        return Promise.resolve();
+    },
+});
+
+export const maxValueValidator = (maxValue: number, message?: string): Rule => ({
+    validator(rule, value: string | undefined): Promise<void> | void {
+        if (value == null) {
+            return Promise.resolve();
+        }
+
+        if (Number(value) > maxValue) {
+            return reject(message ?? `Максимальное значение для данного поля ${maxValue}`);
+        }
+
+        return Promise.resolve();
+    },
+});
+

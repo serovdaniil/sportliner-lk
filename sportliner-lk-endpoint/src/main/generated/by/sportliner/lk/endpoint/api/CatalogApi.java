@@ -5,6 +5,7 @@
  */
 package by.sportliner.lk.endpoint.api;
 
+import by.sportliner.lk.endpoint.api.BranchOfficeItemDto;
 import by.sportliner.lk.endpoint.api.UserAccountItemDto;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,38 @@ import jakarta.annotation.Generated;
 @Validated
 @Tag(name = "catalog", description = "Some common operations")
 public interface CatalogApi {
+
+    /**
+     * GET /availableBranchOffices : Get branch offices
+     *
+     * @return List of branch offices (status code 200)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "getAvailableBranchOffices",
+        summary = "Get branch offices",
+        tags = { "catalog" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "List of branch offices", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BranchOfficeItemDto.class)))
+            }),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/availableBranchOffices",
+        produces = { "application/json" }
+    )
+    ResponseEntity<List<BranchOfficeItemDto>> getAvailableBranchOffices(
+        
+    ) throws Exception;
+
 
     /**
      * GET /trainers : Get trainers

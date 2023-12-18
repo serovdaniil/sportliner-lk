@@ -184,6 +184,24 @@ paths:
           description: Not authenticated
         403:
           description: Access forbidden
+    delete:
+      tags:
+        - users
+      operationId: deleteUser
+      summary: Delete user by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successfully deleted
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
 
   /branchOffices:
     get:
@@ -285,6 +303,25 @@ paths:
       responses:
         200:
           description: Successfully deleted
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /availableBranchOffices:
+    get:
+      tags:
+        - catalog
+      operationId: getAvailableBranchOffices
+      summary: Get branch offices
+      responses:
+        200:
+          description: List of branch offices
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/BranchOfficeItem"
         401:
           description: Not authenticated
         403:
@@ -417,6 +454,7 @@ components:
         - patronymic
         - lastName
         - createTimestamp
+        - payAttention
       properties:
         id:
           type: string
@@ -452,6 +490,52 @@ components:
           type: string
           format: date-time
           readOnly: true
+        payAttention:
+          description: Whether attention to the user is required
+          type: boolean
+        reason:
+          description: The reason why attention is required
+          type: string
+        children:
+          description: Children who will attend the classes
+          type: array
+          items:
+            $ref: '#/components/schemas/Child'
+
+    Child:
+      type: object
+      description: Child
+      required:
+        - id
+        - lastName
+        - firstName
+        - patronymic
+        - birthday
+        - diagnosis
+        - tuitionBalance
+        - numberClassesPerMonth
+      properties:
+        id:
+          type: string
+          readOnly: true
+        lastName:
+          type: string
+        branchOffice:
+          $ref: '#/components/schemas/BranchOfficeItem'
+        firstName:
+          type: string
+        patronymic:
+          type: string
+        birthdate:
+          $ref: '#/components/schemas/LocalDate'
+        diagnosis:
+          type: string
+        tuitionBalance:
+          type: integer
+        numberClassesPerMonth:
+          type: integer
+        notes:
+          type: string
 
     UserAccountListItem:
       type: object
@@ -508,6 +592,18 @@ components:
           type: string
           readOnly: true
         name:
+          type: string
+        address:
+          type: string
+
+    BranchOfficeItem:
+      type: object
+      description: Branch office item
+      required:
+        - id
+        - address
+      properties:
+        id:
           type: string
         address:
           type: string
@@ -588,6 +684,14 @@ components:
       type: string
       description: Time
       format: LocalTime
+      example: 16:45:00
+
+    LocalDate:
+      type: string
+      description: |
+        A date without a time-zone in the ISO-8601 calendar system.
+      format: LocalDate
+      example: 2022-10-25
 
     Versions:
       type: object

@@ -45,6 +45,8 @@ create TABLE user_account (
     person_first_name        TEXT        NOT NULL,
     person_last_name         TEXT        NOT NULL,
     person_patronymic        TEXT        NOT NULL,
+    pay_attention            BOOLEAN     NOT NULL,
+    reason                   TEXT        NULL,
     create_timestamp         TIMESTAMPTZ NOT NULL,
     update_timestamp         TIMESTAMPTZ NULL,
     login_timestamp          TIMESTAMPTZ NULL,
@@ -64,4 +66,19 @@ CREATE TABLE class_schedule (
     day              TEXT  NOT NULL,
     time             time  NOT NULL,
     CONSTRAINT pk_class_schedule PRIMARY KEY (branch_office_id, day, time)
+);
+
+CREATE TABLE children (
+    id                         UUID  NOT NULL,
+    parent_id                  UUID  NOT NULL,
+    branch_office_id           UUID  NOT NULL,
+    person_last_name           TEXT  NOT NULL,
+    person_first_name          TEXT  NOT NULL,
+    person_patronymic          TEXT  NOT NULL,
+    birthday                   DATE  NOT NULL,
+    diagnosis                  TEXT  NOT NULL,
+    tuition_balance            int   NOT NULL,
+    number_classes_per_month   int   NOT NULL,
+    notes                      TEXT  NULL,
+    CONSTRAINT pk_children PRIMARY KEY (id)
 );

@@ -1,7 +1,7 @@
 package by.sportliner.lk.core.service;
 
+import by.sportliner.lk.core.model.Child;
 import by.sportliner.lk.core.model.UserAccount;
-import org.apache.catalina.User;
 
 import java.util.List;
 
@@ -12,5 +12,9 @@ public interface UserAccountService {
     UserAccount getUserAccountById(String id);
 
     List<UserAccount> getTrainers();
+
+    void deleteUserAccountById(String id);
+
+    UserAccount saveUserAccountAndChildren(UserAccount userAccount, List<Child> children);
 
 }

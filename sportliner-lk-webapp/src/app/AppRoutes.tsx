@@ -5,6 +5,8 @@ import {Authorities} from 'app/logic/store/Authorities';
 import {PageMeta} from 'kit/navigation/PageMeta';
 import BranchOfficeListPage from "./logic/branchOffice/list/BranchOfficeListPage";
 import BranchOfficeEditPage from "./logic/branchOffice/edit/BranchOfficeEditPage";
+import UserListPage from "./logic/user/list/UserListPage";
+import UserEditPage from "./logic/user/edit/UserEditPage";
 
 export const AppRoutes = {
 
@@ -35,6 +37,25 @@ export const AppRoutes = {
         path: '/branchOffices/:branchOfficeId',
         render: (props) => <BranchOfficeEditPage branchOfficeId={props.params.branchOfficeId}/>,
         renderParameters: (object) => ({branchOfficeId: object.branchOfficeId}),
+        requiredAuthorities: Authorities.ADMINISTRATIVE
+    }),
+
+    userListPage: new PageMeta<void>({
+        path: '/users',
+        render: () => <UserListPage/>,
+        requiredAuthorities: Authorities.ADMINISTRATIVE
+    }),
+
+    userCreatePage: new PageMeta<void>({
+        path: '/users/new',
+        render: () => <UserEditPage/>,
+        requiredAuthorities: Authorities.ADMINISTRATIVE
+    }),
+
+    userEditPage: new PageMeta<{ userAccountId: string }>({
+        path: '/users/:userAccountId',
+        render: (props) => <UserEditPage userAccountId={props.params.userAccountId}/>,
+        renderParameters: (object) => ({userAccountId: object.userAccountId}),
         requiredAuthorities: Authorities.ADMINISTRATIVE
     }),
 

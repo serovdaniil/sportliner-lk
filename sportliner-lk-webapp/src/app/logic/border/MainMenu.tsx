@@ -88,6 +88,14 @@ export const MainMenu: React.FC = () => {
             pageUrl: AppRoutes.branchOfficeListPage.toUrl(),
             icon: <HomeOutlined/>,
             items: []
+        },
+        {
+            id: 'users',
+            title: 'Список пользователей',
+            page: AppRoutes.userListPage,
+            pageUrl: AppRoutes.userListPage.toUrl(),
+            icon: <HomeOutlined/>,
+            items: []
         }
     ];
 

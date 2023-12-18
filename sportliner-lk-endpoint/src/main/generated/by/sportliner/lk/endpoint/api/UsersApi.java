@@ -70,6 +70,36 @@ public interface UsersApi {
 
 
     /**
+     * DELETE /users/{id} : Delete user by ID
+     *
+     * @param id  (required)
+     * @return Successfully deleted (status code 200)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "deleteUser",
+        summary = "Delete user by ID",
+        tags = { "users" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/users/{id}"
+    )
+    ResponseEntity<Void> deleteUser(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id
+    ) throws Exception;
+
+
+    /**
      * GET /users/{id} : Get user account by ID
      *
      * @param id  (required)

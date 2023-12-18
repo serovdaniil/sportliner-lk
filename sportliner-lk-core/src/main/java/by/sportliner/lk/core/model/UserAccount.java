@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -82,6 +83,18 @@ public class UserAccount extends AbstractDataObject {
     private String patronymic;
 
     /**
+     * Pay Attention.
+     */
+    @Column(name = "pay_attention", nullable = false)
+    private boolean payAttention;
+
+    /**
+     * Reason.
+     */
+    @Column(name = "reason")
+    private String reason;
+
+    /**
      * Account creation timestamp.
      */
     @Column(name = "create_timestamp", nullable = false)
@@ -98,7 +111,6 @@ public class UserAccount extends AbstractDataObject {
      */
     @Column(name = "login_timestamp")
     private Instant loginTimestamp;
-
 
     public String getUsername() {
         return username;
@@ -178,6 +190,22 @@ public class UserAccount extends AbstractDataObject {
 
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
+    }
+
+    public boolean isPayAttention() {
+        return payAttention;
+    }
+
+    public void setPayAttention(boolean payAttention) {
+        this.payAttention = payAttention;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public Instant getCreateTimestamp() {

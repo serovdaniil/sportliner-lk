@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    Child,
+    ChildFromJSON,
+    ChildFromJSONTyped,
+    ChildToJSON,
     UserRole,
     UserRoleFromJSON,
     UserRoleFromJSONTyped,
@@ -105,6 +109,24 @@ export interface UserAccount {
      * @memberof UserAccount
      */
     readonly loginTimestamp?: Date;
+    /**
+     * Whether attention to the user is required
+     * @type {boolean}
+     * @memberof UserAccount
+     */
+    payAttention: boolean;
+    /**
+     * The reason why attention is required
+     * @type {string}
+     * @memberof UserAccount
+     */
+    reason?: string;
+    /**
+     * Children who will attend the classes
+     * @type {Array<Child>}
+     * @memberof UserAccount
+     */
+    children?: Array<Child>;
 }
 
 export function UserAccountFromJSON(json: any): UserAccount {
@@ -130,6 +152,9 @@ export function UserAccountFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'createTimestamp': (new Date(json['createTimestamp'])),
         'updateTimestamp': !exists(json, 'updateTimestamp') ? undefined : (new Date(json['updateTimestamp'])),
         'loginTimestamp': !exists(json, 'loginTimestamp') ? undefined : (new Date(json['loginTimestamp'])),
+        'payAttention': json['payAttention'],
+        'reason': !exists(json, 'reason') ? undefined : json['reason'],
+        'children': !exists(json, 'children') ? undefined : ((json['children'] as Array<any>).map(ChildFromJSON)),
     };
 }
 
@@ -155,6 +180,9 @@ export function UserAccountToJSONTyped(value?: UserAccount | null, ignoreDiscrim
         'firstName': value.firstName,
         'patronymic': value.patronymic,
         'lastName': value.lastName,
+        'payAttention': value.payAttention,
+        'reason': value.reason,
+        'children': value.children === undefined ? undefined : ((value.children as Array<any>).map(ChildToJSON)),
     };
 }
 

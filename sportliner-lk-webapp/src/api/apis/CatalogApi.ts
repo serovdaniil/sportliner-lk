@@ -15,9 +15,12 @@
 
 import * as runtime from '../runtime';
 import type {
+  BranchOfficeItem,
   UserAccountItem,
 } from '../models';
 import {
+    BranchOfficeItemFromJSON,
+    BranchOfficeItemToJSON,
     UserAccountItemFromJSON,
     UserAccountItemToJSON,
 } from '../models';
@@ -26,6 +29,40 @@ import {
  * 
  */
 export class CatalogApi extends runtime.BaseAPI {
+
+    /**
+     * Get branch offices
+     */
+    async getAvailableBranchOfficesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BranchOfficeItem>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/availableBranchOffices`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BranchOfficeItemFromJSON));
+    }
+
+    /**
+     * Get branch offices
+     */
+    async getAvailableBranchOffices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BranchOfficeItem>> {
+        const response = await this.getAvailableBranchOfficesRaw(initOverrides);
+        return await response.value();
+    }
 
     /**
      * Get trainers
