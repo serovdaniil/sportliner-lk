@@ -1,4 +1,4 @@
-import {Form, FormInstance, Input, Select, Space} from "antd";
+import {Form, Input, Select, Space} from "antd";
 import {observer} from "mobx-react";
 import React, {FC} from "react";
 import {ChildAttributes} from "./ChildAttributes";
@@ -6,20 +6,21 @@ import {maxValueValidator, minValueValidator, requiredWithTrimValidator} from ".
 import {BranchOfficeItem} from "../../../../api";
 import LocalDatePicker from "../../../components/LocalDatePicker/LocalDatePicker";
 import TextArea from "antd/es/input/TextArea";
+import {useForm} from "antd/es/form/Form";
 
 interface Props {
     child: ChildAttributes;
     branchOffices: BranchOfficeItem[];
-    form: FormInstance;
 }
 
 const ChildForm: FC<Props> = (props: Props) => {
+    const [form] = useForm();
     const child = props.child;
 
     return (
         <Space style={{width: "100%"}} direction="vertical" size={25}>
             <Form
-                form={props.form}
+                form={form}
                 autoComplete="off"
                 layout="vertical"
                 style={{width: "335px"}}

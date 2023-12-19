@@ -1,6 +1,5 @@
 package by.sportliner.lk.endpoint.controller;
 
-import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.service.BranchOfficeService;
 import by.sportliner.lk.core.service.UserAccountService;
 import by.sportliner.lk.endpoint.api.BranchOfficeItemDto;
@@ -34,7 +33,7 @@ public class CatalogApiController implements CatalogApi {
 
     @Override
     public ResponseEntity<List<BranchOfficeItemDto>> getAvailableBranchOffices() {
-        return ResponseEntity.ok(branchOfficeService.getAllBranchOffices().stream()
+        return ResponseEntity.ok(branchOfficeService.findAll().stream()
             .map(it -> new BranchOfficeItemDto()
                 .id(it.getId())
                 .address(it.getAddress().getFullAddress())

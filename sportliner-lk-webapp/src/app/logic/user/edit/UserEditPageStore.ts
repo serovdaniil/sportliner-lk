@@ -1,6 +1,6 @@
 import {BranchOfficeItem, UserAccount} from 'api';
 import {catalogApi, usersApi} from 'app/service/Apis';
-import {action, computed, makeObservable, observable} from 'mobx';
+import {action, computed, makeObservable, observable, runInAction} from 'mobx';
 import DataValidationException from "../../../service/exceptions/DataValidationException";
 import {UserAttributes} from "./UserAttributes";
 
@@ -34,7 +34,9 @@ export class UserEditPageStore {
         if (userAccountId != null) {
             const userAccount = await usersApi.getUserAccount({id: userAccountId});
 
-            this._userAccount = new UserAttributes(userAccount);
+            runInAction(() => {
+                this._userAccount = new UserAttributes(userAccount);
+            })
         }
 
         this._userAccountId = userAccountId;

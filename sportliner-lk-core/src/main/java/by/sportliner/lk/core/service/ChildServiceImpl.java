@@ -16,7 +16,7 @@ public class ChildServiceImpl implements ChildService{
     private ChildRepository childRepository;
 
     @Override
-    public Child findChildById(String id) {
+    public Child getChildById(String id) {
         return childRepository.getReferenceById(id);
     }
 
@@ -27,14 +27,8 @@ public class ChildServiceImpl implements ChildService{
 
     @Override
     @Transactional
-    public void saveChildren(List<Child> children) {
+    public void save(List<Child> children) {
         childRepository.saveAll(children);
-    }
-
-    @Override
-    @Transactional
-    public void saveChild(Child child) {
-        childRepository.save(child);
     }
 
     @Override

@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Child.
+ */
 @Entity
 @Table(name = "children")
 public class Child extends AbstractDataObject {

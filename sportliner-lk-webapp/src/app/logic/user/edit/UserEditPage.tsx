@@ -27,6 +27,7 @@ import DateUtils from "../../../utils/DateUtils";
 import ChildForm from "./ChildForm";
 import AppNotification from "../../notification/AppNotification";
 import {formatUserRole} from "../list/UserAccountCriteriaBlock";
+import {ChildAttributes} from "./ChildAttributes";
 
 const PAGE_TITLE = "Редактирование пользователя";
 const {Panel} = Collapse;
@@ -78,6 +79,17 @@ const UserEditPage: FC<Props> = (props: Props) => {
     }
 
     const isNewUser = props.userAccountId == null;
+
+    const renderChildFullName = (child: ChildAttributes) => {
+        if (child.lastName == null && child.firstName == null && child.patronymic == null) {
+            return "Новый ребенок"
+        }
+
+        return "${lastName} ${firstName} ${patronymic}"
+            .replace("${lastName}", child.lastName || "")
+            .replace("${firstName}", child.firstName || "")
+            .replace("${patronymic}", child.patronymic || "");
+    }
 
     const hasPassword = () => {
         if (!isNewUser) {
@@ -373,77 +385,76 @@ const UserEditPage: FC<Props> = (props: Props) => {
 
                 </Row>
 
-                {store.userAccount?.role == UserRole.PARENT && (
-                    <Row className="dp-row">
-                        <Space direction={"horizontal"}>
-                            <Typography>Дети</Typography>
-
-                            <Button
-                                className="dp-button"
-                                type="link"
-                                onClick={() => userAttributes.addChild()}
-                            >
-                                Добавить ребенка
-                            </Button>
-                        </Space>
-
-                        <Collapse accordion style={{width: "100%"}}>
-                            {userAttributes.children.map((child, index) => {
-                                return (
-                                    <Panel
-                                        header={
-                                            <Space direction={"horizontal"}>
-                                                <Typography>
-                                                    {child.lastName + " " + child.firstName + " " + child.patronymic}
-                                                </Typography>
-                                                <Tooltip title="Удалить">
-                                                    <a onClick={() => userAttributes.deleteChild(index)}>
-                                                        <DeleteTwoTone twoToneColor="red"/>
-                                                    </a>
-                                                </Tooltip>
-                                            </Space>
-                                        }
-                                        key={child.id!}
-                                    >
-                                        <ChildForm
-                                            child={child}
-                                            branchOffices={store.branchOffices}
-                                            form={form}
-                                        />
-                                    </Panel>
-
-                                )
-                            })}
-                        </Collapse>
-                    </Row>
-                )}
-
-                <Row className="dp-row">
-                    <Space direction={"vertical"}>
-                        {userAttributes.createTimestamp && (
-                            <Typography.Paragraph className="dp-regular-text">
-                                Дата создания аккаунта:&nbsp;
-                                {DateUtils.formatDateLocalWithTime(userAttributes.createTimestamp)}
-                            </Typography.Paragraph>
-                        )}
-
-                        {userAttributes.updateTimestamp && (
-                            <Typography.Paragraph className="dp-regular-text">
-                                Дата последнего обновления пользователя:&nbsp;
-                                {DateUtils.formatDateLocalWithTime(userAttributes.updateTimestamp)}
-                            </Typography.Paragraph>
-                        )}
-
-                        {userAttributes.loginTimestamp && (
-                            <Typography.Paragraph className="dp-regular-text">
-                                Последний вход в систему:&nbsp;
-                                {DateUtils.formatDateLocalWithTime(userAttributes.loginTimestamp)}
-                            </Typography.Paragraph>
-                        )}
-                    </Space>
-                </Row>
-
             </Form>
+
+            {store.userAccount?.role == UserRole.PARENT && (
+                <Row className="dp-row">
+                    <Space direction={"horizontal"}>
+                        <Typography>Дети</Typography>
+
+                        <Button
+                            className="dp-button"
+                            type="link"
+                            onClick={() => userAttributes.addChild()}
+                        >
+                            Добавить ребенка
+                        </Button>
+                    </Space>
+
+                    <Collapse accordion style={{width: "100%"}}>
+                        {userAttributes.children.map((child, index) => {
+                            return (
+                                <Panel
+                                    header={
+                                        <Space direction={"horizontal"}>
+                                            <Typography>
+                                                {renderChildFullName(child)}
+                                            </Typography>
+                                            <Tooltip title="Удалить">
+                                                <a onClick={() => userAttributes.deleteChild(index)}>
+                                                    <DeleteTwoTone twoToneColor="red"/>
+                                                </a>
+                                            </Tooltip>
+                                        </Space>
+                                    }
+                                    key={index}
+                                >
+                                    <ChildForm
+                                        child={child}
+                                        branchOffices={store.branchOffices}
+                                    />
+                                </Panel>
+
+                            )
+                        })}
+                    </Collapse>
+                </Row>
+            )}
+
+            <Row className="dp-row">
+                <Space direction={"vertical"}>
+                    {userAttributes.createTimestamp && (
+                        <Typography.Paragraph className="dp-regular-text">
+                            Дата создания аккаунта:&nbsp;
+                            {DateUtils.formatDateLocalWithTime(userAttributes.createTimestamp)}
+                        </Typography.Paragraph>
+                    )}
+
+                    {userAttributes.updateTimestamp && (
+                        <Typography.Paragraph className="dp-regular-text">
+                            Дата последнего обновления пользователя:&nbsp;
+                            {DateUtils.formatDateLocalWithTime(userAttributes.updateTimestamp)}
+                        </Typography.Paragraph>
+                    )}
+
+                    {userAttributes.loginTimestamp && (
+                        <Typography.Paragraph className="dp-regular-text">
+                            Последний вход в систему:&nbsp;
+                            {DateUtils.formatDateLocalWithTime(userAttributes.loginTimestamp)}
+                        </Typography.Paragraph>
+                    )}
+                </Space>
+            </Row>
         </PageBorder>
     );
 };

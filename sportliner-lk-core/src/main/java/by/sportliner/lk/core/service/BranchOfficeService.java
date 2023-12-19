@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BranchOfficeService {
 
-    List<BranchOffice> getAllBranchOffices();
+    List<BranchOffice> findAll();
 
     BranchOffice getById(String id);
 

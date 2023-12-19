@@ -60,7 +60,7 @@ public class BranchOfficeApiController implements BranchOfficeApi {
 
     @Override
     public ResponseEntity<List<BranchOfficeListItemDto>> getBranchOffices() {
-        return ResponseEntity.ok(branchOfficeService.getAllBranchOffices().stream()
+        return ResponseEntity.ok(branchOfficeService.findAll().stream()
             .map(it -> new BranchOfficeListItemDto()
                 .id(it.getId())
                 .name(it.getName())
@@ -106,7 +106,7 @@ public class BranchOfficeApiController implements BranchOfficeApi {
 
                 classSchedule.setDay(DayOfWeek.valueOf(it.getDay().name()));
                 classSchedule.setTime(it.getTime());
-                classSchedule.setTrainer(userAccountService.getUserAccountById(it.getTrainer().getId()));
+                classSchedule.setTrainer(userAccountService.getById(it.getTrainer().getId()));
 
                 return classSchedule;
             })

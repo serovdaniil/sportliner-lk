@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -23,14 +24,13 @@ public class UserAccountServiceImpl implements UserAccountService {
     private ChildService childService;
 
     @Override
-    public List<UserAccount> getUserAccounts(UserAccountCriteria criteria) {
+    public List<UserAccount> findAll(UserAccountCriteria criteria) {
         return userAccountRepository.findAll(toSpecification(criteria));
     }
 
     @Override
-    public UserAccount getUserAccountById(String id) {
-        return userAccountRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("User with %s not found", id)));
+    public UserAccount getById(String id) {
+        return userAccountRepository.getReferenceById(id);
     }
 
     @Override
@@ -40,17 +40,24 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     @Transactional
-    public void deleteUserAccountById(String id) {
+    public void deleteById(String id) {
         userAccountRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    public UserAccount saveUserAccountAndChildren(UserAccount userAccount, List<Child> children) {
+    public UserAccount saveWithChildren(UserAccount userAccount, List<Child> children) {
+        if (userAccount.getId() == null) {
+            userAccount.setCreateTimestamp(Instant.now());
+        } else {
+            userAccount.setUpdateTimestamp(Instant.now());
+        }
+
+
         UserAccount target = userAccountRepository.save(userAccount);
 
         childService.deleteByParent(target);
-        childService.saveChildren(children);
+        childService.save(children);
 
         return target;
     }

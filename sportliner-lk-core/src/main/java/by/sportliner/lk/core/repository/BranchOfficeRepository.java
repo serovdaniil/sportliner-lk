@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Repository for {@link BranchOffice}.
+ */
 @Repository
 public interface BranchOfficeRepository extends JpaRepositoryImplementation<BranchOffice, String> {
 

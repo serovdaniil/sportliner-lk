@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface UserAccountService {
 
-    List<UserAccount> getUserAccounts(UserAccountCriteria criteria);
+    List<UserAccount> findAll(UserAccountCriteria criteria);
 
-    UserAccount getUserAccountById(String id);
+    UserAccount getById(String id);
 
     List<UserAccount> getTrainers();
 
-    void deleteUserAccountById(String id);
+    void deleteById(String id);
 
-    UserAccount saveUserAccountAndChildren(UserAccount userAccount, List<Child> children);
+    UserAccount saveWithChildren(UserAccount userAccount, List<Child> children);
 
 }

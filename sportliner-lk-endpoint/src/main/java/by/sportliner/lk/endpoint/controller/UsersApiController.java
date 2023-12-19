@@ -33,30 +33,18 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<Void> createUser(UserAccountDto userAccountDto) {
         UserAccount userAccount = new UserAccount();
 
-        userAccount.setUsername(userAccountDto.getUsername());
-        userAccount.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(userAccountDto.getPassword()));
-        userAccount.setPasswordMustBeChanged(true);
-        userAccount.setPasswordTimestamp(Instant.now());
-        userAccount.setRole(UserRole.valueOf(userAccountDto.getRole().name()));
-        userAccount.setLastName(userAccountDto.getLastName());
-        userAccount.setFirstName(userAccountDto.getFirstName());
-        userAccount.setPatronymic(userAccountDto.getPatronymic());
-        userAccount.setPhone(userAccountDto.getPhone());
-        userAccount.setEmail(userAccountDto.getEmail());
-        userAccount.setCreateTimestamp(Instant.now());
-        userAccount.setPayAttention(userAccountDto.isPayAttention());
-        userAccount.setReason(userAccountDto.getReason());
+        updateFields(userAccountDto, userAccount);
 
         List<Child> children = convert(userAccount, userAccountDto.getChildren());
 
-        userAccountService.saveUserAccountAndChildren(userAccount, children);
+        userAccountService.saveWithChildren(userAccount, children);
 
         return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<UserAccountDto> getUserAccount(String id) {
-        UserAccount userAccount = userAccountService.getUserAccountById(id);
+        UserAccount userAccount = userAccountService.getById(id);
         List<Child> children = childService.findChildrenByParent(userAccount);
 
         return ResponseEntity.ok(new UserAccountDto()
@@ -99,7 +87,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<List<UserAccountListItemDto>> getUsers(UserAccountCriteriaDto criteria) {
         UserAccountCriteria userAccountCriteria = convert(criteria);
 
-        return ResponseEntity.ok(userAccountService.getUserAccounts(userAccountCriteria).stream()
+        return ResponseEntity.ok(userAccountService.findAll(userAccountCriteria).stream()
             .map(userAccount -> new UserAccountListItemDto()
                 .id(userAccount.getId())
                 .username(userAccount.getUsername())
@@ -114,36 +102,39 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<Void> updateUserAccount(String id, UserAccountDto userAccountDto) {
-        UserAccount userAccount = userAccountService.getUserAccountById(id);
+        UserAccount userAccount = userAccountService.getById(id);
 
-        if (userAccountDto.getPassword() != null) {
-            userAccount.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(userAccountDto.getPassword()));
-            userAccount.setPasswordMustBeChanged(true);
-            userAccount.setPasswordTimestamp(Instant.now());
-        }
-
-        userAccount.setRole(UserRole.valueOf(userAccountDto.getRole().name()));
-        userAccount.setLastName(userAccountDto.getLastName());
-        userAccount.setFirstName(userAccountDto.getFirstName());
-        userAccount.setPatronymic(userAccountDto.getPatronymic());
-        userAccount.setPhone(userAccountDto.getPhone());
-        userAccount.setEmail(userAccountDto.getEmail());
-        userAccount.setPayAttention(userAccountDto.isPayAttention());
-        userAccount.setReason(userAccountDto.getReason());
-        userAccount.setUpdateTimestamp(Instant.now());
+        updateFields(userAccountDto, userAccount);
 
         List<Child> children = convert(userAccount, userAccountDto.getChildren());
 
-        userAccountService.saveUserAccountAndChildren(userAccount, children);
+        userAccountService.saveWithChildren(userAccount, children);
 
         return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<Void> deleteUser(String id) {
-        userAccountService.deleteUserAccountById(id);
+        userAccountService.deleteById(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    private void updateFields(UserAccountDto dto, UserAccount target) {
+        if (dto.getPassword() != null) {
+            target.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(dto.getPassword()));
+            target.setPasswordMustBeChanged(true);
+            target.setPasswordTimestamp(Instant.now());
+        }
+
+        target.setRole(UserRole.valueOf(dto.getRole().name()));
+        target.setLastName(dto.getLastName());
+        target.setFirstName(dto.getFirstName());
+        target.setPatronymic(dto.getPatronymic());
+        target.setPhone(dto.getPhone());
+        target.setEmail(dto.getEmail());
+        target.setPayAttention(dto.isPayAttention());
+        target.setReason(dto.getReason());
     }
 
     private List<Child> convert(UserAccount parent, List<ChildDto> childrenDto) {
@@ -155,7 +146,7 @@ public class UsersApiController implements UsersApi {
             .map(it -> {
                 Child child = it.getId() == null
                     ? new Child()
-                    : childService.findChildById(it.getId());
+                    : childService.getChildById(it.getId());
 
                 child.setLastName(it.getLastName());
                 child.setFirstName(it.getFirstName());

@@ -15,14 +15,13 @@ public class BranchOfficeServiceImpl implements BranchOfficeService {
     private BranchOfficeRepository branchOfficeRepository;
 
     @Override
-    public List<BranchOffice> getAllBranchOffices() {
+    public List<BranchOffice> findAll() {
         return branchOfficeRepository.findAll();
     }
 
     @Override
     public BranchOffice getById(String id) {
-        return branchOfficeRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Branch office with %s not found", id)));
+        return branchOfficeRepository.getReferenceById(id);
     }
 
     @Override
