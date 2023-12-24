@@ -13,7 +13,8 @@ public enum UserRole {
     ADMIN(
         UserAuthority.AUTHENTICATED,
         UserAuthority.ACCESS_APPLICATION,
-        UserAuthority.ADMINISTRATIVE
+        UserAuthority.ADMINISTRATIVE,
+        UserAuthority.TRAINER
     ),
 
     /**

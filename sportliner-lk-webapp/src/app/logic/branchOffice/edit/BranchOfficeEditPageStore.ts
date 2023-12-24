@@ -59,7 +59,7 @@ export class BranchOfficeEditPageStore {
         Object.values(DayOfWeek).map((day) => {
             const schedules = this._dayToClassSchedules.get(day)!;
 
-            classSchedules.concat(...schedules)
+            classSchedules = classSchedules.concat(schedules)
         })
 
         return classSchedules;
