@@ -3,6 +3,7 @@ import {sessionStorageWorker} from "app/App";
 import {authApi} from 'app/service/Apis';
 import {AuthState} from 'kit/security/AuthState';
 import {action, computed, makeObservable, observable, runInAction} from 'mobx';
+import {Authorities} from "./Authorities";
 
 interface Tokens {
     accessToken: string;
@@ -152,6 +153,11 @@ export default class AuthStore {
         }
 
         return AuthState.authenticated(this.state.info.authorities);
+    }
+
+    @computed
+    get isAdmin(): boolean {
+        return this.state != null && this.state.info.authorities.includes(Authorities.ADMINISTRATIVE);
     }
 
     private isExpired(): boolean {

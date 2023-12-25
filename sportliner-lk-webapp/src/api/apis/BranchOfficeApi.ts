@@ -16,13 +16,22 @@
 import * as runtime from '../runtime';
 import type {
   BranchOffice,
+  BranchOfficeItem,
   BranchOfficeListItem,
+  ChildAttendance,
+  ChildInfo,
 } from '../models';
 import {
     BranchOfficeFromJSON,
     BranchOfficeToJSON,
+    BranchOfficeItemFromJSON,
+    BranchOfficeItemToJSON,
     BranchOfficeListItemFromJSON,
     BranchOfficeListItemToJSON,
+    ChildAttendanceFromJSON,
+    ChildAttendanceToJSON,
+    ChildInfoFromJSON,
+    ChildInfoToJSON,
 } from '../models';
 
 export interface CreateBranchOfficeRequest {
@@ -33,8 +42,28 @@ export interface DeleteBranchOfficeRequest {
     id: string;
 }
 
+export interface GetAttendancesForBranchOfficeRequest {
+    id: string;
+    period: string;
+}
+
 export interface GetBranchOfficeRequest {
     id: string;
+}
+
+export interface GetChildrenForBranchOfficeRequest {
+    id: string;
+}
+
+export interface GetSchedulesForBranchOfficeRequest {
+    id: string;
+    period: string;
+}
+
+export interface SaveAttendancesRequest {
+    id: string;
+    period: string;
+    childAttendance: Array<ChildAttendance>;
 }
 
 export interface UpdateBranchOfficeRequest {
@@ -125,6 +154,48 @@ export class BranchOfficeApi extends runtime.BaseAPI {
     }
 
     /**
+     * Get attendances for branch office of target period
+     */
+    async getAttendancesForBranchOfficeRaw(requestParameters: GetAttendancesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ChildAttendance>>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getAttendancesForBranchOffice.');
+        }
+
+        if (requestParameters.period === null || requestParameters.period === undefined) {
+            throw new runtime.RequiredError('period','Required parameter requestParameters.period was null or undefined when calling getAttendancesForBranchOffice.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/branchOffices/{id}/attendances/{period}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"period"}}`, encodeURIComponent(String(requestParameters.period))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ChildAttendanceFromJSON));
+    }
+
+    /**
+     * Get attendances for branch office of target period
+     */
+    async getAttendancesForBranchOffice(requestParameters: GetAttendancesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ChildAttendance>> {
+        const response = await this.getAttendancesForBranchOfficeRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Get branch office by ID
      */
     async getBranchOfficeRaw(requestParameters: GetBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BranchOffice>> {
@@ -163,6 +234,40 @@ export class BranchOfficeApi extends runtime.BaseAPI {
     }
 
     /**
+     * Get branch office of current trainer
+     */
+    async getBranchOfficeOfCurrentTrainerRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BranchOfficeItem>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/branchOffices/currentTrainer`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BranchOfficeItemFromJSON(jsonValue));
+    }
+
+    /**
+     * Get branch office of current trainer
+     */
+    async getBranchOfficeOfCurrentTrainer(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BranchOfficeItem> {
+        const response = await this.getBranchOfficeOfCurrentTrainerRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Get branch offices
      */
     async getBranchOfficesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BranchOfficeListItem>>> {
@@ -194,6 +299,134 @@ export class BranchOfficeApi extends runtime.BaseAPI {
     async getBranchOffices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BranchOfficeListItem>> {
         const response = await this.getBranchOfficesRaw(initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Get children for branch office
+     */
+    async getChildrenForBranchOfficeRaw(requestParameters: GetChildrenForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ChildInfo>>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getChildrenForBranchOffice.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/branchOffices/{id}/children`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ChildInfoFromJSON));
+    }
+
+    /**
+     * Get children for branch office
+     */
+    async getChildrenForBranchOffice(requestParameters: GetChildrenForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ChildInfo>> {
+        const response = await this.getChildrenForBranchOfficeRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get schedules for branch office
+     */
+    async getSchedulesForBranchOfficeRaw(requestParameters: GetSchedulesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: Array<string>; }>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getSchedulesForBranchOffice.');
+        }
+
+        if (requestParameters.period === null || requestParameters.period === undefined) {
+            throw new runtime.RequiredError('period','Required parameter requestParameters.period was null or undefined when calling getSchedulesForBranchOffice.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/branchOffices/{id}/schedules/{period}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"period"}}`, encodeURIComponent(String(requestParameters.period))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Get schedules for branch office
+     */
+    async getSchedulesForBranchOffice(requestParameters: GetSchedulesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: Array<string>; }> {
+        const response = await this.getSchedulesForBranchOfficeRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Save attendance
+     */
+    async saveAttendancesRaw(requestParameters: SaveAttendancesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling saveAttendances.');
+        }
+
+        if (requestParameters.period === null || requestParameters.period === undefined) {
+            throw new runtime.RequiredError('period','Required parameter requestParameters.period was null or undefined when calling saveAttendances.');
+        }
+
+        if (requestParameters.childAttendance === null || requestParameters.childAttendance === undefined) {
+            throw new runtime.RequiredError('childAttendance','Required parameter requestParameters.childAttendance was null or undefined when calling saveAttendances.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/branchOffices/{id}/attendances/{period}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"period"}}`, encodeURIComponent(String(requestParameters.period))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.childAttendance.map(ChildAttendanceToJSON),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Save attendance
+     */
+    async saveAttendances(requestParameters: SaveAttendancesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.saveAttendancesRaw(requestParameters, initOverrides);
     }
 
     /**

@@ -82,3 +82,11 @@ CREATE TABLE children (
     notes                      TEXT  NULL,
     CONSTRAINT pk_children PRIMARY KEY (id)
 );
+
+CREATE TABLE attendance (
+    id       UUID NOT NULL,
+    child_id UUID NOT NULL,
+    date     DATE NOT NULL,
+    time     TIME NOT NULL,
+    CONSTRAINT pk_attendance PRIMARY KEY (id)
+);

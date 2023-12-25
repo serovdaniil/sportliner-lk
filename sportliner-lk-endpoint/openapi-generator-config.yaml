@@ -22,6 +22,7 @@ schemaMappings:
   LocalDate: java.time.LocalDate
   DateTime: java.time.Instant
   LocalTime: java.time.LocalTime
+  YearMonth: java.time.YearMonth
 typeMappings:
   DateTime: java.time.Instant
 

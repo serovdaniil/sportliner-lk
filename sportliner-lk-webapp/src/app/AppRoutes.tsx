@@ -1,3 +1,4 @@
+import AttendancePage from "app/logic/attendance/AttendancePage";
 import AuthenticationPage from 'app/logic/authentication/AuthenticationPage';
 import SomethingWentWrongPage from 'app/logic/error/SomethingWentWrongPage';
 import HomePage from 'app/logic/HomePage';
@@ -43,20 +44,26 @@ export const AppRoutes = {
     userListPage: new PageMeta<void>({
         path: '/users',
         render: () => <UserListPage/>,
-        requiredAuthorities: Authorities.ADMINISTRATIVE
+        requiredAuthorities: Authorities.TRAINER
     }),
 
     userCreatePage: new PageMeta<void>({
         path: '/users/new',
         render: () => <UserEditPage/>,
-        requiredAuthorities: Authorities.ADMINISTRATIVE
+        requiredAuthorities: Authorities.TRAINER
     }),
 
     userEditPage: new PageMeta<{ userAccountId: string }>({
         path: '/users/:userAccountId',
         render: (props) => <UserEditPage userAccountId={props.params.userAccountId}/>,
         renderParameters: (object) => ({userAccountId: object.userAccountId}),
-        requiredAuthorities: Authorities.ADMINISTRATIVE
+        requiredAuthorities: Authorities.TRAINER
+    }),
+
+    attendances: new PageMeta<void>({
+        path: '/attendances',
+        render: () => <AttendancePage/>,
+        requiredAuthorities: Authorities.TRAINER
     }),
 
     somethingWentWrongPage: new PageMeta<void>({

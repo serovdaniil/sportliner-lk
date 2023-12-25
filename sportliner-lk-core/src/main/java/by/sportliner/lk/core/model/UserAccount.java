@@ -236,6 +236,10 @@ public class UserAccount extends AbstractDataObject {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder().matches(rawPassword, password);
     }
 
+    public boolean isTrainer() {
+        return getRole().equals(UserRole.TRAINER);
+    }
+
     public boolean hasAuthority(UserAuthority authority) {
         return getRole().getAuthorities().contains(authority);
     }

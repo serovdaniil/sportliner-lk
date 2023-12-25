@@ -6,10 +6,10 @@ const ForbiddenErrorPage: React.FC = () => (
         <Result
             status="403"
             title="403"
-            subTitle="Sorry, you are not authorized to access this page."
+            subTitle="Извините, Вы не имеете прав для отображения данной страницы."
             extra={(
                 <Button className="dp-button" type="primary">
-                    <Link to="/">Back Home</Link>
+                    <Link to="/">Вернуться на главную страницу</Link>
                 </Button>
             )}
         />

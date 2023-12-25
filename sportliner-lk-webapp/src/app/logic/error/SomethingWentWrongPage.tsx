@@ -10,8 +10,8 @@ interface SomethingWentWrongPageProps {
 const SomethingWentWrongPage: React.FC<SomethingWentWrongPageProps> = (props: SomethingWentWrongPageProps) => (
     <Result
         status={500}
-        title={props.title ?? 'Error'}
-        subTitle={props.subTitle ?? 'Sorry, something went wrong.'}
+        title={props.title ?? 'Ошибка'}
+        subTitle={props.subTitle ?? 'Извините, что-то пошло не так.'}
         extra={(
             <>
                 <Button
@@ -22,7 +22,7 @@ const SomethingWentWrongPage: React.FC<SomethingWentWrongPageProps> = (props: So
                         props.onButton && props.onButton();
                     }}
                 >
-                    Reload
+                    Перезагрузить
                 </Button>
 
                 <Button
@@ -30,7 +30,7 @@ const SomethingWentWrongPage: React.FC<SomethingWentWrongPageProps> = (props: So
                     type="primary"
                     onClick={props.onButton}
                 >
-                    <Link to="/">Back home</Link>
+                    <Link to="/">Вернуться на главную</Link>
                 </Button>
             </>
         )}

@@ -165,4 +165,13 @@ public class Child extends AbstractDataObject {
             .filter(Objects::nonNull)
             .collect(Collectors.joining(" "));
     }
+
+    public void minusClass() {
+        minusFewClasses(1);
+    }
+
+    public void minusFewClasses(int count) {
+        tuitionBalance = tuitionBalance - count;
+    }
+
 }

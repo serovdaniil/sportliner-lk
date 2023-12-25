@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './Attendance';
 export * from './AuthCredentials';
 export * from './AuthInfo';
 export * from './AuthResponse';
@@ -13,6 +14,8 @@ export * from './BranchOfficeAddress';
 export * from './BranchOfficeItem';
 export * from './BranchOfficeListItem';
 export * from './Child';
+export * from './ChildAttendance';
+export * from './ChildInfo';
 export * from './ClassSchedule';
 export * from './ClientVersionRejectedError';
 export * from './DataValidationError';

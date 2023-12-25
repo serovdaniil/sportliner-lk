@@ -315,6 +315,147 @@ paths:
         403:
           description: Access forbidden
 
+  /branchOffices/{id}/schedules/{period}:
+    get:
+      tags:
+        - branchOffice
+      operationId: getSchedulesForBranchOffice
+      summary: Get schedules for branch office
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: period
+          in: path
+          schema:
+            $ref: '#/components/schemas/YearMonth'
+          required: true
+      responses:
+        200:
+          description: Schedules
+          content:
+            application/json:
+              schema:
+               description: |-
+                 Schedules.
+
+                 Map: date -> times.
+               type: object
+               additionalProperties:
+                 items:
+                   $ref: '#/components/schemas/LocalTime'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /branchOffices/currentTrainer:
+    get:
+      tags:
+        - branchOffice
+      operationId: getBranchOfficeOfCurrentTrainer
+      summary: Get branch office of current trainer
+      responses:
+        200:
+          description: Branch office
+          content:
+            application/json:
+              schema:
+                description: Branch office
+                $ref: '#/components/schemas/BranchOfficeItem'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /branchOffices/{id}/attendances/{period}:
+    get:
+      tags:
+        - branchOffice
+      operationId: getAttendancesForBranchOffice
+      summary: Get attendances for branch office of target period
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: period
+          in: path
+          schema:
+            $ref: '#/components/schemas/YearMonth'
+          required: true
+      responses:
+        200:
+          description: Attendance for children
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ChildAttendance'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    put:
+      tags:
+        - branchOffice
+      operationId: saveAttendances
+      summary: Save attendance
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: period
+          in: path
+          schema:
+            $ref: '#/components/schemas/YearMonth'
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/ChildAttendance'
+      responses:
+        200:
+          description: Successfully saved
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+
+  /branchOffices/{id}/children:
+    get:
+      tags:
+        - branchOffice
+      operationId: getChildrenForBranchOffice
+      summary: Get children for branch office
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Children
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ChildInfo'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
   /availableBranchOffices:
     get:
       tags:
@@ -685,6 +826,49 @@ components:
           description: Trainer
           $ref: '#/components/schemas/UserAccountItem'
 
+    ChildInfo:
+      type: object
+      description: Child attendance
+      required:
+        - id
+        - fullName
+      properties:
+        id:
+          description: ID
+          type: string
+        fullName:
+          description: fullName
+          type: string
+
+    ChildAttendance:
+      type: object
+      description: Child attendance
+      required:
+        - childId
+        - attendances
+      properties:
+        childId:
+          description: Child ID
+          type: string
+        attendances:
+          description: Attendances
+          items:
+            $ref: '#/components/schemas/Attendance'
+
+    Attendance:
+      type: object
+      description: Child attendance
+      required:
+        - date
+        - time
+      properties:
+        date:
+          description: Date
+          $ref: '#/components/schemas/LocalDate'
+        time:
+          description: Time
+          $ref: '#/components/schemas/LocalTime'
+
     DayOfWeek:
       description: Day of week
       type: string
@@ -709,6 +893,13 @@ components:
         A date without a time-zone in the ISO-8601 calendar system.
       format: LocalDate
       example: 2022-10-25
+
+    YearMonth:
+      type: string
+      description: |
+        A year-month in the ISO-8601 calendar system.
+      format: YearMonth
+      example: 2021-05
 
     Versions:
       type: object
