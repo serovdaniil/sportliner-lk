@@ -32,10 +32,6 @@ public class AccountApiController implements AccountApi {
     @Override
     public ResponseEntity<Void> changeCurrentUserPassword(AuthChangePasswordDto authChangePasswordDto) {
         String username = authChangePasswordDto.getUsername();
-        if (!username.equals(targetUser().getUsername())) {
-              throw new DataValidationException("Invalid username!"); TODO
-        }
-
         String oldPassword = authChangePasswordDto.getOldPassword();
         String newPassword = authChangePasswordDto.getNewPassword();
 
