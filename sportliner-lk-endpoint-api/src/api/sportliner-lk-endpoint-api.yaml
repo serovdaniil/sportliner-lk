@@ -17,6 +17,8 @@ tags:
     description: Authentication operations
   - name: meta
     description: Base meta services
+  - name: account
+    description: Current user management services
   - name: users
     description: User operations
   - name: branchOffice
@@ -93,6 +95,92 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /account/profile:
+    get:
+      tags:
+        - account
+      operationId: getCurrentUserProfile
+      summary: Get current user's profile info
+      responses:
+        200:
+          description: User account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /account/password/change:
+    post:
+      tags:
+        - account
+      operationId: changeCurrentUserPassword
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthChangePassword'
+      responses:
+        200:
+          description: OK
+        401:
+          description: Invalid credentials
+        403:
+          description: Access forbidden
+
+  /account/child/{id}:
+    get:
+      tags:
+        - account
+      operationId: getChildTargetAccount
+      summary: Get child of target user account
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Child
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChildProfile'
+        401:
+          description: Invalid credentials
+        403:
+          description: Access forbidden
+    put:
+      tags:
+        - account
+      operationId: updateChildTargetAccount
+      summary: Update child of target user account
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChildProfile'
+      responses:
+        201:
+          description: Successfully updated
         401:
           description: Not authenticated
         403:
@@ -587,6 +675,82 @@ components:
           type: string
         expires_in:
           type: integer
+
+    UserProfile:
+      type: object
+      description: User account
+      required:
+        - id
+        - username
+        - email
+        - phone
+        - firstName
+        - patronymic
+        - lastName
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        firstName:
+          type: string
+        patronymic:
+          type: string
+        lastName:
+          type: string
+        children:
+          description: Children who will attend the classes
+          type: array
+          items:
+            $ref: '#/components/schemas/ChildInfo'
+
+    ChildProfile:
+      type: object
+      description: Child
+      required:
+        - id
+        - fullName
+        - birthday
+        - diagnosis
+        - tuitionBalance
+        - numberClassesPerMonth
+      properties:
+        id:
+          type: string
+          readOnly: true
+        fullName:
+          type: string
+        birthdate:
+          $ref: '#/components/schemas/LocalDate'
+        diagnosis:
+          type: string
+        tuitionBalance:
+          type: integer
+        numberClassesPerMonth:
+          type: integer
+        notes:
+          type: string
+
+    AuthChangePassword:
+      type: object
+      description: Credentials for authentication
+      required:
+        - username
+        - oldPassword
+        - newPassword
+      properties:
+        username:
+          type: string
+        oldPassword:
+          type: string
+          format: password
+        newPassword:
+          type: string
+          format: password
 
     UserAccount:
       type: object

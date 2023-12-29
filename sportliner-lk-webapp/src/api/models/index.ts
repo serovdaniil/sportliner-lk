@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './Attendance';
+export * from './AuthChangePassword';
 export * from './AuthCredentials';
 export * from './AuthInfo';
 export * from './AuthResponse';
@@ -16,6 +17,7 @@ export * from './BranchOfficeListItem';
 export * from './Child';
 export * from './ChildAttendance';
 export * from './ChildInfo';
+export * from './ChildProfile';
 export * from './ClassSchedule';
 export * from './ClientVersionRejectedError';
 export * from './DataValidationError';
@@ -31,5 +33,6 @@ export * from './UserAccount';
 export * from './UserAccountCriteria';
 export * from './UserAccountItem';
 export * from './UserAccountListItem';
+export * from './UserProfile';
 export * from './UserRole';
 export * from './Versions';

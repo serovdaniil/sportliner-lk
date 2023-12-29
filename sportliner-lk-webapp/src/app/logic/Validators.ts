@@ -16,6 +16,40 @@ export const requiredWithTrimValidator = (message = 'Поле обязатель
     },
 });
 
+export const passwordValidator = (): Rule => ({
+    validator(rule, value: string): Promise<void> | void {
+        if (value == null || value.length == 0) {
+            return Promise.resolve();
+        }
+
+        if (!/^[\x21-\x7E]+$/.test(value)) {
+            return reject('Value contains not allowed chars');
+        }
+
+        if (value.length < 8) {
+            return reject('Minimal length of the field is 8');
+        }
+
+        if (value.length > 20) {
+            return reject('Maximal length of the field is 20');
+        }
+
+        if (!/\d/.test(value)) {
+            return reject('Value should contain at least 1 digit');
+        }
+
+        if (!/[a-z]/.test(value)) {
+            return reject('Value should contain at least 1 lowercase letter');
+        }
+
+        if (!/[A-Z]/.test(value)) {
+            return reject('Value should contain at least 1 uppercase letter');
+        }
+
+        return Promise.resolve();
+    },
+});
+
 export const timeRequired = (message = 'Поле обязательно'): Rule => ({
     required: true,
     message,

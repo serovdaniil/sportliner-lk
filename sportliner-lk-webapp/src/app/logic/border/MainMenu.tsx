@@ -156,7 +156,7 @@ export const MainMenu: React.FC = () => {
     };
 
     return (
-        <Menu mode="horizontal" theme="dark" style={{backgroundColor: "#ffaa00"}} selectedKeys={selectedKeys} className="dp-sider_menu">
+        <Menu mode="horizontal" theme="light" style={{backgroundColor: "#ffaa00"}} selectedKeys={selectedKeys} className="dp-sider_menu">
             {mainMenuModel.visibleGroups.map((group) => renderMenuGroup(group))}
         </Menu>
     );

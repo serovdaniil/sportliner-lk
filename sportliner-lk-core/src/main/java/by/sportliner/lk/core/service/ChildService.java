@@ -16,6 +16,8 @@ public interface ChildService {
 
     void save(List<Child> children);
 
+    void save(Child child);
+
     void deleteByParent(UserAccount parent);
 
 }

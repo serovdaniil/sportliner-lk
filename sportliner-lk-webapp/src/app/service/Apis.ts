@@ -1,4 +1,5 @@
 import {
+    AccountApi,
     ApiResponse,
     AuthApi,
     BaseError,
@@ -171,6 +172,8 @@ export async function extractBlobWithFilename(response: ApiResponse<Blob>): Prom
 }
 
 export const authApi = new AuthApi(configuration);
+
+export const accountApi = new AccountApi(configuration);
 
 export const branchOfficeApi = new BranchOfficeApi(configuration);
 

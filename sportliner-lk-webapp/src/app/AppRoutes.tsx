@@ -8,6 +8,8 @@ import BranchOfficeListPage from "./logic/branchOffice/list/BranchOfficeListPage
 import BranchOfficeEditPage from "./logic/branchOffice/edit/BranchOfficeEditPage";
 import UserListPage from "./logic/user/list/UserListPage";
 import UserEditPage from "./logic/user/edit/UserEditPage";
+import ProfilePage from "./logic/profile/ProfilePage";
+import ChildEditPage from "./logic/profile/child/ChildEditPage";
 
 export const AppRoutes = {
 
@@ -19,6 +21,19 @@ export const AppRoutes = {
     homePage: new PageMeta<void>({
         path: '/home',
         render: () => <HomePage/>,
+        requiredAuthorities: Authorities.AUTHENTICATED
+    }),
+
+    profilePage: new PageMeta<void>({
+        path: '/profile',
+        render: () => <ProfilePage/>,
+        requiredAuthorities: Authorities.AUTHENTICATED
+    }),
+
+    childEditPage: new PageMeta<{ childId: string }>({
+        path: '/profile/child/:childId',
+        render: (props) => <ChildEditPage childId={props.params.childId!}/>,
+        renderParameters: (object) => ({childId: object.childId}),
         requiredAuthorities: Authorities.AUTHENTICATED
     }),
 

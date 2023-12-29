@@ -7,6 +7,7 @@ import {useNavigator} from 'app/logic/Navigator';
 import {observer} from 'mobx-react';
 import NProgress from 'nprogress';
 import React, {useEffect} from 'react';
+import {AppRoutes} from "../../AppRoutes";
 
 NProgress.configure({showSpinner: false});
 
@@ -37,6 +38,13 @@ const PageHeader: React.FC<AuthorizedPageHeaderProps> = (props: AuthorizedPageHe
                 icon={<LogoutOutlined/>}
             >
                 <Typography.Text>Выйти из личного кабинета</Typography.Text>
+            </Menu.Item>
+            <Menu.Item
+                key="2"
+                onClick={() => navigator.safeNavigate(AppRoutes.profilePage.toUrl())}
+                icon={<LogoutOutlined/>}
+            >
+                <Typography.Text>Профиль</Typography.Text>
             </Menu.Item>
         </Menu>
     );

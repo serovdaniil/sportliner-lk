@@ -41,6 +41,12 @@ public class ChildServiceImpl implements ChildService {
 
     @Override
     @Transactional
+    public void save(Child child) {
+        childRepository.save(child);
+    }
+
+    @Override
+    @Transactional
     public void deleteByParent(UserAccount parent) {
         childRepository.deleteAllByParent(parent);
     }
