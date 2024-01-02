@@ -170,3 +170,8 @@ body > iframe {
     padding: 15px 10px 15px 10px;
     font-weight: bold;
 }
+
+.dp-filter {
+    height: 100%;
+    width: 100%;
+}

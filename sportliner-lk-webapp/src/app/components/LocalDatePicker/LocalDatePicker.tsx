@@ -30,7 +30,7 @@ const LocalDatePicker: React.FC<Props> = (props: Props) => {
     return (
         <div className="dp-local-date-picker">
             <DatePicker
-                style={{width: 200}}
+                style={{width: '10vw'}}
                 value={value}
                 onSelect={handleSelect}
                 allowClear

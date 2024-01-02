@@ -104,6 +104,14 @@ export const MainMenu: React.FC = () => {
             pageUrl: AppRoutes.attendances.toUrl(),
             icon: <HomeOutlined/>,
             items: []
+        },
+        {
+            id: 'analysis',
+            title: 'Анализ посещаемости',
+            page: AppRoutes.analysisPage,
+            pageUrl: AppRoutes.analysisPage.toUrl(),
+            icon: <HomeOutlined/>,
+            items: []
         }
     ];
 

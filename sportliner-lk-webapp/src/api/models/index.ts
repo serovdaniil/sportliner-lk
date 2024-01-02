@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './AnalysisData';
 export * from './Attendance';
 export * from './AuthChangePassword';
 export * from './AuthCredentials';

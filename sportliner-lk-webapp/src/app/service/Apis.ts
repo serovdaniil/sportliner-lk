@@ -1,5 +1,5 @@
 import {
-    AccountApi,
+    AccountApi, AnalysisApi,
     ApiResponse,
     AuthApi,
     BaseError,
@@ -178,5 +178,7 @@ export const accountApi = new AccountApi(configuration);
 export const branchOfficeApi = new BranchOfficeApi(configuration);
 
 export const usersApi = new UsersApi(configuration);
+
+export const analysisApi = new AnalysisApi(configuration);
 
 export const catalogApi = new CatalogApi(configuration);

@@ -10,6 +10,7 @@ import UserListPage from "./logic/user/list/UserListPage";
 import UserEditPage from "./logic/user/edit/UserEditPage";
 import ProfilePage from "./logic/profile/ProfilePage";
 import ChildEditPage from "./logic/profile/child/ChildEditPage";
+import AnalysisPage from "./logic/analysis/AnalysisPage";
 
 export const AppRoutes = {
 
@@ -79,6 +80,12 @@ export const AppRoutes = {
         path: '/attendances',
         render: () => <AttendancePage/>,
         requiredAuthorities: Authorities.TRAINER
+    }),
+
+    analysisPage: new PageMeta<void>({
+        path: '/analysis',
+        render: () => <AnalysisPage/>,
+        requiredAuthorities: Authorities.ADMINISTRATIVE
     }),
 
     somethingWentWrongPage: new PageMeta<void>({

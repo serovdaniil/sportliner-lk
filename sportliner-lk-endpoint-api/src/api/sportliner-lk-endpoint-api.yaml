@@ -23,6 +23,8 @@ tags:
     description: User operations
   - name: branchOffice
     description: Branch office operations
+  - name: analysis
+    description: Analysis operations
   - name: catalog
     description: Some common operations
 
@@ -518,7 +520,6 @@ paths:
         403:
           description: Access forbidden
 
-
   /branchOffices/{id}/children:
     get:
       tags:
@@ -577,6 +578,35 @@ paths:
               schema:
                 items:
                   $ref: "#/components/schemas/UserAccountItem"
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /analysis/{branchOfficeId}/{date}:
+    get:
+      tags:
+        - analysis
+      operationId: analysisDayAtBranchOffice
+      summary: Analyzing the day at the branch
+      parameters:
+        - name: branchOfficeId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: date
+          in: path
+          schema:
+            $ref: '#/components/schemas/LocalDate'
+          required: true
+      responses:
+        200:
+          description: Analysis data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisData'
         401:
           description: Not authenticated
         403:
@@ -1032,6 +1062,21 @@ components:
         time:
           description: Time
           $ref: '#/components/schemas/LocalTime'
+
+    AnalysisData:
+      type: object
+      description: Analysis data
+      required:
+        - averageAttendance
+        - attendanceByTime
+      properties:
+        averageAttendance:
+          description: Average attendance
+          type: number
+        attendanceByTime:
+          description: Attendance by time
+          additionalProperties:
+            type: integer
 
     DayOfWeek:
       description: Day of week

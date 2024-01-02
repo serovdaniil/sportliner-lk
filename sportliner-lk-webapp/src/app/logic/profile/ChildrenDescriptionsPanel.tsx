@@ -6,11 +6,15 @@ import {useNavigator} from "../Navigator";
 import {AppRoutes} from "../../AppRoutes";
 
 interface Props {
-    children: ChildInfo[];
+    children: ChildInfo[] | undefined;
 }
 
 const ChildrenDescriptionsPanel: FC<Props> = (props: Props) => {
     const navigator = useNavigator();
+
+    if (!props.children) {
+        return (<Space/>);
+    }
 
     return (
         <Row className="dp-row" gutter={16}>

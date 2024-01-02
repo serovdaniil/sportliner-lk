@@ -15,8 +15,8 @@ repositories {
 dependencies {
     swaggerCodegen("org.openapitools:openapi-generator-cli:6.4.0")
 }
-val NODE_VERSION = "16.13.1"
-val YARN_VERSION = "1.22.17"
+val NODE_VERSION = "18.18.1"
+val YARN_VERSION = "1.22.19"
 
 configure<NodeExtension> {
 

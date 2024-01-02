@@ -1,6 +1,7 @@
 package by.sportliner.lk.core.service;
 
 import by.sportliner.lk.core.model.Attendance;
+import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.Child;
 import by.sportliner.lk.core.repository.AttendanceRepository;
 import by.sportliner.lk.core.repository.ChildRepository;
@@ -22,6 +23,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private ChildRepository childRepository;
+
+    @Override
+    public List<Attendance> findByBranchOfficeAndDate(BranchOffice branchOffice, LocalDate date) {
+        return attendanceRepository.findByBranchOfficeAndDate(branchOffice, date);
+    }
 
     @Override
     public List<Attendance> findByChildAndPeriod(Child child, YearMonth period) {

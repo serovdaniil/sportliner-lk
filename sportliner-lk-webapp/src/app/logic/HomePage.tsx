@@ -12,6 +12,7 @@ const HomePage: React.FC = () => (
         <Typography.Title level={1} style={{color: '#013A7B'}}>
             Личный кабинет Sportliner
         </Typography.Title>
+
     </AuthorizedBorder>
 );
 
