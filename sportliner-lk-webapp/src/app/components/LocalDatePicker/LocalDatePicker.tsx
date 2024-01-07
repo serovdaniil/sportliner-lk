@@ -1,7 +1,11 @@
 import {CloseCircleFilled} from '@ant-design/icons';
-import {DatePicker} from 'antd';
+import {ConfigProvider, DatePicker} from 'antd';
 import moment, {Moment} from 'moment';
 import React, {useState} from 'react';
+import locale from 'antd/es/date-picker/locale/ru_RU';
+import localeProvider from 'antd/lib/locale/zh_CN';
+
+import 'dayjs/locale/ru';
 
 /**
  * Local date string in the format: YYYY-MM-DD.
@@ -19,6 +23,10 @@ interface Props {
 }
 
 const LocalDatePicker: React.FC<Props> = (props: Props) => {
+    moment.updateLocale("ru", {
+        monthsShort: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        weekdaysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
+    });
 
     const [value, setValue] = useState<Moment | undefined>(() => convertToMoment(props.value));
 
@@ -29,20 +37,22 @@ const LocalDatePicker: React.FC<Props> = (props: Props) => {
 
     return (
         <div className="dp-local-date-picker">
-            <DatePicker
-                style={{width: '10vw'}}
-                value={value}
-                onSelect={handleSelect}
-                allowClear
-                placeholder={props.placeholder}
-                clearIcon={
-                    <CloseCircleFilled
-                        style={{color: "#d9d9d9"}}
-                        onClick={() => handleSelect()}
-                    />
-                }
-            />
-
+            <ConfigProvider locale={localeProvider}>
+                <DatePicker
+                    style={{width: '10vw'}}
+                    value={value}
+                    onSelect={handleSelect}
+                    allowClear
+                    placeholder={props.placeholder}
+                    clearIcon={
+                        <CloseCircleFilled
+                            style={{color: "#d9d9d9"}}
+                            onClick={() => handleSelect()}
+                        />
+                    }
+                    locale={locale}
+                />
+            </ConfigProvider>
         </div>
     );
 };

@@ -27,6 +27,8 @@ export type PageRouteCollection = {
 
     homePage: PageMeta<void>,
 
+    profilePage:PageMeta<void>
+
     [K: string]: PageMeta<any>
 
 }

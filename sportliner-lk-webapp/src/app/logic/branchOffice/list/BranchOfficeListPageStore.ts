@@ -1,5 +1,5 @@
 import {action, makeObservable, observable} from 'mobx';
-import {BranchOffice, BranchOfficeListItem} from "../../../../api";
+import {BranchOfficeListItem} from "../../../../api";
 import {branchOfficeApi} from "../../../service/Apis";
 
 export class BranchOfficeListPageStore {

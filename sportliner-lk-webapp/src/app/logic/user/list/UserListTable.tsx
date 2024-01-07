@@ -1,6 +1,6 @@
 import {Space, Table} from 'antd';
 import {ColumnsType} from 'antd/es/table';
-import {BranchOfficeListItem, DayOfWeek, UserAccountListItem, UserRole} from 'api';
+import {UserAccountListItem} from 'api';
 import DeleteActionButton from 'app/components/DeleteActionButton/DeleteActionButton';
 import {useNavigator} from 'app/logic/Navigator';
 import {isEventFromInteractiveChild} from 'app/utils/DomUtils';

@@ -45,7 +45,7 @@ const ClassScheduleListTable: React.FC<ClassScheduleTableProps> = (props: ClassS
                                 </Typography.Text>,
                             key: date + " - " + it,
                             align: 'center',
-                            width: 50,
+                            width: 40,
                             render: (_, record) => {
                                 return (
                                     <AttendanceCell model={props.editStore.getAttendanceModel(record.id, date, it)}/>
@@ -75,7 +75,7 @@ const ClassScheduleListTable: React.FC<ClassScheduleTableProps> = (props: ClassS
                 dataSource={props.editStore.children}
                 columns={columns()}
                 pagination={false}
-                scroll={{y: 'calc(100vh - 450px)'}}
+                scroll={{y: 'calc(100vh - 350px)'}}
                 rowKey={(record) => record.id}
                 bordered
             />

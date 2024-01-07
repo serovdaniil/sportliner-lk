@@ -1,4 +1,3 @@
-import homePage from 'app/logic/HomePage';
 import {PageMeta, PageRouteCollection} from "kit/navigation/PageMeta";
 import {AuthState} from "kit/security/AuthState";
 import React, {FC} from "react";
@@ -80,7 +79,7 @@ export const PageRouter: React.FC<PageRouterProps> = (props: PageRouterProps) =>
                         route={route}
                         authStateProvider={props.authStateProvider}
                         authPage={props.routes.authPage}
-                        homePage={props.routes.homePage}
+                        homePage={props.routes.profilePage}
                         renderForbidden={props.renderForbidden}
                     />
                 )}

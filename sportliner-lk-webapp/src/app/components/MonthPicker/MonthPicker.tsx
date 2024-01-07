@@ -3,6 +3,9 @@ import {Button, DatePicker} from 'antd';
 import moment, {Moment} from 'moment';
 import React from 'react';
 import DateUtils from "../../utils/DateUtils";
+import locale from 'antd/es/date-picker/locale/ru_RU';
+
+import 'dayjs/locale/ru';
 
 /**
  * Year-month string in the format: YYYY-MM.
@@ -28,6 +31,11 @@ interface MonthPickerProps {
 }
 
 const MonthPicker: React.FC<MonthPickerProps> = (props: MonthPickerProps) => {
+
+    moment.updateLocale("ru", {
+        monthsShort: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        weekdaysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
+    });
 
     const isWithinAllowedRange = (value: YearMonth) => {
         const min = props.minValue;
@@ -74,6 +82,7 @@ const MonthPicker: React.FC<MonthPickerProps> = (props: MonthPickerProps) => {
                 format={(value: Moment) => value.format('MMMM YYYY')}
                 disabled={props.disabled}
                 inputReadOnly
+                locale={locale}
             />
 
             <Button

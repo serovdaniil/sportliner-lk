@@ -1,49 +1,55 @@
-import {Button, Form, Input, Row, Select, Space, Typography} from 'antd';
-import {useForm} from 'antd/es/form/Form';
+import {Button, Row, Select, Space, Typography} from 'antd';
 import {requestHandlerStore} from 'app/App';
-import {AppRoutes} from 'app/AppRoutes';
 import LoadingBlock from "app/components/LoadingBlock/LoadingBlock";
 import {AttendancePageStore} from "app/logic/attendance/AttendancePageStore";
 import AttendanceTable from "app/logic/attendance/AttendanceTable";
 import PageBorder from 'app/logic/border/PageBorder';
-import {useNavigator} from "app/logic/Navigator";
-import {requiredWithTrimValidator} from 'app/logic/Validators';
 
 import {observer, useLocalObservable} from 'mobx-react';
 import React, {FC, useEffect, useState} from 'react';
 import {branchOfficeItemStore} from "../store/Catalog/BranchOfficeItemStore";
 import MonthPicker from "../../components/MonthPicker/MonthPicker";
-
-const PAGE_TITLE = "Посещаемость";
+import {useDirtyChecker} from "../dirtyCheck/DirtyChecker";
+import AppNotification from "../notification/AppNotification";
+import {confirmPageLeave} from "../dirtyCheck/ConfirmPageLeave";
 
 interface Props {
 }
 
 const AttendancePage: FC<Props> = (props: Props) => {
-    const [form] = useForm();
     const [init, setInit] = useState(false);
     const store: AttendancePageStore = useLocalObservable(() => new AttendancePageStore());
-    const navigator = useNavigator();
+    const dirtyChecker = useDirtyChecker();
+
+    const registerAttendancesInDirtyChecker = (): void => {
+        dirtyChecker.deleteLast();
+
+        dirtyChecker.register(() => ({
+            currencyReturns: store.editStore.toJson(),
+            branchOffice: store.branchOffice,
+            period: store.period
+        }));
+    };
 
     useEffect(() => {
         (async () => {
             await requestHandlerStore.initializePage(async () => {
                 await store.init();
-
                 setInit(true);
+                registerAttendancesInDirtyChecker();
             });
         })();
     }, []);
 
     const onSave = async () => {
-        await store.save();
+        await requestHandlerStore.requestWithBlockingUI(async () => {
+            await store.save();
 
-        goBack()
+            dirtyChecker.commit();
+
+            AppNotification.success('Изменения сохранены');
+        })
     };
-
-    const goBack = () => {
-        navigator.safeNavigate(-1);
-    }
 
     if (!init) {
         return (
@@ -69,60 +75,58 @@ const AttendancePage: FC<Props> = (props: Props) => {
                     >
                         Сохранить
                     </Button>
-                    <Button
-                        className="dp-button"
-                        type="primary"
-                        onClick={goBack}
-                        style={{background: '#0f2d77'}}
-                    >
-                        Назад
-                    </Button>
                 </Space>
             )}
         >
-            {!store.isTrainer && (
-                <Row className="dp-row">
-                    <Space direction={"vertical"}>
 
-                        <Typography.Text>Фильтр</Typography.Text>
+            <Row className="dp-row">
+                <Space direction={"vertical"}>
 
-                        <Space direction={"horizontal"}>
+                    <Typography.Text>Фильтр</Typography.Text>
 
-                            <Typography.Text>Филиал: </Typography.Text>
+                    <Space direction={"horizontal"}>
 
-                            <Select
-                                value={store.branchOffice.id}
-                                onChange={(value) => {
-                                    const branchOfficeId = value;
-                                    const branchOffice = branchOfficeItemStore.getById(branchOfficeId);
+                        {!store.isTrainer && (
+                            <Space>
+                                <Typography.Text>Филиал: </Typography.Text>
 
-                                    store.setBranchOffice(branchOffice);
-                                }}
-                                style={{width: 400}}
-                            >
-                                {branchOfficeItemStore.available.map((branchOffice) => {
-                                    return (
-                                        <Select.Option
-                                            key={branchOffice.id}
-                                            value={branchOffice.id}
-                                        >
-                                            {branchOffice.address}
-                                        </Select.Option>
-                                    )
-                                })}
-                            </Select>
+                                <Select
+                                    value={store.branchOffice.id}
+                                    onChange={async (value) => {
+                                        if (!dirtyChecker.isDirty() || await confirmPageLeave()){
+                                            const branchOffice = branchOfficeItemStore.getById(value);
 
-                            <Typography.Text>Период: </Typography.Text>
+                                            store.setBranchOffice(branchOffice);
+                                            registerAttendancesInDirtyChecker();
+                                        }
 
-                            <MonthPicker
-                                value={store.period}
-                                onChange={store.setPeriod}
-                                disabled={false}
-                            />
-                        </Space>
+                                    }}
+                                    style={{width: 400}}
+                                >
+                                    {branchOfficeItemStore.available.map((branchOffice) => {
+                                        return (
+                                            <Select.Option
+                                                key={branchOffice.id}
+                                                value={branchOffice.id}
+                                            >
+                                                {branchOffice.address}
+                                            </Select.Option>
+                                        )
+                                    })}
+                                </Select>
+                            </Space>
+                        )}
+
+                        <Typography.Text>Период: </Typography.Text>
+
+                        <MonthPicker
+                            value={store.period}
+                            onChange={store.setPeriod}
+                            disabled={false}
+                        />
                     </Space>
-                </Row>
-            )}
+                </Space>
+            </Row>
 
             <Row className="dp-row">
 

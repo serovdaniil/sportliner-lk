@@ -13,10 +13,14 @@ import 'normalize.css';
 import 'nprogress/nprogress.css';
 import {useEffect, useState} from 'react';
 import ForbiddenErrorPage from "./logic/error/ForbiddenErrorPage";
+import DirtyCheckerRegistry from "./logic/dirtyCheck/DirtyCheckerRegistry";
+import DirtyCheckerContextProvider from "./logic/dirtyCheck/DirtyCheckerContextProvider";
+import DirtyChecker from "./logic/dirtyCheck/DirtyChecker";
 
 export const requestHandlerStore = new RequestHandlerStore();
 export const auth = new AuthStore();
 export const sessionStorageWorker = new SessionStorageWorker();
+export const dirtyCheckerRegistry = new DirtyCheckerRegistry();
 
 const renderErrorOverlay = (is404: boolean, isSomethingWentWrong: boolean) => {
 
@@ -37,6 +41,8 @@ const App: React.FC = () => {
 
     const [fullyInit, setFullyInit] = useState<boolean | null>(null);
     const loading = auth.initializing || (auth.authState.authenticated && !fullyInit);
+
+    const [dirtyChecker] = useState<DirtyChecker>(() => new DirtyChecker());
 
     useEffect(() => {
         const removeErrorListeners = requestHandlerStore.setUnhandledErrorsProcessing();
@@ -66,15 +72,17 @@ const App: React.FC = () => {
 
     return (
         <div className="App">
-            {renderErrorOverlay(requestHandlerStore.is404, requestHandlerStore.isSomethingWentWrong)
-                ?? (
-                    <PageRouter
-                        authStateProvider={() => auth.authState}
-                        routes={AppRoutes}
-                        renderNotFound={() => <NotFoundErrorPage/>}
-                        renderForbidden={() => <ForbiddenErrorPage/>}
-                    />
-                )}
+            <DirtyCheckerContextProvider value={dirtyChecker}>
+                {renderErrorOverlay(requestHandlerStore.is404, requestHandlerStore.isSomethingWentWrong)
+                    ?? (
+                        <PageRouter
+                            authStateProvider={() => auth.authState}
+                            routes={AppRoutes}
+                            renderNotFound={() => <NotFoundErrorPage/>}
+                            renderForbidden={() => <ForbiddenErrorPage/>}
+                        />
+                    )}
+            </DirtyCheckerContextProvider>
         </div>
     );
 };

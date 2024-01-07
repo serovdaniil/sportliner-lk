@@ -1,13 +1,11 @@
 import {LogoutOutlined, UserOutlined} from '@ant-design/icons';
-import {Avatar, Button, Divider, Dropdown, Image, Layout, Menu, Row, Space, Typography} from 'antd';
+import {Avatar, Divider, Dropdown, Image, Layout, Menu, Row, Space, Typography} from 'antd';
 import {auth} from 'app/App';
 import logo from 'app/assets/logo.png';
 import {MainMenu} from 'app/logic/border/MainMenu';
-import {useNavigator} from 'app/logic/Navigator';
 import {observer} from 'mobx-react';
 import NProgress from 'nprogress';
 import React, {useEffect} from 'react';
-import {AppRoutes} from "../../AppRoutes";
 
 NProgress.configure({showSpinner: false});
 
@@ -22,13 +20,10 @@ interface AuthorizedPageHeaderProps {
  */
 const PageHeader: React.FC<AuthorizedPageHeaderProps> = (props: AuthorizedPageHeaderProps) => {
 
-    const navigator = useNavigator();
-
     const logout = async () => {
         await auth.logout();
 
     };
-
 
     const dropDown = (
         <Menu>
@@ -38,13 +33,6 @@ const PageHeader: React.FC<AuthorizedPageHeaderProps> = (props: AuthorizedPageHe
                 icon={<LogoutOutlined/>}
             >
                 <Typography.Text>Выйти из личного кабинета</Typography.Text>
-            </Menu.Item>
-            <Menu.Item
-                key="2"
-                onClick={() => navigator.safeNavigate(AppRoutes.profilePage.toUrl())}
-                icon={<LogoutOutlined/>}
-            >
-                <Typography.Text>Профиль</Typography.Text>
             </Menu.Item>
         </Menu>
     );
@@ -100,7 +88,10 @@ const PageHeader: React.FC<AuthorizedPageHeaderProps> = (props: AuthorizedPageHe
 
             {props.content}
 
-            <MainMenu/>
+            {!auth.isParent && (
+                <MainMenu/>
+            )}
+
         </Layout.Header>
     );
 };

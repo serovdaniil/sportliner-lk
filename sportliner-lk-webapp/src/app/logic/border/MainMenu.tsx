@@ -1,5 +1,5 @@
-import {HomeOutlined} from '@ant-design/icons';
-import {Button, Menu, Typography} from 'antd';
+import {BarChartOutlined, HomeOutlined, PicLeftOutlined, ScheduleOutlined, UserOutlined} from '@ant-design/icons';
+import {Button, Menu} from 'antd';
 import {auth} from 'app/App';
 import {AppRoutes} from 'app/AppRoutes';
 import {useNavigator} from "app/logic/Navigator";
@@ -71,47 +71,49 @@ export const MainMenu: React.FC = () => {
     const location = useLocation();
     const currentPath = location.pathname;
 
-
-    const groups: MenuGroup[] = [
+    const masterDataItems: MenuItem[] = [
         {
-            id: 'home',
-            title: 'Главная',
-            page: AppRoutes.homePage,
-            pageUrl: AppRoutes.homePage.toUrl(),
-            icon: <HomeOutlined/>,
-            items: []
+            id: 'profile',
+            title: 'Профиль',
+            page: AppRoutes.profilePage,
+            pageUrl: AppRoutes.profilePage.toUrl(),
+            icon: <HomeOutlined/>
         },
         {
             id: 'branchOffices',
             title: 'Список филиалов',
             page: AppRoutes.branchOfficeListPage,
             pageUrl: AppRoutes.branchOfficeListPage.toUrl(),
-            icon: <HomeOutlined/>,
-            items: []
+            icon: <PicLeftOutlined/>
         },
         {
             id: 'users',
             title: 'Список пользователей',
             page: AppRoutes.userListPage,
             pageUrl: AppRoutes.userListPage.toUrl(),
-            icon: <HomeOutlined/>,
-            items: []
+            icon: <UserOutlined/>
         },
         {
             id: 'attendances',
             title: 'Посещаемость',
             page: AppRoutes.attendances,
             pageUrl: AppRoutes.attendances.toUrl(),
-            icon: <HomeOutlined/>,
-            items: []
+            icon: <ScheduleOutlined/>
         },
         {
             id: 'analysis',
             title: 'Анализ посещаемости',
             page: AppRoutes.analysisPage,
             pageUrl: AppRoutes.analysisPage.toUrl(),
-            icon: <HomeOutlined/>,
-            items: []
+            icon: <BarChartOutlined/>
+        }
+    ];
+
+    const groups: MenuGroup[] = [
+        {
+            id: 'regularData',
+            title: '',
+            items: masterDataItems
         }
     ];
 
@@ -133,7 +135,7 @@ export const MainMenu: React.FC = () => {
                 onClick={() => navigator.safeNavigate(item.pageUrl)}
                 className="dp-menu_link ant-menu-title-content"
                 icon={item.icon}
-                style={{color: "#000000", fontSize: 16}}
+                style={{color: "#000000"}}
             >
                 {item.title}
             </Button>
@@ -141,30 +143,17 @@ export const MainMenu: React.FC = () => {
     );
 
     const renderMenuGroup = (group: MenuGroup) => {
-        if (group.page) {
-            return renderMenuItem(group as MenuItem);
-        }
         return (
-            <Menu.ItemGroup
-                key={group.id}
-                title={
-                    <Typography.Text
-                        strong
-                        className="dp-menu-group"
-                        style={group.style}
-                    >
-                        {group.title}
-                    </Typography.Text>
-                }
-            >
-                {group.items.map((item) => renderMenuItem(item))}
-            </Menu.ItemGroup>
+
+            group.items.map((item) => renderMenuItem(item))
+
         );
 
     };
 
     return (
-        <Menu mode="horizontal" theme="light" style={{backgroundColor: "#ffaa00"}} selectedKeys={selectedKeys} className="dp-sider_menu">
+        <Menu mode="horizontal" theme="light" style={{backgroundColor: "#ffaa00", overflowY: "hidden"}}
+              selectedKeys={selectedKeys} className="dp-sider_menu">
             {mainMenuModel.visibleGroups.map((group) => renderMenuGroup(group))}
         </Menu>
     );

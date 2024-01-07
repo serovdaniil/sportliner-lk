@@ -156,6 +156,11 @@ export default class AuthStore {
     }
 
     @computed
+    get isParent(): boolean {
+        return this.state != null && this.state.info.authorities.includes(Authorities.PARENT);
+    }
+
+    @computed
     get isAdmin(): boolean {
         return this.state != null && this.state.info.authorities.includes(Authorities.ADMINISTRATIVE);
     }
