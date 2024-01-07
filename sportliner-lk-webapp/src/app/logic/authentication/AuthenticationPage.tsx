@@ -1,10 +1,10 @@
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Form, Image, Input, InputRef, Modal, Row, Space, Typography} from 'antd';
-import {AuthResponse, AuthResponseStatus} from 'api';
+import {Button, Form, Input, InputRef, Row, Space, Typography} from 'antd';
+import {AuthResponse, AuthResponseStatus, LoginWithChangePasswordRequest} from 'api';
 import {AuthCredentials} from 'api/models/AuthCredentials';
 import {auth, sessionStorageWorker} from 'app/App';
 import backgroundImage from 'app/assets/auth-background.jpg';
-import {requiredValidator} from 'app/logic/Validators';
+import {passwordValidator, requiredValidator} from 'app/logic/Validators';
 import ValidateItemState from 'app/model/ValidateItemState';
 import {authApi} from 'app/service/Apis';
 import AuthenticationException from "app/service/exceptions/AuthenticationException";
@@ -65,6 +65,42 @@ const AuthenticationPage: React.FC = () => {
             if (response.status === AuthResponseStatus.MUST_CHANGE_PASSWORD) {
                 setCreds(authCredentials);
                 resetToStep('changePassword');
+            }
+        } catch (response: any) {
+            if (response instanceof AuthenticationException) {
+                await handleError(response);
+            } else {
+                throw response;
+            }
+        }
+    };
+
+    const sendPasswordChange = async (data: { newPassword: string, newPasswordConfirm: string }) => {
+        setAuthResponseStatus({
+            status: '',
+            errorMessage: null,
+        });
+
+        if (data.newPassword !== data.newPasswordConfirm) {
+            setAuthResponseStatus({
+                status: 'error',
+                errorMessage: 'Passwords don’t match',
+            });
+            return;
+        }
+
+        try {
+            const request: LoginWithChangePasswordRequest = {
+                authChangePassword: {
+                    username: creds.username,
+                    oldPassword: creds.password,
+                    newPassword: data.newPassword,
+                },
+            };
+            const response: AuthResponse = await authApi.loginWithChangePassword(request);
+
+            if (response.status === AuthResponseStatus.SUCCESS) {
+                auth.authenticated(response);
             }
         } catch (response: any) {
             if (response instanceof AuthenticationException) {
@@ -142,6 +178,80 @@ const AuthenticationPage: React.FC = () => {
         </Form>
     );
 
+    const changePasswordForm = (
+        <Form
+            form={form}
+            name="normal_login"
+            className="dp-auth-form"
+            onFinish={sendPasswordChange}
+            onFinishFailed={highlightFields}
+            autoComplete="off"
+        >
+
+            <Space
+                align="center"
+                direction="vertical"
+            >
+
+                <p>Вы должны определить свой новый пароль</p>
+
+            </Space>
+
+            <Input
+                name="username"
+                value={creds?.username}
+                style={{display: 'none'}}
+                hidden
+            />
+
+            <Form.Item
+                name="newPassword"
+                validateStatus={authResponseStatus.status}
+                rules={[requiredValidator(), passwordValidator()]}
+            >
+                <Input.Password
+                    prefix={<LockOutlined className="site-form-item-icon"/>}
+                    placeholder="Новый пароль"
+                    autoComplete="new-password"
+                    autoFocus
+                />
+            </Form.Item>
+
+            <Form.Item
+                name="newPasswordConfirm"
+                validateStatus={authResponseStatus.status}
+                help={authResponseStatus.errorMessage}
+                rules={[requiredValidator()]}
+            >
+                <Input.Password
+                    prefix={<LockOutlined className="site-form-item-icon"/>}
+                    placeholder="Повторите новый пароль"
+                    autoComplete="new-password"
+                />
+            </Form.Item>
+
+            <Form.Item className="login-button">
+                <Button
+                    className="dp-button"
+                    type="primary"
+                    htmlType="submit"
+                    style={{width: '50%'}}
+                >
+                    Войти
+                </Button>
+                <Button
+                    className="dp-button"
+                    type="default"
+                    htmlType="button"
+                    style={{width: '50%'}}
+                    onClick={() => resetToStep('login')}
+                >
+                    Вернуться
+                </Button>
+            </Form.Item>
+        </Form>
+    );
+
     return (
         <Space
             style={{
@@ -158,6 +268,7 @@ const AuthenticationPage: React.FC = () => {
             </Space>
 
             {step === 'login' && loginForm}
+            {step === 'changePassword' && changePasswordForm}
 
         </Space>
     );

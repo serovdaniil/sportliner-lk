@@ -46,6 +46,23 @@ public class AuthApiController implements AuthApi {
     }
 
     @Override
+    public ResponseEntity<AuthResponseDto> loginWithChangePassword(AuthChangePasswordDto authChangePasswordDto) {
+
+        AuthenticationRequest request = new AuthenticationRequest(
+            authChangePasswordDto.getUsername(),
+            authChangePasswordDto.getOldPassword(),
+            Set.of(UserAuthority.ACCESS_APPLICATION)
+        );
+
+        AuthenticationResponse response =
+            authenticationService.authenticateAndChangePassword(request, authChangePasswordDto.getNewPassword());
+
+        putRefreshToken(response);
+
+        return ResponseEntity.ok(convert(response));
+    }
+
+    @Override
     public ResponseEntity<Void> logout(Boolean automatic) {
         refreshTokenCookieHelper().clearToken();
 

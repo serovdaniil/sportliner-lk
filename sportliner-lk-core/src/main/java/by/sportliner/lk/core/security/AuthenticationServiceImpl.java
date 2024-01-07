@@ -15,6 +15,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
@@ -40,8 +41,40 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private JwtService jwtService;
 
     @Override
+    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         UserAccount account = checkCredentials(request);
+
+        userAccountRepository.saveAndFlush(account);
+
+        if (account.isPasswordMustBeChanged()) {
+            LOGGER.info("Password change prompt requested");
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setStatus(AuthenticationResponse.Status.MUST_CHANGE_PASSWORD);
+            return response;
+        }
+
+        userAccountRepository.updateLoginTimestamp(account.getId(), Instant.now());
+
+        LOGGER.info("Authenticated as: {}", account.getUsername());
+
+        return onSuccessAuth(account, true);
+    }
+
+    @Override
+    @Transactional
+    public AuthenticationResponse authenticateAndChangePassword(AuthenticationRequest request, String newPassword) {
+        UserAccount account = checkCredentials(request);
+
+        account.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(newPassword));
+        account.setPasswordTimestamp(Instant.now());
+        account.setPasswordMustBeChanged(false);
+        userAccountRepository.saveAndFlush(account);
+        LOGGER.info("Password change prompt succeeded");
+
+        userAccountRepository.updateLoginTimestamp(account.getId(), Instant.now());
+
+        LOGGER.info("Authenticated as: {}", account.getUsername());
 
         return onSuccessAuth(account, true);
     }
@@ -63,8 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Jwt token;
         try {
             token = jwtService.decode(refreshToken);
-        }
-        catch (JwtException e) {
+        } catch (JwtException e) {
             throw new InsufficientAuthenticationException("Invalid refresh token", e);
         }
 

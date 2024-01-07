@@ -15,11 +15,14 @@
 
 import * as runtime from '../runtime';
 import type {
+  AuthChangePassword,
   AuthCredentials,
   AuthResponse,
   AuthenticationError,
 } from '../models';
 import {
+    AuthChangePasswordFromJSON,
+    AuthChangePasswordToJSON,
     AuthCredentialsFromJSON,
     AuthCredentialsToJSON,
     AuthResponseFromJSON,
@@ -30,6 +33,10 @@ import {
 
 export interface LoginRequest {
     authCredentials: AuthCredentials;
+}
+
+export interface LoginWithChangePasswordRequest {
+    authChangePassword: AuthChangePassword;
 }
 
 export interface LogoutRequest {
@@ -71,6 +78,39 @@ export class AuthApi extends runtime.BaseAPI {
      */
     async login(requestParameters: LoginRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthResponse> {
         const response = await this.loginRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Change password
+     */
+    async loginWithChangePasswordRaw(requestParameters: LoginWithChangePasswordRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthResponse>> {
+        if (requestParameters.authChangePassword === null || requestParameters.authChangePassword === undefined) {
+            throw new runtime.RequiredError('authChangePassword','Required parameter requestParameters.authChangePassword was null or undefined when calling loginWithChangePassword.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/auth/login/changePassword`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AuthChangePasswordToJSON(requestParameters.authChangePassword),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Change password
+     */
+    async loginWithChangePassword(requestParameters: LoginWithChangePasswordRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthResponse> {
+        const response = await this.loginWithChangePasswordRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

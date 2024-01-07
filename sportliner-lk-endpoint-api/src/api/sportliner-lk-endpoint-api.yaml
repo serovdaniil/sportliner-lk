@@ -65,6 +65,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthenticationError'
 
+  /auth/login/changePassword:
+    post:
+      tags:
+        - auth
+      security: [ ]
+      operationId: loginWithChangePassword
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthChangePassword'
+      responses:
+        200:
+          description: Authentication response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Authentication failed
+        403:
+          description: Authentication refused
+
   /auth/logout:
     post:
       tags:

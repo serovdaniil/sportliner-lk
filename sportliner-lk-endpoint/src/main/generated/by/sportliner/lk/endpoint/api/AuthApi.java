@@ -5,6 +5,7 @@
  */
 package by.sportliner.lk.endpoint.api;
 
+import by.sportliner.lk.endpoint.api.AuthChangePasswordDto;
 import by.sportliner.lk.endpoint.api.AuthCredentialsDto;
 import by.sportliner.lk.endpoint.api.AuthResponseDto;
 import by.sportliner.lk.endpoint.api.AuthenticationErrorDto;
@@ -71,6 +72,37 @@ public interface AuthApi {
     )
     ResponseEntity<AuthResponseDto> login(
         @Parameter(name = "AuthCredentialsDto", description = "", required = true) @Valid @RequestBody AuthCredentialsDto authCredentialsDto
+    ) throws Exception;
+
+
+    /**
+     * POST /auth/login/changePassword : Change password
+     *
+     * @param authChangePasswordDto  (required)
+     * @return Authentication response (status code 200)
+     *         or Authentication failed (status code 401)
+     *         or Authentication refused (status code 403)
+     */
+    @Operation(
+        operationId = "loginWithChangePassword",
+        summary = "Change password",
+        tags = { "auth" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Authentication response", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Authentication failed"),
+            @ApiResponse(responseCode = "403", description = "Authentication refused")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/auth/login/changePassword",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<AuthResponseDto> loginWithChangePassword(
+        @Parameter(name = "AuthChangePasswordDto", description = "", required = true) @Valid @RequestBody AuthChangePasswordDto authChangePasswordDto
     ) throws Exception;
 
 
