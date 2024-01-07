@@ -44,9 +44,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional
-    public void saveAttendances(List<Attendance> attendances) {
-        YearMonth period = YearMonth.now();
+    public Map<Child, List<Attendance>> findChildrenAttendances(BranchOffice branchOffice, YearMonth period) {
+        List<Child> children = childRepository.findByBranchOffice(branchOffice);
 
+        return children.stream()
+            .map(child -> Map.entry(child, findByChildAndPeriod(child, period)))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @Override
+    @Transactional
+    public void saveAttendances(YearMonth period, List<Attendance> attendances) {
         LocalDate fromDate = period.atDay(1);
         LocalDate toDate = period.atEndOfMonth();
 

@@ -35,7 +35,7 @@ public class AttendanceApiController implements AttendanceApi {
     public ResponseEntity<List<ChildAttendanceDto>> getAttendancesForBranchOffice(String branchOfficeId, YearMonth period) {
         BranchOffice branchOffice = branchOfficeService.getById(branchOfficeId);
 
-        Map<Child, List<Attendance>> attendances = branchOfficeService.getChildrenAttendances(branchOffice, period);
+        Map<Child, List<Attendance>> attendances = attendanceService.findChildrenAttendances(branchOffice, period);
 
 
         return ResponseEntity.ok(attendances.entrySet().stream()
@@ -90,7 +90,7 @@ public class AttendanceApiController implements AttendanceApi {
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
 
-        attendanceService.saveAttendances(attendances);
+        attendanceService.saveAttendances(period, attendances);
 
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,9 @@
 package by.sportliner.lk.core.service;
 
-import by.sportliner.lk.core.model.*;
+import by.sportliner.lk.core.model.BranchOffice;
+import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.ClassSchedule;
+import by.sportliner.lk.core.model.UserAccount;
 import by.sportliner.lk.core.repository.BranchOfficeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +30,6 @@ public class BranchOfficeServiceImpl implements BranchOfficeService {
 
     @Autowired
     private ChildService childService;
-
-    @Autowired
-    private AttendanceService attendanceService;
 
     @Override
     public List<BranchOffice> findAll() {
@@ -59,16 +59,6 @@ public class BranchOfficeServiceImpl implements BranchOfficeService {
     @Transactional
     public Map<LocalDate, List<LocalTime>> getClassSchedules(BranchOffice branchOffice, YearMonth period) {
         return generateScheduleForCurrentMonth(branchOffice, period);
-    }
-
-    @Override
-    @Transactional
-    public Map<Child, List<Attendance>> getChildrenAttendances(BranchOffice branchOffice, YearMonth period) {
-        List<Child> children = childService.findChildrenByBranchOffice(branchOffice);
-
-        return children.stream()
-            .map(child -> Map.entry(child, attendanceService.findByChildAndPeriod(child, period)))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override

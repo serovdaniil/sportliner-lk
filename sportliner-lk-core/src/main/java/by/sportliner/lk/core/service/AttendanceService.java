@@ -7,6 +7,7 @@ import by.sportliner.lk.core.model.Child;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 public interface AttendanceService {
 
@@ -16,5 +17,7 @@ public interface AttendanceService {
 
     List<Attendance> findByChild(Child child);
 
-    void saveAttendances(List<Attendance> attendances);
+    Map<Child, List<Attendance>> findChildrenAttendances(BranchOffice branchOffice, YearMonth period);
+
+    void saveAttendances(YearMonth period, List<Attendance> attendances);
 }
