@@ -31,6 +31,15 @@ body > iframe {
     pointer-events: none;
 }
 
+.dp-background-image {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: -10;
+}
+
 .dp-header {
     display: flex;
     flex-direction: column;

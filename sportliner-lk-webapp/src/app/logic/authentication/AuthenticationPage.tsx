@@ -10,12 +10,12 @@ import {authApi} from 'app/service/Apis';
 import AuthenticationException from "app/service/exceptions/AuthenticationException";
 import {observer} from 'mobx-react';
 import React, {useState} from 'react';
+import BackgroundImage from "../../components/BackgroundImage/BackgroundImage";
 
 /**
  * Authentication page
  */
 const AuthenticationPage: React.FC = () => {
-    const [modal, modalContext] = Modal.useModal();
     const [form] = Form.useForm();
     const passwordRef = React.createRef<InputRef>();
     const [step, setStep] = React.useState('login');
@@ -153,7 +153,9 @@ const AuthenticationPage: React.FC = () => {
             align="center"
         >
 
-            {modalContext}
+            <Space>
+                <BackgroundImage src={backgroundImage}/>
+            </Space>
 
             {step === 'login' && loginForm}
 
