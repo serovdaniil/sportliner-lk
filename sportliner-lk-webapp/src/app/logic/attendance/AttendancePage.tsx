@@ -25,7 +25,7 @@ const AttendancePage: FC<Props> = (props: Props) => {
         dirtyChecker.deleteLast();
 
         dirtyChecker.register(() => ({
-            currencyReturns: store.editStore.toJson(),
+            attendances: store.editStore.toJson(),
             branchOffice: store.branchOffice,
             period: store.period
         }));
@@ -93,13 +93,13 @@ const AttendancePage: FC<Props> = (props: Props) => {
                                 <Select
                                     value={store.branchOffice.id}
                                     onChange={async (value) => {
-                                        if (!dirtyChecker.isDirty() || await confirmPageLeave()){
+                                        if (!dirtyChecker.isDirty() || await confirmPageLeave()) {
                                             const branchOffice = branchOfficeItemStore.getById(value);
 
                                             store.setBranchOffice(branchOffice);
-                                            registerAttendancesInDirtyChecker();
+                                            await store.loadData();
+                                            await registerAttendancesInDirtyChecker();
                                         }
-
                                     }}
                                     style={{width: 400}}
                                 >
@@ -121,7 +121,13 @@ const AttendancePage: FC<Props> = (props: Props) => {
 
                         <MonthPicker
                             value={store.period}
-                            onChange={store.setPeriod}
+                            onChange={async (value) => {
+                                if (!dirtyChecker.isDirty() || await confirmPageLeave()) {
+                                    store.setPeriod(value);
+                                    await store.loadData();
+                                    await registerAttendancesInDirtyChecker();
+                                }
+                            }}
                             disabled={false}
                         />
                     </Space>

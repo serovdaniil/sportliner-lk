@@ -71,7 +71,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="App">
+        <div className="App" style={{minWidth: 1200}}>
             <DirtyCheckerContextProvider value={dirtyChecker}>
                 {renderErrorOverlay(requestHandlerStore.is404, requestHandlerStore.isSomethingWentWrong)
                     ?? (

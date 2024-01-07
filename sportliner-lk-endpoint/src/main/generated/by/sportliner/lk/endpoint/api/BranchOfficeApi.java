@@ -8,9 +8,7 @@ package by.sportliner.lk.endpoint.api;
 import by.sportliner.lk.endpoint.api.BranchOfficeDto;
 import by.sportliner.lk.endpoint.api.BranchOfficeItemDto;
 import by.sportliner.lk.endpoint.api.BranchOfficeListItemDto;
-import by.sportliner.lk.endpoint.api.ChildAttendanceDto;
 import by.sportliner.lk.endpoint.api.ChildInfoDto;
-import java.util.List;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -100,41 +98,6 @@ public interface BranchOfficeApi {
     )
     ResponseEntity<Void> deleteBranchOffice(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id
-    ) throws Exception;
-
-
-    /**
-     * GET /branchOffices/{id}/attendances/{period} : Get attendances for branch office of target period
-     *
-     * @param id  (required)
-     * @param period  (required)
-     * @return Attendance for children (status code 200)
-     *         or Not authenticated (status code 401)
-     *         or Access forbidden (status code 403)
-     */
-    @Operation(
-        operationId = "getAttendancesForBranchOffice",
-        summary = "Get attendances for branch office of target period",
-        tags = { "branchOffice" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Attendance for children", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ChildAttendanceDto.class)))
-            }),
-            @ApiResponse(responseCode = "401", description = "Not authenticated"),
-            @ApiResponse(responseCode = "403", description = "Access forbidden")
-        },
-        security = {
-            @SecurityRequirement(name = "bearerAuth")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/branchOffices/{id}/attendances/{period}",
-        produces = { "application/json" }
-    )
-    ResponseEntity<List<ChildAttendanceDto>> getAttendancesForBranchOffice(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id,
-        @Parameter(name = "period", description = "", required = true, in = ParameterIn.PATH) @PathVariable("period") java.time.YearMonth period
     ) throws Exception;
 
 
@@ -302,41 +265,6 @@ public interface BranchOfficeApi {
     ResponseEntity<Map<String, List<java.time.LocalTime>>> getSchedulesForBranchOffice(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id,
         @Parameter(name = "period", description = "", required = true, in = ParameterIn.PATH) @PathVariable("period") java.time.YearMonth period
-    ) throws Exception;
-
-
-    /**
-     * PUT /branchOffices/{id}/attendances/{period} : Save attendance
-     *
-     * @param id  (required)
-     * @param period  (required)
-     * @param childAttendanceDto  (required)
-     * @return Successfully saved (status code 200)
-     *         or Not authenticated (status code 401)
-     *         or Access forbidden (status code 403)
-     */
-    @Operation(
-        operationId = "saveAttendances",
-        summary = "Save attendance",
-        tags = { "branchOffice" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully saved"),
-            @ApiResponse(responseCode = "401", description = "Not authenticated"),
-            @ApiResponse(responseCode = "403", description = "Access forbidden")
-        },
-        security = {
-            @SecurityRequirement(name = "bearerAuth")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/branchOffices/{id}/attendances/{period}",
-        consumes = { "application/json" }
-    )
-    ResponseEntity<Void> saveAttendances(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id,
-        @Parameter(name = "period", description = "", required = true, in = ParameterIn.PATH) @PathVariable("period") java.time.YearMonth period,
-        @Parameter(name = "ChildAttendanceDto", description = "", required = true) @Valid @RequestBody List<ChildAttendanceDto> childAttendanceDto
     ) throws Exception;
 
 

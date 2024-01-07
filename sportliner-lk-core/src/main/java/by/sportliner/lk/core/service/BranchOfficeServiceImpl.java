@@ -73,7 +73,9 @@ public class BranchOfficeServiceImpl implements BranchOfficeService {
 
     @Override
     public List<Child> getChildren(BranchOffice branchOffice) {
-        return childService.findChildrenByBranchOffice(branchOffice);
+        return childService.findChildrenByBranchOffice(branchOffice).stream()
+            .sorted(Comparator.comparing(Child::getFullName))
+            .collect(Collectors.toList());
     }
 
     @Override

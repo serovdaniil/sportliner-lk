@@ -3,7 +3,6 @@ package by.sportliner.lk.core.repository;
 import by.sportliner.lk.core.model.Attendance;
 import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.Child;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
@@ -25,6 +24,8 @@ public interface AttendanceRepository extends JpaRepositoryImplementation<Attend
         "AND :fromDate <= st.date AND st.date <= :toDate"
     )
     List<Attendance> findByChildAndPeriod(Child child, LocalDate fromDate, LocalDate toDate);
+
+    List<Attendance> findByChild(Child child);
 
     @Modifying
     @Query("DELETE FROM Attendance st WHERE st.child = :child " +

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +33,13 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public List<Attendance> findByChildAndPeriod(Child child, YearMonth period) {
         return attendanceRepository.findByChildAndPeriod(child, period.atDay(1), period.atEndOfMonth());
+    }
+
+    @Override
+    public List<Attendance> findByChild(Child child) {
+        return attendanceRepository.findByChild(child).stream()
+            .sorted(Comparator.comparing(Attendance::getDate).reversed())
+            .collect(Collectors.toList());
     }
 
     @Override

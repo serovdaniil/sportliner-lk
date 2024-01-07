@@ -1,6 +1,6 @@
 import {ChildAttendance, ChildInfo} from "api";
 import AttendanceModel from "app/logic/attendance/AttendanceModel";
-import {branchOfficeApi} from "app/service/Apis";
+import {attendanceApi, branchOfficeApi} from "app/service/Apis";
 import RuntimeException from "app/service/exceptions/RuntimeException";
 import {action, computed, makeObservable, observable} from 'mobx';
 
@@ -77,8 +77,8 @@ export class AttendanceEditStore {
             this._attendances.set(it.id, childAttendances);
         })
 
-        const attendances = await branchOfficeApi.getAttendancesForBranchOffice({
-            id: this.branchOfficeId,
+        const attendances = await attendanceApi.getAttendancesForBranchOffice({
+            branchOfficeId: this.branchOfficeId,
             period: this.period
         });
 

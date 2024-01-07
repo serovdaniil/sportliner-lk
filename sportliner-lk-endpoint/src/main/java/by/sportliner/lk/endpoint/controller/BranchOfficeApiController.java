@@ -1,12 +1,9 @@
 package by.sportliner.lk.endpoint.controller;
 
-import by.sportliner.lk.core.model.Attendance;
 import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.Child;
 import by.sportliner.lk.core.model.ClassSchedule;
-import by.sportliner.lk.core.service.AttendanceService;
 import by.sportliner.lk.core.service.BranchOfficeService;
-import by.sportliner.lk.core.service.ChildService;
 import by.sportliner.lk.core.service.UserAccountService;
 import by.sportliner.lk.endpoint.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,12 +28,6 @@ public class BranchOfficeApiController implements BranchOfficeApi {
 
     @Autowired
     private UserAccountService userAccountService;
-
-    @Autowired
-    private ChildService childService;
-
-    @Autowired
-    private AttendanceService attendanceService;
 
     @Override
     public ResponseEntity<Void> createBranchOffice(BranchOfficeDto branchOfficeDto) {
@@ -109,33 +103,10 @@ public class BranchOfficeApiController implements BranchOfficeApi {
     }
 
     @Override
-    public ResponseEntity<List<ChildAttendanceDto>> getAttendancesForBranchOffice(String id, YearMonth period) {
-        BranchOffice branchOffice = branchOfficeService.getById(id);
-
-        Map<Child, List<Attendance>> attendances = branchOfficeService.getChildrenAttendances(branchOffice, period);
-
-
-        return ResponseEntity.ok(attendances.entrySet().stream()
-            .map(entry -> new ChildAttendanceDto()
-                .childId(entry.getKey().getId())
-                .attendances(entry.getValue().stream()
-                    .map(attendance -> new AttendanceDto()
-                        .date(attendance.getDate())
-                        .time(attendance.getTime())
-                    )
-                    .collect(Collectors.toList())
-                )
-            )
-            .collect(Collectors.toList())
-        );
-    }
-
-    @Override
     public ResponseEntity<List<ChildInfoDto>> getChildrenForBranchOffice(String id) {
         BranchOffice branchOffice = branchOfficeService.getById(id);
-        List<Child> children = branchOfficeService.getChildren(branchOffice).stream()
-            .sorted(Comparator.comparing(Child::getFullName))
-            .collect(Collectors.toList());
+
+        List<Child> children = branchOfficeService.getChildren(branchOffice);
 
         return ResponseEntity.ok(children.stream()
             .map(it -> new ChildInfoDto()
@@ -144,32 +115,6 @@ public class BranchOfficeApiController implements BranchOfficeApi {
             )
             .collect(Collectors.toList())
         );
-    }
-
-    @Override
-    public ResponseEntity<Void> saveAttendances(String id, YearMonth period, List<ChildAttendanceDto> childAttendanceDto) {
-        List<Attendance> attendances = childAttendanceDto.stream()
-            .map(item -> {
-                Child child = childService.getChildById(item.getChildId());
-
-                return item.getAttendances().stream()
-                    .map(it -> {
-                        Attendance attendance = new Attendance();
-
-                        attendance.setChild(child);
-                        attendance.setDate(it.getDate());
-                        attendance.setTime(it.getTime());
-
-                        return attendance;
-                    })
-                    .collect(Collectors.toList());
-            })
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
-
-        attendanceService.saveAttendances(attendances);
-
-        return ResponseEntity.ok().build();
     }
 
     @Override

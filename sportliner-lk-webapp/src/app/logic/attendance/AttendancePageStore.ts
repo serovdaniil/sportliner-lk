@@ -1,6 +1,6 @@
 import {AttendanceEditStore} from "app/logic/attendance/AttendanceEditStore";
-import {branchOfficeApi} from "app/service/Apis";
-import {action, makeObservable, observable, reaction} from 'mobx';
+import {attendanceApi, branchOfficeApi} from "app/service/Apis";
+import {action, makeObservable, observable} from 'mobx';
 import {auth} from "../../App";
 import {BranchOfficeItem} from "../../../api";
 import {branchOfficeItemStore} from "../store/Catalog/BranchOfficeItemStore";
@@ -21,7 +21,7 @@ export class AttendancePageStore {
         this._trainer = !auth.isAdmin;
         this._editStore = new AttendanceEditStore();
         this._period = "2023-12";
-        this.setupReactions();
+        // this.setupReactions();
 
         makeObservable(this);
     }
@@ -61,6 +61,11 @@ export class AttendancePageStore {
             this._branchOffice = branchOfficeItemStore.available[0];
         }
 
+        await this.loadData();
+    }
+
+    @action.bound
+    async loadData(): Promise<void> {
         await this._editStore.loadData(this._branchOffice?.id!, this._period);
     }
 
@@ -75,23 +80,21 @@ export class AttendancePageStore {
     }
 
     async save(): Promise<void> {
-        await branchOfficeApi.saveAttendances({
-            id: this._branchOffice?.id!,
+        await attendanceApi.saveAttendances({
+            branchOfficeId: this._branchOffice?.id!,
             period: this.period,
             childAttendance: this.editStore.toJson()
         });
     }
 
-    setupReactions(): void {
-        reaction(
-            () => this._period,
-            async () => await this._editStore.loadData(this._branchOffice?.id!, this._period)
-        );
-
-        reaction(
-            () => this._branchOffice,
-            async () => await this._editStore.loadData(this._branchOffice?.id!, this._period)
-        )
-    }
+    // setupReactions(): void {
+    //     reaction(
+    //         () => toJS({
+    //             period: this.period,
+    //             branchOffice: this.branchOffice
+    //         }),
+    //         async () => await this._editStore.loadData(this._branchOffice?.id!, this._period)
+    //     );
+    // }
 
 }

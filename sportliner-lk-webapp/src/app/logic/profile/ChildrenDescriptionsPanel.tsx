@@ -17,24 +17,25 @@ const ChildrenDescriptionsPanel: FC<Props> = (props: Props) => {
     }
 
     return (
-        <Row className="dp-row" gutter={16}>
+        <Row className="dp-row">
+            <Space direction={"vertical"}>
+                <Typography.Title level={5}>Дети</Typography.Title>
 
-            <Typography.Text>Дети</Typography.Text>
-
-            <Row gutter={16}>
-                {props.children.map(it =>
-                    <Col span={8}>
-                        <Card title={it.fullName} bordered={false}>
-                            <Button
-                                type="link"
-                                onClick={() => navigator.safeNavigate(AppRoutes.childEditPage.toUrl({childId: it.id}))}
-                            >
-                                Изменить
-                            </Button>
-                        </Card>
-                    </Col>
-                )}
-            </Row>
+                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                    {props.children.map(it =>
+                        <Col span={12}>
+                            <Card title={it.fullName} bordered={true}>
+                                <Button
+                                    type="link"
+                                    onClick={() => navigator.safeNavigate(AppRoutes.childEditPage.toUrl({childId: it.id}))}
+                                >
+                                    Подробнее
+                                </Button>
+                            </Card>
+                        </Col>
+                    )}
+                </Row>
+            </Space>
         </Row>
     )
 };

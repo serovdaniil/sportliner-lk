@@ -1,4 +1,4 @@
-import {Button, Descriptions, Form, Input, Row, Space} from 'antd';
+import {Button, Descriptions, Form, Input, Row, Space, Typography} from 'antd';
 import {requestHandlerStore} from 'app/App';
 import LoadingBlock from 'app/components/LoadingBlock/LoadingBlock';
 import {useNavigator} from "app/logic/Navigator";
@@ -9,6 +9,7 @@ import PageBorder from "../../border/PageBorder";
 import DescriptionsItem from "antd/es/descriptions/Item";
 import {maxValueValidator, minValueValidator, requiredWithTrimValidator} from "../../Validators";
 import TextArea from "antd/es/input/TextArea";
+import ChildAttendancesTable from "./ChildAttendancesTable";
 
 const PAGE_TITLE: string = "Данные о ребенке";
 
@@ -19,12 +20,12 @@ interface Props {
 const ChildEditPage: FC<Props> = (props: Props) => {
     const [init, setInit] = useState<boolean>(false);
     const navigator = useNavigator();
-    const [store] = useState<ChildEditPageStore>(() => new ChildEditPageStore());
+    const [store] = useState<ChildEditPageStore>(() => new ChildEditPageStore(props.childId));
     const [form] = Form.useForm();
 
     useEffect(() => {
         requestHandlerStore.initializePage(async () => {
-            await store.init(props.childId);
+            await store.init();
 
             setInit(true);
         });
@@ -86,6 +87,8 @@ const ChildEditPage: FC<Props> = (props: Props) => {
             )}
         >
             <Row className="dp-row">
+                <Typography.Title level={5}>Персональные данные</Typography.Title>
+
                 <Space direction="vertical" style={{width: "100%"}}>
 
                     <Descriptions size={"small"} layout={"vertical"} column={2} style={{width: 500}}>
@@ -148,6 +151,14 @@ const ChildEditPage: FC<Props> = (props: Props) => {
                         </Form.Item>
                     </Form>
 
+                </Space>
+            </Row>
+
+            <Row className="dp-row">
+                <Space direction={"vertical"} style={{width: "100vw"}}>
+                    <Typography.Title level={5}>Посещения занятий</Typography.Title>
+
+                    <ChildAttendancesTable content={store.attendances}/>
                 </Space>
             </Row>
         </PageBorder>

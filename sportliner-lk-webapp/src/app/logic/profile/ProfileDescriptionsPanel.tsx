@@ -20,7 +20,7 @@ const ProfileDescriptionsPanel: FC<Props> = (props: Props) => {
         <Row className="dp-row">
 
             <Space direction={"vertical"}>
-                <Typography.Text>Персональные данные</Typography.Text>
+                <Typography.Title level={5}>Персональные данные</Typography.Title>
                 <Descriptions size={"small"} layout={"vertical"} column={2} style={{width: 500}}>
 
                     <DescriptionsItem label="Логин">{profile.username}</DescriptionsItem>

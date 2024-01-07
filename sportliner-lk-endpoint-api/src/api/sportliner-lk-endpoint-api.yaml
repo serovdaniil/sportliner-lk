@@ -23,6 +23,8 @@ tags:
     description: User operations
   - name: branchOffice
     description: Branch office operations
+  - name: attendance
+    description: Attendances operations
   - name: analysis
     description: Analysis operations
   - name: catalog
@@ -460,14 +462,39 @@ paths:
         403:
           description: Access forbidden
 
-  /branchOffices/{id}/attendances/{period}:
+  /branchOffices/{id}/children:
     get:
       tags:
         - branchOffice
+      operationId: getChildrenForBranchOffice
+      summary: Get children for branch office
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Children
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ChildInfo'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /branchOffices/{branchOfficeId}/attendances/{period}:
+    get:
+      tags:
+        - attendance
       operationId: getAttendancesForBranchOffice
       summary: Get attendances for branch office of target period
       parameters:
-        - name: id
+        - name: branchOfficeId
           in: path
           schema:
             type: string
@@ -491,11 +518,11 @@ paths:
           description: Access forbidden
     put:
       tags:
-        - branchOffice
+        - attendance
       operationId: saveAttendances
       summary: Save attendance
       parameters:
-        - name: id
+        - name: branchOfficeId
           in: path
           schema:
             type: string
@@ -520,26 +547,26 @@ paths:
         403:
           description: Access forbidden
 
-  /branchOffices/{id}/children:
+  /child/{childId}/attendances:
     get:
       tags:
-        - branchOffice
-      operationId: getChildrenForBranchOffice
-      summary: Get children for branch office
+        - attendance
+      operationId: getAttendancesForChild
+      summary: Get attendances for child
       parameters:
-        - name: id
+        - name: childId
           in: path
           schema:
             type: string
           required: true
       responses:
         200:
-          description: Children
+          description: Attendance for children
           content:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/ChildInfo'
+                  $ref: '#/components/schemas/Attendance'
         401:
           description: Not authenticated
         403:

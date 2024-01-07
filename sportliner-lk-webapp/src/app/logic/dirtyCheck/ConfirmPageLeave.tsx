@@ -4,15 +4,15 @@ export const confirmPageLeave = async (): Promise<boolean> => {
     return new Promise<boolean>((resolve) => {
 
         const modal = Modal.confirm({
-            content: 'Are you sure? You have unsaved changes.',
+            content: 'Вы уверены? У вас есть несохраненные изменения.',
 
-            cancelText: 'Stay on page',
+            cancelText: 'Оставаться на странице',
             onCancel: () => {
                 modal.destroy();
                 resolve(false);
             },
 
-            okText: 'Leave page',
+            okText: 'Покинуть страницу',
             onOk: () => {
                 resolve(true);
             }

@@ -14,5 +14,7 @@ public interface AttendanceService {
 
     List<Attendance> findByChildAndPeriod(Child child, YearMonth period);
 
+    List<Attendance> findByChild(Child child);
+
     void saveAttendances(List<Attendance> attendances);
 }

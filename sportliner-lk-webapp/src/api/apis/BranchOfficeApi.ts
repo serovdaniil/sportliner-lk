@@ -18,7 +18,6 @@ import type {
   BranchOffice,
   BranchOfficeItem,
   BranchOfficeListItem,
-  ChildAttendance,
   ChildInfo,
 } from '../models';
 import {
@@ -28,8 +27,6 @@ import {
     BranchOfficeItemToJSON,
     BranchOfficeListItemFromJSON,
     BranchOfficeListItemToJSON,
-    ChildAttendanceFromJSON,
-    ChildAttendanceToJSON,
     ChildInfoFromJSON,
     ChildInfoToJSON,
 } from '../models';
@@ -40,11 +37,6 @@ export interface CreateBranchOfficeRequest {
 
 export interface DeleteBranchOfficeRequest {
     id: string;
-}
-
-export interface GetAttendancesForBranchOfficeRequest {
-    id: string;
-    period: string;
 }
 
 export interface GetBranchOfficeRequest {
@@ -58,12 +50,6 @@ export interface GetChildrenForBranchOfficeRequest {
 export interface GetSchedulesForBranchOfficeRequest {
     id: string;
     period: string;
-}
-
-export interface SaveAttendancesRequest {
-    id: string;
-    period: string;
-    childAttendance: Array<ChildAttendance>;
 }
 
 export interface UpdateBranchOfficeRequest {
@@ -151,48 +137,6 @@ export class BranchOfficeApi extends runtime.BaseAPI {
      */
     async deleteBranchOffice(requestParameters: DeleteBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.deleteBranchOfficeRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Get attendances for branch office of target period
-     */
-    async getAttendancesForBranchOfficeRaw(requestParameters: GetAttendancesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ChildAttendance>>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getAttendancesForBranchOffice.');
-        }
-
-        if (requestParameters.period === null || requestParameters.period === undefined) {
-            throw new runtime.RequiredError('period','Required parameter requestParameters.period was null or undefined when calling getAttendancesForBranchOffice.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/branchOffices/{id}/attendances/{period}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"period"}}`, encodeURIComponent(String(requestParameters.period))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ChildAttendanceFromJSON));
-    }
-
-    /**
-     * Get attendances for branch office of target period
-     */
-    async getAttendancesForBranchOffice(requestParameters: GetAttendancesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ChildAttendance>> {
-        const response = await this.getAttendancesForBranchOfficeRaw(requestParameters, initOverrides);
-        return await response.value();
     }
 
     /**
@@ -379,54 +323,6 @@ export class BranchOfficeApi extends runtime.BaseAPI {
     async getSchedulesForBranchOffice(requestParameters: GetSchedulesForBranchOfficeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: Array<string>; }> {
         const response = await this.getSchedulesForBranchOfficeRaw(requestParameters, initOverrides);
         return await response.value();
-    }
-
-    /**
-     * Save attendance
-     */
-    async saveAttendancesRaw(requestParameters: SaveAttendancesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling saveAttendances.');
-        }
-
-        if (requestParameters.period === null || requestParameters.period === undefined) {
-            throw new runtime.RequiredError('period','Required parameter requestParameters.period was null or undefined when calling saveAttendances.');
-        }
-
-        if (requestParameters.childAttendance === null || requestParameters.childAttendance === undefined) {
-            throw new runtime.RequiredError('childAttendance','Required parameter requestParameters.childAttendance was null or undefined when calling saveAttendances.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/branchOffices/{id}/attendances/{period}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"period"}}`, encodeURIComponent(String(requestParameters.period))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: requestParameters.childAttendance.map(ChildAttendanceToJSON),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Save attendance
-     */
-    async saveAttendances(requestParameters: SaveAttendancesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.saveAttendancesRaw(requestParameters, initOverrides);
     }
 
     /**
