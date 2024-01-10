@@ -1,6 +1,6 @@
 import {Button, Checkbox, Collapse, Form, Input, Modal, Row, Select, Space, Tooltip, Typography} from 'antd';
 import {useForm} from 'antd/es/form/Form';
-import {requestHandlerStore} from 'app/App';
+import {auth, requestHandlerStore} from 'app/App';
 import {AppRoutes} from 'app/AppRoutes';
 import LoadingBlock from "app/components/LoadingBlock/LoadingBlock";
 import PageBorder from 'app/logic/border/PageBorder';
@@ -230,17 +230,26 @@ const UserEditPage: FC<Props> = (props: Props) => {
                                 style={{width: 280}}
                             >
                                 <Select onChange={(role: UserRole) => userAttributes.setRole(role)}>
-                                    <Select.Option value=""> </Select.Option>
-                                    {Object.values(UserRole).map((role) => {
-                                        return (
-                                            <Select.Option
-                                                key={role}
-                                                value={role}
-                                            >
-                                                {formatUserRole(role)}
-                                            </Select.Option>
-                                        )
-                                    })}
+                                    {(auth.isTrainer && !auth.isAdmin)&& (
+                                        <Select.Option
+                                            key={UserRole.PARENT}
+                                            value={UserRole.PARENT}
+                                        >
+                                            {formatUserRole(UserRole.PARENT)}
+                                        </Select.Option>
+                                    )}
+                                    {auth.isAdmin && (
+                                        Object.values(UserRole).map((role) => {
+                                            return (
+                                                <Select.Option
+                                                    key={role}
+                                                    value={role}
+                                                >
+                                                    {formatUserRole(role)}
+                                                </Select.Option>
+                                            )
+                                        })
+                                    )}
                                 </Select>
                             </Form.Item>
                         </Space>
