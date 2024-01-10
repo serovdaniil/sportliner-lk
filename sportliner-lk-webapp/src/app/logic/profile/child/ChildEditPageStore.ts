@@ -5,9 +5,9 @@ export default class ChildEditPageStore {
 
     private readonly _childId: string;
 
-    private _child: ChildProfile;
+    private _child?: ChildProfile;
 
-    private _attendances: Attendance[];
+    private _attendances: Attendance[] = [];
 
 
     constructor(childId: string) {
@@ -20,7 +20,7 @@ export default class ChildEditPageStore {
     };
 
     get child(): ChildProfile {
-        return this._child;
+        return this._child!;
     }
 
     get attendances(): Attendance[] {

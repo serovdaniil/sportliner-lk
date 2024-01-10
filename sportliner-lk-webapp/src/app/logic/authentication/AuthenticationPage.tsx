@@ -43,7 +43,7 @@ const AuthenticationPage: React.FC = () => {
         if (error instanceof AuthenticationException) {
             setAuthResponseStatus({
                 status: 'error',
-                errorMessage: 'User with such login and password not found',
+                errorMessage: 'Пользователь с таким логином и паролем не найден',
             });
         }
     };
