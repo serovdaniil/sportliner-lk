@@ -89,13 +89,18 @@ tasks.register<YarnTask>("start") {
 
 tasks.register("stop") {
     doLast {
-        try {
-            exec {
-                commandLine = listOf("cmd", "/c", "taskkill /F /IM node.exe")
-                isIgnoreExitValue = true
-            }
-        } catch (e: Exception) {
-            println(e.message)
+//        try {
+//            exec {
+//                commandLine = listOf("cmd", "/c", "taskkill /F /IM node.exe")
+//                isIgnoreExitValue = true
+//            }
+//        } catch (e: Exception) {
+//            println(e.message)
+//        }
+        val pattern = "node ${project.projectDir}"
+        exec {
+            commandLine = listOf("sh", "-c", "pkill -f '${pattern}'")
+            isIgnoreExitValue = true
         }
     }
 }
