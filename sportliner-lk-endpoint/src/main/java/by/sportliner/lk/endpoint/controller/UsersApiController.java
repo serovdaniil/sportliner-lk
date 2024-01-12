@@ -127,6 +127,7 @@ public class UsersApiController implements UsersApi {
             target.setPasswordTimestamp(Instant.now());
         }
 
+        target.setUsername(dto.getUsername());
         target.setRole(UserRole.valueOf(dto.getRole().name()));
         target.setLastName(dto.getLastName());
         target.setFirstName(dto.getFirstName());
