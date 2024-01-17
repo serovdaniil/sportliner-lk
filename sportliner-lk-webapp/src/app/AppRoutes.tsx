@@ -11,6 +11,8 @@ import UserEditPage from "./logic/user/edit/UserEditPage";
 import ProfilePage from "./logic/profile/ProfilePage";
 import ChildEditPage from "./logic/profile/child/ChildEditPage";
 import AnalysisPage from "./logic/analysis/AnalysisPage";
+import TrialAttendanceListPage from "./logic/attendance/trialAttendance/list/TrialAttendanceListPage";
+import TrialAttendanceEditPage from "./logic/attendance/trialAttendance/edit/TrialAttendanceEditPage";
 
 export const AppRoutes = {
 
@@ -79,6 +81,18 @@ export const AppRoutes = {
     attendances: new PageMeta<void>({
         path: '/attendances',
         render: () => <AttendancePage/>,
+        requiredAuthorities: Authorities.TRAINER
+    }),
+
+    trialAttendances: new PageMeta<void>({
+        path: '/trialAttendances',
+        render: () => <TrialAttendanceListPage/>,
+        requiredAuthorities: Authorities.TRAINER
+    }),
+
+    addTrialAttendances: new PageMeta<void>({
+        path: '/trialAttendances/add',
+        render: () => <TrialAttendanceEditPage/>,
         requiredAuthorities: Authorities.TRAINER
     }),
 

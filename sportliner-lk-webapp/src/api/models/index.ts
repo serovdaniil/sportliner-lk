@@ -30,6 +30,8 @@ export * from './InternalError';
 export * from './ObjectNotFoundError';
 export * from './PaymentType';
 export * from './ReferenceViolationError';
+export * from './TrialAttendance';
+export * from './TrialAttendanceStatus';
 export * from './UniquenessViolationError';
 export * from './UserAccount';
 export * from './UserAccountCriteria';

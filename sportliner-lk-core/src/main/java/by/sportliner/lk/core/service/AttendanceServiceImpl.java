@@ -3,8 +3,10 @@ package by.sportliner.lk.core.service;
 import by.sportliner.lk.core.model.Attendance;
 import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.TrialAttendance;
 import by.sportliner.lk.core.repository.AttendanceRepository;
 import by.sportliner.lk.core.repository.ChildRepository;
+import by.sportliner.lk.core.repository.TrialAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private ChildRepository childRepository;
+
+    @Autowired
+    private TrialAttendanceRepository trialAttendanceRepository;
 
     @Override
     public List<Attendance> findByBranchOfficeAndDate(BranchOffice branchOffice, LocalDate date) {
@@ -72,5 +77,24 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceRepository.saveAll(attendancesForChild);
             childRepository.save(child);
         }
+    }
+
+    @Override
+    public List<TrialAttendance> findTrialAttendances() {
+        return trialAttendanceRepository.findAll();
+    }
+
+    @Override
+    public void addNewTrialAttendance(TrialAttendance trialAttendance) {
+        trialAttendanceRepository.save(trialAttendance);
+    }
+
+    @Override
+    public void confirmAttendance(String trialAttendanceId) {
+        TrialAttendance trialAttendance = trialAttendanceRepository.getReferenceById(trialAttendanceId);
+
+        trialAttendance.setTrialAttendanceStatus(TrialAttendance.TrialAttendanceStatus.ATTENDED);
+
+        trialAttendanceRepository.save(trialAttendance);
     }
 }

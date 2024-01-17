@@ -8,6 +8,7 @@ package by.sportliner.lk.endpoint.api;
 import by.sportliner.lk.endpoint.api.AttendanceDto;
 import by.sportliner.lk.endpoint.api.ChildAttendanceDto;
 import java.util.List;
+import by.sportliner.lk.endpoint.api.TrialAttendanceDto;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,6 +39,67 @@ import jakarta.annotation.Generated;
 @Validated
 @Tag(name = "attendance", description = "Attendances operations")
 public interface AttendanceApi {
+
+    /**
+     * POST /trialAttendance/{trialAttendanceId} : Confirm trial attendance
+     *
+     * @param trialAttendanceId  (required)
+     * @return Update status trial attendance (status code 200)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "confirmTrialAttendance",
+        summary = "Confirm trial attendance",
+        tags = { "attendance" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Update status trial attendance"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/trialAttendance/{trialAttendanceId}"
+    )
+    ResponseEntity<Void> confirmTrialAttendance(
+        @Parameter(name = "trialAttendanceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("trialAttendanceId") String trialAttendanceId
+    ) throws Exception;
+
+
+    /**
+     * POST /trialAttendance : Create trial attendances
+     *
+     * @param trialAttendanceDto  (required)
+     * @return Successfully created (status code 201)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "createTrialAttendances",
+        summary = "Create trial attendances",
+        tags = { "attendance" },
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Successfully created"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/trialAttendance",
+        consumes = { "application/json" }
+    )
+    ResponseEntity<Void> createTrialAttendances(
+        @Parameter(name = "TrialAttendanceDto", description = "", required = true) @Valid @RequestBody TrialAttendanceDto trialAttendanceDto
+    ) throws Exception;
+
 
     /**
      * GET /branchOffices/{branchOfficeId}/attendances/{period} : Get attendances for branch office of target period
@@ -104,6 +166,38 @@ public interface AttendanceApi {
     )
     ResponseEntity<List<AttendanceDto>> getAttendancesForChild(
         @Parameter(name = "childId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("childId") String childId
+    ) throws Exception;
+
+
+    /**
+     * GET /trialAttendance : Get trial attendances
+     *
+     * @return Trial Attendance (status code 200)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "getTrialAttendances",
+        summary = "Get trial attendances",
+        tags = { "attendance" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Trial Attendance", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TrialAttendanceDto.class)))
+            }),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/trialAttendance",
+        produces = { "application/json" }
+    )
+    ResponseEntity<List<TrialAttendanceDto>> getTrialAttendances(
+        
     ) throws Exception;
 
 

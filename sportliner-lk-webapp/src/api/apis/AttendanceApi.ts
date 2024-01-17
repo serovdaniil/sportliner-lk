@@ -17,13 +17,24 @@ import * as runtime from '../runtime';
 import type {
   Attendance,
   ChildAttendance,
+  TrialAttendance,
 } from '../models';
 import {
     AttendanceFromJSON,
     AttendanceToJSON,
     ChildAttendanceFromJSON,
     ChildAttendanceToJSON,
+    TrialAttendanceFromJSON,
+    TrialAttendanceToJSON,
 } from '../models';
+
+export interface ConfirmTrialAttendanceRequest {
+    trialAttendanceId: string;
+}
+
+export interface CreateTrialAttendancesRequest {
+    trialAttendance: TrialAttendance;
+}
 
 export interface GetAttendancesForBranchOfficeRequest {
     branchOfficeId: string;
@@ -44,6 +55,83 @@ export interface SaveAttendancesRequest {
  * 
  */
 export class AttendanceApi extends runtime.BaseAPI {
+
+    /**
+     * Confirm trial attendance
+     */
+    async confirmTrialAttendanceRaw(requestParameters: ConfirmTrialAttendanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.trialAttendanceId === null || requestParameters.trialAttendanceId === undefined) {
+            throw new runtime.RequiredError('trialAttendanceId','Required parameter requestParameters.trialAttendanceId was null or undefined when calling confirmTrialAttendance.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/trialAttendance/{trialAttendanceId}`.replace(`{${"trialAttendanceId"}}`, encodeURIComponent(String(requestParameters.trialAttendanceId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Confirm trial attendance
+     */
+    async confirmTrialAttendance(requestParameters: ConfirmTrialAttendanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.confirmTrialAttendanceRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Create trial attendances
+     */
+    async createTrialAttendancesRaw(requestParameters: CreateTrialAttendancesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.trialAttendance === null || requestParameters.trialAttendance === undefined) {
+            throw new runtime.RequiredError('trialAttendance','Required parameter requestParameters.trialAttendance was null or undefined when calling createTrialAttendances.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/trialAttendance`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TrialAttendanceToJSON(requestParameters.trialAttendance),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Create trial attendances
+     */
+    async createTrialAttendances(requestParameters: CreateTrialAttendancesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.createTrialAttendancesRaw(requestParameters, initOverrides);
+    }
 
     /**
      * Get attendances for branch office of target period
@@ -122,6 +210,40 @@ export class AttendanceApi extends runtime.BaseAPI {
      */
     async getAttendancesForChild(requestParameters: GetAttendancesForChildRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Attendance>> {
         const response = await this.getAttendancesForChildRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get trial attendances
+     */
+    async getTrialAttendancesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<TrialAttendance>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/trialAttendance`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TrialAttendanceFromJSON));
+    }
+
+    /**
+     * Get trial attendances
+     */
+    async getTrialAttendances(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TrialAttendance>> {
+        const response = await this.getTrialAttendancesRaw(initOverrides);
         return await response.value();
     }
 

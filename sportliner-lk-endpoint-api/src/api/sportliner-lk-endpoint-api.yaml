@@ -597,6 +597,63 @@ paths:
         403:
           description: Access forbidden
 
+  /trialAttendance:
+    get:
+      tags:
+        - attendance
+      operationId: getTrialAttendances
+      summary: Get trial attendances
+      responses:
+        200:
+          description: Trial Attendance
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TrialAttendance'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    post:
+      tags:
+        - attendance
+      operationId: createTrialAttendances
+      summary: Create trial attendances
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrialAttendance'
+      responses:
+        201:
+          description: Successfully created
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /trialAttendance/{trialAttendanceId}:
+    post:
+      tags:
+        - attendance
+      operationId: confirmTrialAttendance
+      summary: Confirm trial attendance
+      parameters:
+        - name: trialAttendanceId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Update status trial attendance
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
   /availableBranchOffices:
     get:
       tags:
@@ -1124,6 +1181,41 @@ components:
         time:
           description: Time
           $ref: '#/components/schemas/LocalTime'
+
+    TrialAttendance:
+      type: object
+      description: Trial attendance
+      required:
+        - id
+        - branchOffice
+        - name
+        - phone
+        - diagnosis
+        - date
+        - status
+      properties:
+        id:
+          readOnly: true
+          type: string
+        branchOffice:
+          $ref: '#/components/schemas/BranchOfficeItem'
+        name:
+          type: string
+        phone:
+          type: string
+        diagnosis:
+          type: string
+        date:
+          description: Date
+          $ref: '#/components/schemas/LocalDate'
+        status:
+          $ref: '#/components/schemas/TrialAttendanceStatus'
+
+    TrialAttendanceStatus:
+      type: string
+      enum:
+        - ATTENDED
+        - UNATTENDED
 
     AnalysisData:
       type: object

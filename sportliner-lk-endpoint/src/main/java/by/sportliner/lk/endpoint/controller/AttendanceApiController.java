@@ -3,12 +3,11 @@ package by.sportliner.lk.endpoint.controller;
 import by.sportliner.lk.core.model.Attendance;
 import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.TrialAttendance;
 import by.sportliner.lk.core.service.AttendanceService;
 import by.sportliner.lk.core.service.BranchOfficeService;
 import by.sportliner.lk.core.service.ChildService;
-import by.sportliner.lk.endpoint.api.AttendanceApi;
-import by.sportliner.lk.endpoint.api.AttendanceDto;
-import by.sportliner.lk.endpoint.api.ChildAttendanceDto;
+import by.sportliner.lk.endpoint.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,5 +92,53 @@ public class AttendanceApiController implements AttendanceApi {
         attendanceService.saveAttendances(period, attendances);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> confirmTrialAttendance(String trialAttendanceId) {
+        attendanceService.confirmAttendance(trialAttendanceId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> createTrialAttendances(TrialAttendanceDto trialAttendanceDto) {
+        TrialAttendance trialAttendance = convert(trialAttendanceDto);
+
+        attendanceService.addNewTrialAttendance(trialAttendance);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<List<TrialAttendanceDto>> getTrialAttendances() {
+        return ResponseEntity.ok(attendanceService.findTrialAttendances().stream()
+            .map(it -> new TrialAttendanceDto()
+                .id(it.getId())
+                .branchOffice(new BranchOfficeItemDto()
+                    .id(it.getId())
+                    .address(it.getBranchOffice().getAddress().getFullAddress())
+                )
+                .name(it.getName())
+                .phone(it.getPhone())
+                .diagnosis(it.getDiagnosis())
+                .date(it.getDate())
+                .status(TrialAttendanceStatusDto.valueOf(it.getTrialAttendanceStatus().name()))
+            )
+            .collect(Collectors.toList())
+        );
+    }
+
+    private TrialAttendance convert(TrialAttendanceDto dto) {
+        TrialAttendance trialAttendance = new TrialAttendance();
+
+        trialAttendance.setBranchOffice(branchOfficeService.getById(dto.getBranchOffice().getId()));
+        trialAttendance.setName(dto.getName());
+        trialAttendance.setPhone(dto.getPhone());
+        trialAttendance.setDiagnosis(dto.getDiagnosis());
+        trialAttendance.setDate(dto.getDate());
+        trialAttendance.setTrialAttendanceStatus(TrialAttendance.TrialAttendanceStatus.UNATTENDED);
+
+        return trialAttendance;
     }
 }

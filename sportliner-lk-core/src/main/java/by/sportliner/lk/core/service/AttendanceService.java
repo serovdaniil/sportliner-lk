@@ -3,6 +3,7 @@ package by.sportliner.lk.core.service;
 import by.sportliner.lk.core.model.Attendance;
 import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.TrialAttendance;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -20,4 +21,10 @@ public interface AttendanceService {
     Map<Child, List<Attendance>> findChildrenAttendances(BranchOffice branchOffice, YearMonth period);
 
     void saveAttendances(YearMonth period, List<Attendance> attendances);
+
+    List<TrialAttendance> findTrialAttendances();
+
+    void addNewTrialAttendance(TrialAttendance trialAttendance);
+
+    void confirmAttendance(String trialAttendanceId);
 }
