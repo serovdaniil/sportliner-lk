@@ -18,6 +18,10 @@ import {
     BranchOfficeItemFromJSON,
     BranchOfficeItemFromJSONTyped,
     BranchOfficeItemToJSON,
+    PaymentType,
+    PaymentTypeFromJSON,
+    PaymentTypeFromJSONTyped,
+    PaymentTypeToJSON,
 } from './';
 
 
@@ -84,6 +88,12 @@ export interface Child {
     numberClassesPerMonth: number;
     /**
      * 
+     * @type {PaymentType}
+     * @memberof Child
+     */
+    paymentType: PaymentType;
+    /**
+     * 
      * @type {string}
      * @memberof Child
      */
@@ -109,6 +119,7 @@ export function ChildFromJSONTyped(json: any, ignoreDiscriminator: boolean): Chi
         'diagnosis': json['diagnosis'],
         'tuitionBalance': json['tuitionBalance'],
         'numberClassesPerMonth': json['numberClassesPerMonth'],
+        'paymentType': PaymentTypeFromJSON(json['paymentType']),
         'notes': !exists(json, 'notes') ? undefined : json['notes'],
     };
 }
@@ -134,6 +145,7 @@ export function ChildToJSONTyped(value?: Child | null, ignoreDiscriminator: bool
         'diagnosis': value.diagnosis,
         'tuitionBalance': value.tuitionBalance,
         'numberClassesPerMonth': value.numberClassesPerMonth,
+        'paymentType': PaymentTypeToJSON(value.paymentType),
         'notes': value.notes,
     };
 }

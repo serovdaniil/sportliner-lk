@@ -79,6 +79,7 @@ CREATE TABLE children (
     diagnosis                  TEXT  NOT NULL,
     tuition_balance            int   NOT NULL,
     number_classes_per_month   int   NOT NULL,
+    payment_type               TEXT  NOT NULL,
     notes                      TEXT  NULL,
     CONSTRAINT pk_children PRIMARY KEY (id)
 );

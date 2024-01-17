@@ -28,6 +28,7 @@ export * from './DayOfWeek';
 export * from './IntegrationError';
 export * from './InternalError';
 export * from './ObjectNotFoundError';
+export * from './PaymentType';
 export * from './ReferenceViolationError';
 export * from './UniquenessViolationError';
 export * from './UserAccount';

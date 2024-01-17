@@ -3,9 +3,11 @@ package by.sportliner.lk.endpoint.api;
 import java.net.URI;
 import java.util.Objects;
 import by.sportliner.lk.endpoint.api.BranchOfficeItemDto;
+import by.sportliner.lk.endpoint.api.PaymentTypeDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -51,6 +53,9 @@ public class ChildDto {
 
   @JsonProperty("numberClassesPerMonth")
   private Integer numberClassesPerMonth;
+
+  @JsonProperty("paymentType")
+  private PaymentTypeDto paymentType;
 
   @JsonProperty("notes")
   private String notes;
@@ -226,6 +231,25 @@ public class ChildDto {
     this.numberClassesPerMonth = numberClassesPerMonth;
   }
 
+  public ChildDto paymentType(PaymentTypeDto paymentType) {
+    this.paymentType = paymentType;
+    return this;
+  }
+
+  /**
+   * Get paymentType
+   * @return paymentType
+  */
+  @NotNull @Valid 
+  @Schema(name = "paymentType", requiredMode = Schema.RequiredMode.REQUIRED)
+  public PaymentTypeDto getPaymentType() {
+    return paymentType;
+  }
+
+  public void setPaymentType(PaymentTypeDto paymentType) {
+    this.paymentType = paymentType;
+  }
+
   public ChildDto notes(String notes) {
     this.notes = notes;
     return this;
@@ -263,12 +287,13 @@ public class ChildDto {
         Objects.equals(this.diagnosis, child.diagnosis) &&
         Objects.equals(this.tuitionBalance, child.tuitionBalance) &&
         Objects.equals(this.numberClassesPerMonth, child.numberClassesPerMonth) &&
+        Objects.equals(this.paymentType, child.paymentType) &&
         Objects.equals(this.notes, child.notes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, lastName, branchOffice, firstName, patronymic, birthdate, diagnosis, tuitionBalance, numberClassesPerMonth, notes);
+    return Objects.hash(id, lastName, branchOffice, firstName, patronymic, birthdate, diagnosis, tuitionBalance, numberClassesPerMonth, paymentType, notes);
   }
 
   @Override
@@ -284,6 +309,7 @@ public class ChildDto {
     sb.append("    diagnosis: ").append(toIndentedString(diagnosis)).append("\n");
     sb.append("    tuitionBalance: ").append(toIndentedString(tuitionBalance)).append("\n");
     sb.append("    numberClassesPerMonth: ").append(toIndentedString(numberClassesPerMonth)).append("\n");
+    sb.append("    paymentType: ").append(toIndentedString(paymentType)).append("\n");
     sb.append("    notes: ").append(toIndentedString(notes)).append("\n");
     sb.append("}");
     return sb.toString();

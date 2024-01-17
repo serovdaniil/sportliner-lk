@@ -3,10 +3,11 @@ import {observer} from "mobx-react";
 import React, {FC} from "react";
 import {ChildAttributes} from "./ChildAttributes";
 import {maxValueValidator, minValueValidator, requiredWithTrimValidator} from "../../Validators";
-import {BranchOfficeItem} from "../../../../api";
+import {BranchOfficeItem, DayOfWeek, PaymentType} from "../../../../api";
 import LocalDatePicker from "../../../components/LocalDatePicker/LocalDatePicker";
 import TextArea from "antd/es/input/TextArea";
 import {useForm} from "antd/es/form/Form";
+import {formatDayOfWeek} from "../../branchOffice/edit/BranchOfficeEditPage";
 
 interface Props {
     child: ChildAttributes;
@@ -34,6 +35,7 @@ const ChildForm: FC<Props> = (props: Props) => {
                     branchOffice: child.branchOffice?.id,
                     tuitionBalance: child.tuitionBalance,
                     numberClassesPerMonth: child.numberClassesPerMonth,
+                    paymentType: child.paymentType
                 }}
             >
                 <Space direction={"horizontal"}>
@@ -131,7 +133,6 @@ const ChildForm: FC<Props> = (props: Props) => {
                             child.updateBranchOffice(props.branchOffices[index]);
                         }}
                     >
-                        <Select.Option value=""> </Select.Option>
                         {props.branchOffices.map((branchOffice) => {
                             return (
                                 <Select.Option
@@ -148,7 +149,7 @@ const ChildForm: FC<Props> = (props: Props) => {
                 <Form.Item
                     name="tuitionBalance"
                     label="Количество оплаченных занятий:"
-                    rules={[requiredWithTrimValidator(), minValueValidator(0)]}
+                    rules={[requiredWithTrimValidator(), minValueValidator(-15)]}
                     style={{width: 300}}
                 >
                     <Input
@@ -165,6 +166,21 @@ const ChildForm: FC<Props> = (props: Props) => {
                     <Input
                         onChange={event => child.updateNumberClassesPerMonth(Number(event.target.value))}
                     />
+                </Form.Item>
+
+                <Form.Item
+                    name="paymentType"
+                    label="Тип оплаты:"
+                    rules={[requiredWithTrimValidator()]}
+                >
+                    <Select
+                        onChange={(value) => {
+                            child.updatePaymentType(value)
+                        }}>
+                        <Select.Option value={PaymentType.PREPAYMENT}>Предоплата</Select.Option>
+                        <Select.Option value={PaymentType.POST_PAYMENT}>Оплата по факту</Select.Option>
+                        <Select.Option value={PaymentType.PER_LESSON}>День в день</Select.Option>
+                    </Select>
                 </Form.Item>
 
             </Form>

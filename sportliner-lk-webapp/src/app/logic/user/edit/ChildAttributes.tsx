@@ -1,4 +1,4 @@
-import {BranchOfficeItem, Child} from 'api';
+import {BranchOfficeItem, Child, PaymentType} from 'api';
 import {action, makeObservable, observable, toJS} from 'mobx';
 
 interface ChildAttributesValues {
@@ -12,6 +12,7 @@ interface ChildAttributesValues {
     notes?: string;
     numberClassesPerMonth?: number;
     tuitionBalance?: number;
+    paymentType?: PaymentType;
 }
 
 export class ChildAttributes implements ChildAttributesValues {
@@ -45,6 +46,9 @@ export class ChildAttributes implements ChildAttributesValues {
     @observable
     private _numberClassesPerMonth?: number;
 
+    @observable
+    private _paymentType?: PaymentType;
+
     constructor(values?: ChildAttributesValues) {
         this._id = values?.id;
         this._lastName = values?.lastName;
@@ -56,6 +60,7 @@ export class ChildAttributes implements ChildAttributesValues {
         this._notes = values?.notes;
         this._numberClassesPerMonth = values?.numberClassesPerMonth;
         this._tuitionBalance = values?.tuitionBalance;
+        this._paymentType = values?.paymentType;
 
         makeObservable(this);
     }
@@ -98,6 +103,11 @@ export class ChildAttributes implements ChildAttributesValues {
 
     get numberClassesPerMonth(): number | undefined {
         return this._numberClassesPerMonth;
+    }
+
+
+    get paymentType(): PaymentType | undefined {
+        return this._paymentType;
     }
 
     @action.bound
@@ -145,6 +155,11 @@ export class ChildAttributes implements ChildAttributesValues {
         this._numberClassesPerMonth = value;
     }
 
+    @action.bound
+    updatePaymentType(value: PaymentType) {
+        this._paymentType = value;
+    }
+
     isValid(): boolean {
         return this._lastName != null
             && this._firstName != null
@@ -153,7 +168,8 @@ export class ChildAttributes implements ChildAttributesValues {
             && this._diagnosis != null
             && this._branchOffice != null
             && this._tuitionBalance != null
-            && this._numberClassesPerMonth != null;
+            && this._numberClassesPerMonth != null
+            && this._paymentType != null;
     }
 
     toJson(): Child {
@@ -167,7 +183,8 @@ export class ChildAttributes implements ChildAttributesValues {
             diagnosis: toJS(this._diagnosis!),
             notes: toJS(this._notes!),
             tuitionBalance: toJS(this._tuitionBalance!),
-            numberClassesPerMonth: toJS(this._numberClassesPerMonth!)
+            numberClassesPerMonth: toJS(this._numberClassesPerMonth!),
+            paymentType: toJS(this._paymentType!)
         }
     }
 

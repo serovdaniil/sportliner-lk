@@ -1,6 +1,7 @@
 package by.sportliner.lk.endpoint.controller;
 
 import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.PaymentType;
 import by.sportliner.lk.core.model.UserAccount;
 import by.sportliner.lk.core.model.UserRole;
 import by.sportliner.lk.core.service.BranchOfficeService;
@@ -71,6 +72,7 @@ public class UsersApiController implements UsersApi {
                     )
                     .tuitionBalance(it.getTuitionBalance())
                     .numberClassesPerMonth(it.getNumberClassesPerMonth())
+                    .paymentType(PaymentTypeDto.valueOf(it.getPaymentType().name()))
                     .notes(it.getNotes())
                 )
                 .toList()
@@ -159,6 +161,7 @@ public class UsersApiController implements UsersApi {
                 child.setBranchOffice(branchOfficeService.getById(it.getBranchOffice().getId()));
                 child.setTuitionBalance(it.getTuitionBalance());
                 child.setNumberClassesPerMonth(it.getNumberClassesPerMonth());
+                child.setPaymentType(PaymentType.valueOf(it.getPaymentType().name()));
 
                 return child;
             }).collect(Collectors.toList());

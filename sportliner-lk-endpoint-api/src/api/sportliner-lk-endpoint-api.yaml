@@ -908,6 +908,7 @@ components:
         - diagnosis
         - tuitionBalance
         - numberClassesPerMonth
+        - paymentType
       properties:
         id:
           type: string
@@ -928,8 +929,17 @@ components:
           type: integer
         numberClassesPerMonth:
           type: integer
+        paymentType:
+          $ref: '#/components/schemas/PaymentType'
         notes:
           type: string
+
+    PaymentType:
+      type: string
+      enum:
+        - PREPAYMENT
+        - POST_PAYMENT
+        - PER_LESSON
 
     UserAccountListItem:
       type: object

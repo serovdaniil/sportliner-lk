@@ -76,6 +76,13 @@ public class Child extends AbstractDataObject {
     @Column(name = "number_classes_per_month", nullable = false)
     private int numberClassesPerMonth;
 
+    /**
+     * Payment type.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_type", nullable = false)
+    private PaymentType paymentType;
+
     public UserAccount getParent() {
         return parent;
     }
@@ -154,6 +161,14 @@ public class Child extends AbstractDataObject {
 
     public void setNumberClassesPerMonth(int numberClassesPerMonth) {
         this.numberClassesPerMonth = numberClassesPerMonth;
+    }
+
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 
     public String getFullName() {
