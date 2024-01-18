@@ -57,6 +57,21 @@ export class AnalysisPageStore {
         return new Map<string, number>(Object.entries(this._analysisData.attendanceByTime));
     }
 
+    countAttendances(): number {
+        if (this._analysisData == null) {
+            throw new Error("Analysis data wasn't initialized yet");
+        }
+
+        let count = 0;
+
+        this.attendanceByTime
+            .forEach((attendances, time) => {
+                count = count + attendances
+            });
+
+        return count;
+    }
+
     @action.bound
     async init(): Promise<void> {
         await branchOfficeItemStore.loadAvailable();

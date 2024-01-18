@@ -105,9 +105,14 @@ const AnalysisPage: FC<Props> = (props: Props) => {
 
             <Row className="dp-row">
                 <Space direction={"vertical"}>
-                    <Space>
-                        <Typography.Title level={5}> Средняя посещаемость занятий в
-                            день: {store.averageAttendance}</Typography.Title>
+                    <Space direction={"vertical"}>
+                        <Typography.Title level={5}>
+                            Средняя посещаемость занятий в день: {store.averageAttendance}
+                        </Typography.Title>
+
+                        <Typography.Title level={5}>
+                            Общей количество детей: {store.countAttendances()}
+                        </Typography.Title>
                     </Space>
 
                     <Space direction={"vertical"}>

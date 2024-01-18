@@ -1,9 +1,6 @@
 package by.sportliner.lk.core.service;
 
-import by.sportliner.lk.core.model.Attendance;
-import by.sportliner.lk.core.model.BranchOffice;
-import by.sportliner.lk.core.model.Child;
-import by.sportliner.lk.core.model.TrialAttendance;
+import by.sportliner.lk.core.model.*;
 import by.sportliner.lk.core.repository.AttendanceRepository;
 import by.sportliner.lk.core.repository.ChildRepository;
 import by.sportliner.lk.core.repository.TrialAttendanceRepository;
@@ -29,6 +26,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private TrialAttendanceRepository trialAttendanceRepository;
+
+    @Autowired
+    private CurrentUserService currentUserService;
+
+    @Autowired
+    private BranchOfficeService branchOfficeService;
 
     @Override
     public List<Attendance> findByBranchOfficeAndDate(BranchOffice branchOffice, LocalDate date) {
@@ -81,6 +84,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public List<TrialAttendance> findTrialAttendances() {
+        UserAccount currentUserAccount = currentUserService.getUserAccount();
+
+        if (currentUserAccount.isTrainer()) {
+            BranchOffice branchOffice = branchOfficeService.getBranchOfficeOfCurrentTrainer();
+
+            return trialAttendanceRepository.findByBranchOffice(branchOffice);
+        }
+
         return trialAttendanceRepository.findAll();
     }
 
