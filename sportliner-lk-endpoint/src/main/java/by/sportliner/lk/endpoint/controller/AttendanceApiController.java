@@ -89,7 +89,9 @@ public class AttendanceApiController implements AttendanceApi {
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
 
-        attendanceService.saveAttendances(period, attendances);
+        BranchOffice branchOffice = branchOfficeService.getById(branchOfficeId);
+
+        attendanceService.saveAttendances(branchOffice, period, attendances);
 
         return ResponseEntity.ok().build();
     }

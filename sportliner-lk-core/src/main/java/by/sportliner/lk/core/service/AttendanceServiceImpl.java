@@ -62,22 +62,29 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional
-    public void saveAttendances(YearMonth period, List<Attendance> attendances) {
+    public void saveAttendances(BranchOffice branchOffice, YearMonth period, List<Attendance> attendances) {
         LocalDate fromDate = period.atDay(1);
         LocalDate toDate = period.atEndOfMonth();
 
         Map<Child, List<Attendance>> attendancesByChild = attendances.stream()
             .collect(Collectors.groupingBy(Attendance::getChild));
 
-        for (Map.Entry<Child, List<Attendance>> entry : attendancesByChild.entrySet()) {
-            Child child = entry.getKey();
-            List<Attendance> attendancesForChild = entry.getValue();
+        List<Child> children = branchOfficeService.getChildren(branchOffice);
 
-            int count = attendanceRepository.deleteAllByChildAndPeriod(child, fromDate, toDate);
+        for (Child child : children) {
+            List<Attendance> childAttendances = findByChild(child);
+            List<Attendance> currentChildAttendances = attendancesByChild.getOrDefault(child, List.of());
 
-            child.minusFewClasses(attendancesForChild.size() - count);
+            int countDifference = currentChildAttendances.size() - childAttendances.size();
 
-            attendanceRepository.saveAll(attendancesForChild);
+            if (countDifference == 0) {
+                continue;
+            }
+
+            child.minusFewClasses(countDifference);
+
+            attendanceRepository.deleteAllByChildAndPeriod(child, fromDate, toDate);
+            attendanceRepository.saveAll(currentChildAttendances);
             childRepository.save(child);
         }
     }

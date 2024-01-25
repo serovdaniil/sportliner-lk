@@ -20,7 +20,7 @@ public interface AttendanceService {
 
     Map<Child, List<Attendance>> findChildrenAttendances(BranchOffice branchOffice, YearMonth period);
 
-    void saveAttendances(YearMonth period, List<Attendance> attendances);
+    void saveAttendances(BranchOffice branchOffice, YearMonth period, List<Attendance> attendances);
 
     List<TrialAttendance> findTrialAttendances();
 
