@@ -114,7 +114,7 @@ export const phoneValidator = (message?: string): Rule => ({
             return reject(message ?? 'Пожалуйста, введите корректный телефонный номер');
         }
 
-        const emailRegExp = /^\+375 \((17|29|33|44)\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/;
+        const emailRegExp = /^\+375 \((17|29|33|44|25)\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/;
         const isEmailValid = emailRegExp.test(String(value).toLowerCase());
 
         if (!isEmailValid) {

@@ -138,7 +138,7 @@ const AuthenticationPage: React.FC = () => {
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon"/>}
-                        placeholder="Username"
+                        placeholder="Логин"
                         autoComplete="username"
                         autoFocus
                     />
@@ -153,7 +153,7 @@ const AuthenticationPage: React.FC = () => {
                     <Input.Password
                         ref={passwordRef}
                         prefix={<LockOutlined className="site-form-item-icon"/>}
-                        placeholder="Password"
+                        placeholder="Пароль"
                         autoComplete="current-password"
                     />
                 </Form.Item>
@@ -171,7 +171,7 @@ const AuthenticationPage: React.FC = () => {
                         htmlType="submit"
                         style={{width: '100%'}}
                     >
-                        Log in
+                        Войти в личный кабинет
                     </Button>
                 </Form.Item>
             </Space>
