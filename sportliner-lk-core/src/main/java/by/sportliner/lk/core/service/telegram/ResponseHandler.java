@@ -170,7 +170,7 @@ public class ResponseHandler {
 
         SendMessage responseMessage = new SendMessage();
         responseMessage.setChatId(chatId);
-        responseMessage.setText("Пожалуйста, выбирете дату пробного занятия");
+        responseMessage.setText("Пожалуйста, выберите дату пробного занятия");
         responseMessage.setReplyMarkup(KeyboardFactory.renderDates(branchOfficeService.getClassSchedules(branchOffice, YearMonth.now()).keySet()));
         sender.execute(responseMessage);
         chatStates.put(chatId, AWAITING_DATE);
