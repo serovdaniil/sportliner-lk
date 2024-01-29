@@ -15,6 +15,8 @@ public interface BranchOfficeService {
 
     BranchOffice getById(String id);
 
+    BranchOffice getByName(String name);
+
     BranchOffice save(BranchOffice branchOffice);
 
     void deleteById(String id);

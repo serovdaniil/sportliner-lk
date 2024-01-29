@@ -51,6 +51,9 @@ public class TrialAttendance extends AbstractDataObject{
     @Column(name = "status", nullable = false)
     private TrialAttendanceStatus trialAttendanceStatus;
 
+    @Column(name = "telegram_username")
+    private String telegramUsername;
+
     public BranchOffice getBranchOffice() {
         return branchOffice;
     }
@@ -97,6 +100,14 @@ public class TrialAttendance extends AbstractDataObject{
 
     public void setTrialAttendanceStatus(TrialAttendanceStatus trialAttendanceStatus) {
         this.trialAttendanceStatus = trialAttendanceStatus;
+    }
+
+    public String getTelegramUsername() {
+        return telegramUsername;
+    }
+
+    public void setTelegramUsername(String telegramUsername) {
+        this.telegramUsername = telegramUsername;
     }
 
     public enum TrialAttendanceStatus {

@@ -30,6 +30,9 @@ public class TrialAttendanceDto {
   @JsonProperty("id")
   private String id;
 
+  @JsonProperty("telegramUsername")
+  private String telegramUsername;
+
   @JsonProperty("branchOffice")
   private BranchOfficeItemDto branchOffice;
 
@@ -65,6 +68,25 @@ public class TrialAttendanceDto {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public TrialAttendanceDto telegramUsername(String telegramUsername) {
+    this.telegramUsername = telegramUsername;
+    return this;
+  }
+
+  /**
+   * Get telegramUsername
+   * @return telegramUsername
+  */
+  
+  @Schema(name = "telegramUsername", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public String getTelegramUsername() {
+    return telegramUsername;
+  }
+
+  public void setTelegramUsername(String telegramUsername) {
+    this.telegramUsername = telegramUsername;
   }
 
   public TrialAttendanceDto branchOffice(BranchOfficeItemDto branchOffice) {
@@ -191,6 +213,7 @@ public class TrialAttendanceDto {
     }
     TrialAttendanceDto trialAttendance = (TrialAttendanceDto) o;
     return Objects.equals(this.id, trialAttendance.id) &&
+        Objects.equals(this.telegramUsername, trialAttendance.telegramUsername) &&
         Objects.equals(this.branchOffice, trialAttendance.branchOffice) &&
         Objects.equals(this.name, trialAttendance.name) &&
         Objects.equals(this.phone, trialAttendance.phone) &&
@@ -201,7 +224,7 @@ public class TrialAttendanceDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, branchOffice, name, phone, diagnosis, date, status);
+    return Objects.hash(id, telegramUsername, branchOffice, name, phone, diagnosis, date, status);
   }
 
   @Override
@@ -209,6 +232,7 @@ public class TrialAttendanceDto {
     StringBuilder sb = new StringBuilder();
     sb.append("class TrialAttendanceDto {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    telegramUsername: ").append(toIndentedString(telegramUsername)).append("\n");
     sb.append("    branchOffice: ").append(toIndentedString(branchOffice)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    phone: ").append(toIndentedString(phone)).append("\n");

@@ -39,6 +39,12 @@ export interface TrialAttendance {
     readonly id: string;
     /**
      * 
+     * @type {string}
+     * @memberof TrialAttendance
+     */
+    telegramUsername?: string;
+    /**
+     * 
      * @type {BranchOfficeItem}
      * @memberof TrialAttendance
      */
@@ -87,6 +93,7 @@ export function TrialAttendanceFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'id': json['id'],
+        'telegramUsername': !exists(json, 'telegramUsername') ? undefined : json['telegramUsername'],
         'branchOffice': BranchOfficeItemFromJSON(json['branchOffice']),
         'name': json['name'],
         'phone': json['phone'],
@@ -109,6 +116,7 @@ export function TrialAttendanceToJSONTyped(value?: TrialAttendance | null, ignor
     }
     return {
         
+        'telegramUsername': value.telegramUsername,
         'branchOffice': BranchOfficeItemToJSON(value.branchOffice),
         'name': value.name,
         'phone': value.phone,

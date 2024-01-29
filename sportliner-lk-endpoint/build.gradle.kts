@@ -17,6 +17,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.data:spring-data-commons")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.telegram:telegrambots-abilities:6.9.0")
 
     // for swagger
     compileOnly("jakarta.annotation:jakarta.annotation-api:2.1.1")

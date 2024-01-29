@@ -6,3 +6,6 @@ ALTER TABLE class_schedule
 
 ALTER TABLE attendance
     ADD CONSTRAINT fk_attendance_children FOREIGN KEY (child_id) REFERENCES children (id) ON DELETE CASCADE;
+
+ALTER TABLE telegram_chat
+    ADD CONSTRAINT fk_telegram_chat_branch_office FOREIGN KEY (branch_office_id) REFERENCES branch_office (id) ON DELETE CASCADE;

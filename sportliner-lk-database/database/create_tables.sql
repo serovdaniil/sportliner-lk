@@ -93,12 +93,25 @@ CREATE TABLE attendance (
 );
 
 CREATE TABLE trial_attendance (
+    id                 UUID NOT NULL,
+    branch_office_id   UUID NOT NULL,
+    name               TEXT NOT NULL,
+    phone              TEXT NOT NULL,
+    diagnosis          TEXT NOT NULL,
+    date               DATE NOT NULL,
+    status             TEXT NOT NULL,
+    telegram_username  TEXT NULL,
+    CONSTRAINT pk_trial_attendance PRIMARY KEY (id)
+)
+
+CREATE TABLE telegram_chat (
     id               UUID NOT NULL,
+    chat_id          int  NOT NULL,
+    username         TEXT NOT NULL,
     branch_office_id UUID NOT NULL,
-    name             TEXT NOT NULL,
+    child_fio        TEXT NOT NULL,
     phone            TEXT NOT NULL,
     diagnosis        TEXT NOT NULL,
     date             DATE NOT NULL,
-    status           TEXT NOT NULL,
-    CONSTRAINT pk_trial_attendance PRIMARY KEY (id)
+    CONSTRAINT pk_telegram_chat PRIMARY KEY (id)
 )

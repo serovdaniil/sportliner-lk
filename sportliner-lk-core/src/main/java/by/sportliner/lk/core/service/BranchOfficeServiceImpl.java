@@ -44,6 +44,12 @@ public class BranchOfficeServiceImpl implements BranchOfficeService {
     }
 
     @Override
+    public BranchOffice getByName(String name) {
+        return branchOfficeRepository.findByName(name)
+            .orElseThrow(() -> new IllegalArgumentException("The branch office not found by name: " + name));
+    }
+
+    @Override
     public BranchOffice getBranchOfficeOfCurrentTrainer() {
         UserAccount targetUser = currentUserService.getTargetUserAccount();
 

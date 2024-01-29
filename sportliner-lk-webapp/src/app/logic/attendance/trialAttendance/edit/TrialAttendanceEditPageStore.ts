@@ -33,6 +33,7 @@ export default class TrialAttendanceEditPageStore {
         await attendanceApi.createTrialAttendances({
             trialAttendance: {
                 id: this._trialAttendance.id!,
+                telegramUsername: this._trialAttendance.telegramUsername,
                 branchOffice: this._trialAttendance.branchOffice!,
                 name: this._trialAttendance.name!,
                 phone: this._trialAttendance.phone!,

@@ -1197,6 +1197,8 @@ components:
         id:
           readOnly: true
           type: string
+        telegramUsername:
+          type: string
         branchOffice:
           $ref: '#/components/schemas/BranchOfficeItem'
         name:

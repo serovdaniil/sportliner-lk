@@ -18,9 +18,17 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
 
     const columns: ColumnsType<TrialAttendance> = [
         {
+            title: "Telegram username",
+            key: "telegramUsername",
+            align: "center",
+            width: '10vw',
+            sorter: false,
+            render: (_, record) => record.telegramUsername
+        },
+        {
             title: "Филиал",
             key: "name",
-            align: "left",
+            align: "center",
             width: '15vw',
             sorter: (a, b) => a.branchOffice.address.localeCompare(b.branchOffice.address),
             render: (_, record) => record.branchOffice.address
@@ -28,9 +36,9 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
         {
             title: "Имя ребенка",
             key: "name",
-            align: "left",
+            align: "center",
             sorter: false,
-            width: '15vw',
+            width: '10vw',
             render: (_, record) => record.name
         },
         {
@@ -38,7 +46,7 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
             key: "phone",
             align: "left",
             sorter: false,
-            width: '10vw',
+            width: '15vw',
             render: (_, record) => record.phone
         },
         {
@@ -46,7 +54,7 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
             key: "diagnosis",
             align: "left",
             sorter: false,
-            width: '30vw',
+            width: '20vw',
             render: (_, record) => record.diagnosis
         },
         {

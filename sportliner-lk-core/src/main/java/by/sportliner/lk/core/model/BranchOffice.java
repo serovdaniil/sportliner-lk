@@ -3,6 +3,7 @@ package by.sportliner.lk.core.model;
 import by.sportliner.lk.core.support.jpa.type.BranchOfficeAddressJsonbType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Type;
 
 import java.io.Serializable;
@@ -31,7 +32,7 @@ public class BranchOffice extends AbstractDataObject {
     /**
      * Class schedules.
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "class_schedule", joinColumns = @JoinColumn(name = "branch_office_id", nullable = false))
     private List<ClassSchedule> classSchedules;
 

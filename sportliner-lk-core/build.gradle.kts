@@ -19,6 +19,10 @@ dependencies {
 
     implementation("commons-codec:commons-codec:1.15")
 
+    // telegram
+    implementation("org.telegram:telegrambots-abilities:6.9.0")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+
     runtimeOnly("org.postgresql:postgresql")
 
 }

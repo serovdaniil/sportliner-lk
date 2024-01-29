@@ -15,6 +15,9 @@ import java.util.Optional;
 public interface BranchOfficeRepository extends JpaRepositoryImplementation<BranchOffice, String> {
 
     Optional<BranchOffice> findById(String id);
+
+    Optional<BranchOffice> findByName(String name);
+
     @Query("select p from BranchOffice p left join p.classSchedules q where q.trainer = :trainer")
     Optional<BranchOffice> findByTrainer(UserAccount trainer);
 }

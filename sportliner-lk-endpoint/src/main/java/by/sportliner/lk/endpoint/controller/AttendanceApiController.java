@@ -117,6 +117,7 @@ public class AttendanceApiController implements AttendanceApi {
         return ResponseEntity.ok(attendanceService.findTrialAttendances().stream()
             .map(it -> new TrialAttendanceDto()
                 .id(it.getId())
+                .telegramUsername(it.getTelegramUsername())
                 .branchOffice(new BranchOfficeItemDto()
                     .id(it.getId())
                     .address(it.getBranchOffice().getAddress().getFullAddress())
@@ -134,6 +135,7 @@ public class AttendanceApiController implements AttendanceApi {
     private TrialAttendance convert(TrialAttendanceDto dto) {
         TrialAttendance trialAttendance = new TrialAttendance();
 
+        trialAttendance.setTelegramUsername(dto.getTelegramUsername());
         trialAttendance.setBranchOffice(branchOfficeService.getById(dto.getBranchOffice().getId()));
         trialAttendance.setName(dto.getName());
         trialAttendance.setPhone(dto.getPhone());

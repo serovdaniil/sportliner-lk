@@ -123,6 +123,18 @@ const TrialAttendanceEditPage: FC<Props> = (props: Props) => {
                         </Form.Item>
 
                         <Form.Item
+                            name="telegramUsername"
+                            label="Telegram username:"
+                            style={{marginBottom: 0, width: '30vw'}}
+                        >
+                            <Input
+                                onChange={event => {
+                                    store.trialAttendance.telegramUsername = event.target.value
+                                }}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
                             name="name"
                             label="Имя ребенка:"
                             style={{marginBottom: 0, width: '30vw'}}
