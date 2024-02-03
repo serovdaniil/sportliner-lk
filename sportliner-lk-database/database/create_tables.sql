@@ -105,13 +105,11 @@ CREATE TABLE trial_attendance (
 )
 
 CREATE TABLE telegram_chat (
-    id               UUID NOT NULL,
-    chat_id          int  NOT NULL,
-    username         TEXT NOT NULL,
-    branch_office_id UUID NOT NULL,
-    child_fio        TEXT NOT NULL,
-    phone            TEXT NOT NULL,
-    diagnosis        TEXT NOT NULL,
-    date             DATE NOT NULL,
+    id               UUID       NOT NULL,
+    chat_id          int        NOT NULL,
+    username         TEXT       NOT NULL,
+    branch_office_id UUID       NOT NULL,
+    phone            TEXT       NOT NULL,
+    create_timestamp IMESTAMPTZ NOT NULL,
     CONSTRAINT pk_telegram_chat PRIMARY KEY (id)
 )

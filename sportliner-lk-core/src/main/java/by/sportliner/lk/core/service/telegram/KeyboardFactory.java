@@ -30,21 +30,10 @@ public class KeyboardFactory {
         return new ReplyKeyboardMarkup(rows);
     }
 
-    public static ReplyKeyboard renderDates(Set<LocalDate> dates) {
-        List<LocalDate> datesForRender = dates.stream()
-            .filter(date -> date.isAfter(LocalDate.now()))
-            .sorted()
-            .toList();
-
-        List<KeyboardRow> rows = new ArrayList<>();
-
-        for (LocalDate date : datesForRender) {
-            KeyboardRow row = new KeyboardRow();
-            row.add(date.toString());
-            rows.add(row);
-        }
-
-        return new ReplyKeyboardMarkup(rows);
+    public static ReplyKeyboard renderCancelButton() {
+        KeyboardRow row = new KeyboardRow();
+        row.add("Вернуться к списку филиалов");
+        return new ReplyKeyboardMarkup(List.of(row));
     }
 
 }

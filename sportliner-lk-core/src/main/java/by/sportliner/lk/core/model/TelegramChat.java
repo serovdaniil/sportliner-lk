@@ -2,6 +2,7 @@ package by.sportliner.lk.core.model;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity
@@ -21,15 +22,9 @@ public class TelegramChat extends AbstractDataObject {
     private String username;
 
     /**
-     * Child fio.
-     */
-    @Column(name = "child_fio")
-    private String childFio;
-
-    /**
      * Branch office.
      */
-    @OneToOne(optional = true)
+    @OneToOne
     @JoinColumn(name = "branch_office_id")
     private BranchOffice branchOffice;
 
@@ -40,16 +35,10 @@ public class TelegramChat extends AbstractDataObject {
     private String phone;
 
     /**
-     * Diagnosis.
+     * Сreation timestamp.
      */
-    @Column(name = "diagnosis")
-    private String diagnosis;
-
-    /**
-     * Date.
-     */
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "create_timestamp", nullable = false)
+    private Instant createTimestamp;
 
     public Long getChatId() {
         return chatId;
@@ -65,14 +54,6 @@ public class TelegramChat extends AbstractDataObject {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getChildFio() {
-        return childFio;
-    }
-
-    public void setChildFio(String childFio) {
-        this.childFio = childFio;
     }
 
     public BranchOffice getBranchOffice() {
@@ -91,19 +72,11 @@ public class TelegramChat extends AbstractDataObject {
         this.phone = phone;
     }
 
-    public String getDiagnosis() {
-        return diagnosis;
+    public Instant getCreateTimestamp() {
+        return createTimestamp;
     }
 
-    public void setDiagnosis(String diagnosis) {
-        this.diagnosis = diagnosis;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setCreateTimestamp(Instant createTimestamp) {
+        this.createTimestamp = createTimestamp;
     }
 }
