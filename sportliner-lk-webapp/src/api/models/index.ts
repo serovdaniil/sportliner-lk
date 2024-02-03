@@ -30,6 +30,7 @@ export * from './InternalError';
 export * from './ObjectNotFoundError';
 export * from './PaymentType';
 export * from './ReferenceViolationError';
+export * from './TelegramBotApplication';
 export * from './TrialAttendance';
 export * from './TrialAttendanceStatus';
 export * from './UniquenessViolationError';

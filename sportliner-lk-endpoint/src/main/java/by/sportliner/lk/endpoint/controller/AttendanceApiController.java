@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -115,6 +116,7 @@ public class AttendanceApiController implements AttendanceApi {
     @Override
     public ResponseEntity<List<TrialAttendanceDto>> getTrialAttendances() {
         return ResponseEntity.ok(attendanceService.findTrialAttendances().stream()
+            .sorted(Comparator.comparing(TrialAttendance::getDate).reversed())
             .map(it -> new TrialAttendanceDto()
                 .id(it.getId())
                 .telegramUsername(it.getTelegramUsername())

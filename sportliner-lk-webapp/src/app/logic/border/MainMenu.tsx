@@ -108,6 +108,13 @@ export const MainMenu: React.FC = () => {
             icon: <ScheduleOutlined/>
         },
         {
+            id: 'telegramBotApplications',
+            title: 'Заявки из Telegram',
+            page: AppRoutes.telegramBotApplicationPage,
+            pageUrl: AppRoutes.telegramBotApplicationPage.toUrl(),
+            icon: <ScheduleOutlined/>
+        },
+        {
             id: 'analysis',
             title: 'Анализ посещаемости',
             page: AppRoutes.analysisPage,

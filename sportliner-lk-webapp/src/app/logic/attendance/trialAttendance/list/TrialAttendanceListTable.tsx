@@ -1,12 +1,8 @@
 import {Button, Space, Table} from 'antd';
 import {ColumnsType} from 'antd/es/table';
-import {BranchOfficeListItem, TrialAttendance, TrialAttendanceStatus} from 'api';
-import DeleteActionButton from 'app/components/DeleteActionButton/DeleteActionButton';
+import {TrialAttendance, TrialAttendanceStatus} from 'api';
 import {useNavigator} from 'app/logic/Navigator';
-import {isEventFromInteractiveChild} from 'app/utils/DomUtils';
-import {isNothingSelectedOnPage} from 'app/utils/WindowUtils';
 import React from 'react';
-import {AppRoutes} from "../../../../AppRoutes";
 
 interface TrialAttendanceTableProps {
     content: TrialAttendance[];

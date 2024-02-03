@@ -13,6 +13,7 @@ import ChildEditPage from "./logic/profile/child/ChildEditPage";
 import AnalysisPage from "./logic/analysis/AnalysisPage";
 import TrialAttendanceListPage from "./logic/attendance/trialAttendance/list/TrialAttendanceListPage";
 import TrialAttendanceEditPage from "./logic/attendance/trialAttendance/edit/TrialAttendanceEditPage";
+import TelegramApplicationListPage from "./logic/telegram/TelegramApplicationListPage";
 
 export const AppRoutes = {
 
@@ -99,6 +100,12 @@ export const AppRoutes = {
     analysisPage: new PageMeta<void>({
         path: '/analysis',
         render: () => <AnalysisPage/>,
+        requiredAuthorities: Authorities.ADMINISTRATIVE
+    }),
+
+    telegramBotApplicationPage: new PageMeta<void>({
+        path: '/telegramBot/application',
+        render: () => <TelegramApplicationListPage/>,
         requiredAuthorities: Authorities.ADMINISTRATIVE
     }),
 

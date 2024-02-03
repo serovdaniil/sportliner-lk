@@ -27,6 +27,8 @@ tags:
     description: Attendances operations
   - name: analysis
     description: Analysis operations
+  - name: telegram
+    description: Telegram operations
   - name: catalog
     description: Some common operations
 
@@ -721,6 +723,49 @@ paths:
         403:
           description: Access forbidden
 
+  /telegram/application:
+    get:
+      tags:
+        - telegram
+      operationId: getTelegramApplications
+      summary: Get applications from telegram bot
+      responses:
+        200:
+          description: Telegram bot applications
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TelegramBotApplication'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /telegram/application/{telegramBotApplicationId}:
+    get:
+      tags:
+        - telegram
+      operationId: getTelegramApplicationById
+      summary: Get application from telegram bot by ID
+      parameters:
+        - name: telegramBotApplicationId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Telegram bot application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramBotApplication'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
   /version:
     get:
       operationId: getVersions
@@ -1233,6 +1278,32 @@ components:
           description: Attendance by time
           additionalProperties:
             type: integer
+
+    TelegramBotApplication:
+      type: object
+      description: Telegram bot application
+      required:
+        - id
+        - telegramUsername
+        - createTimestamp
+      properties:
+        id:
+          description: ID
+          type: string
+          readOnly: true
+        telegramUsername:
+          description: Telegram username
+          type: string
+        createTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        branchOffice:
+          description: Branch office for application
+          $ref: '#/components/schemas/BranchOfficeItem'
+        phone:
+          description: Phone
+          type: string
 
     DayOfWeek:
       description: Day of week
