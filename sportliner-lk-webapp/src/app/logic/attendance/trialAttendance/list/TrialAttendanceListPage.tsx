@@ -55,6 +55,7 @@ const TrialAttendanceListPage: FC = () => {
                 <TrialAttendanceListTable
                     content={store.trialAttendances}
                     handleOnConfirm={(id) => store.confirmTrialAttendance(id)}
+                    handleOnConfirm={(id) => store.confirmPaidTrialAttendance(id)}
                 />
             </Row>
         </PageBorder>

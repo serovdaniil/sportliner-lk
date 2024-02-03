@@ -115,4 +115,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         trialAttendanceRepository.save(trialAttendance);
     }
+
+    @Override
+    public void confirmPaid(String trialAttendanceId) {
+        TrialAttendance trialAttendance = trialAttendanceRepository.getReferenceById(trialAttendanceId);
+
+        trialAttendance.setTrialAttendanceStatus(TrialAttendance.TrialAttendanceStatus.PAID);
+
+        trialAttendanceRepository.save(trialAttendance);
+    }
+
 }

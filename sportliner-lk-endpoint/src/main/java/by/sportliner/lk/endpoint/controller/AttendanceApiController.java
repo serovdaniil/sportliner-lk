@@ -105,6 +105,13 @@ public class AttendanceApiController implements AttendanceApi {
     }
 
     @Override
+    public ResponseEntity<Void> confirmPaidTrialAttendance(String trialAttendanceId) {
+        attendanceService.confirmPaid(trialAttendanceId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     public ResponseEntity<Void> createTrialAttendances(TrialAttendanceDto trialAttendanceDto) {
         TrialAttendance trialAttendance = convert(trialAttendanceDto);
 
@@ -143,7 +150,7 @@ public class AttendanceApiController implements AttendanceApi {
         trialAttendance.setPhone(dto.getPhone());
         trialAttendance.setDiagnosis(dto.getDiagnosis());
         trialAttendance.setDate(dto.getDate());
-        trialAttendance.setTrialAttendanceStatus(TrialAttendance.TrialAttendanceStatus.UNATTENDED);
+        trialAttendance.setTrialAttendanceStatus(TrialAttendance.TrialAttendanceStatus.UNPAID);
 
         return trialAttendance;
     }

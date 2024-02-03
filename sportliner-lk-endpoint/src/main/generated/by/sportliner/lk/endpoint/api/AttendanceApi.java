@@ -41,7 +41,37 @@ import jakarta.annotation.Generated;
 public interface AttendanceApi {
 
     /**
-     * POST /trialAttendance/{trialAttendanceId} : Confirm trial attendance
+     * POST /trialAttendance/{trialAttendanceId}/confirmPaid : Confirm paid trial attendance
+     *
+     * @param trialAttendanceId  (required)
+     * @return Update status trial attendance (status code 200)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "confirmPaidTrialAttendance",
+        summary = "Confirm paid trial attendance",
+        tags = { "attendance" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Update status trial attendance"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/trialAttendance/{trialAttendanceId}/confirmPaid"
+    )
+    ResponseEntity<Void> confirmPaidTrialAttendance(
+        @Parameter(name = "trialAttendanceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("trialAttendanceId") String trialAttendanceId
+    ) throws Exception;
+
+
+    /**
+     * POST /trialAttendance/{trialAttendanceId}/confirmAttendance : Confirm trial attendance
      *
      * @param trialAttendanceId  (required)
      * @return Update status trial attendance (status code 200)
@@ -63,7 +93,7 @@ public interface AttendanceApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/trialAttendance/{trialAttendanceId}"
+        value = "/trialAttendance/{trialAttendanceId}/confirmAttendance"
     )
     ResponseEntity<Void> confirmTrialAttendance(
         @Parameter(name = "trialAttendanceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("trialAttendanceId") String trialAttendanceId

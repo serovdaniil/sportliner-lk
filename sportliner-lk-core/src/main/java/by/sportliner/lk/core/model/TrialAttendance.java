@@ -114,7 +114,9 @@ public class TrialAttendance extends AbstractDataObject{
 
         ATTENDED,
 
-        UNATTENDED
+        PAID,
+
+        UNPAID
 
     }
 

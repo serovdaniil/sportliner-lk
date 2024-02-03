@@ -25,7 +25,9 @@ public enum TrialAttendanceStatusDto {
   
   ATTENDED("ATTENDED"),
   
-  UNATTENDED("UNATTENDED");
+  PAID("PAID"),
+  
+  UNPAID("UNPAID");
 
   private String value;
 

@@ -1,16 +1,28 @@
 import {Button, Space, Table} from 'antd';
 import {ColumnsType} from 'antd/es/table';
-import {TrialAttendance, TrialAttendanceStatus} from 'api';
+import {DayOfWeek, TrialAttendance, TrialAttendanceStatus} from 'api';
 import {useNavigator} from 'app/logic/Navigator';
 import React from 'react';
 
 interface TrialAttendanceTableProps {
     content: TrialAttendance[];
     handleOnConfirm: (id: string) => Promise<void>;
+    handleOnPaidTrialAttendance: (id: string) => Promise<void>;
 }
 
 const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: TrialAttendanceTableProps) => {
-    const navigator = useNavigator();
+    const formatTrialAttendanceStatus = (status: TrialAttendanceStatus): string => {
+        switch (status) {
+            case TrialAttendanceStatus.ATTENDED:
+                return "Занятие посещено";
+            case TrialAttendanceStatus.PAID:
+                return "Занятие оплачено";
+            case TrialAttendanceStatus.UNPAID:
+                return "Занятие не оплачено";
+            default:
+                throw new Error("Unexpected status: " + status);
+        }
+    };
 
     const columns: ColumnsType<TrialAttendance> = [
         {
@@ -67,7 +79,7 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
             align: "left",
             sorter: (a, b) => a.status.localeCompare(b.status),
             width: '10vw',
-            render: (_, record) => record.status === "ATTENDED" ? 'Занятие посещено' : 'Занятие не посещено'
+            render: (_, record) => formatTrialAttendanceStatus(record.status)
         },
         {
             title: 'Действие',
@@ -76,7 +88,7 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
             width: '10vw',
             render: (_, record) => (
                 <Space size="middle">
-                    {record.status === TrialAttendanceStatus.UNATTENDED && (
+                    {record.status === TrialAttendanceStatus.PAID && (
                         <Button
                             className="dp-button"
                             type="primary"
@@ -84,6 +96,16 @@ const TrialAttendanceListTable: React.FC<TrialAttendanceTableProps> = (props: Tr
                             style={{background: '#0f2d77'}}
                         >
                             Отметить посещение
+                        </Button>
+                    )}
+                    {record.status === TrialAttendanceStatus.UNPAID && (
+                        <Button
+                            className="dp-button"
+                            type="primary"
+                            onClick={async () => await props.handleOnPaidTrialAttendance(record.id)}
+                            style={{background: '#0f2d77'}}
+                        >
+                            Отметить оплату пробного занятия
                         </Button>
                     )}
                 </Space>

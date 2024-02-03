@@ -27,4 +27,6 @@ public interface AttendanceService {
     void addNewTrialAttendance(TrialAttendance trialAttendance);
 
     void confirmAttendance(String trialAttendanceId);
+
+    void confirmPaid(String trialAttendanceId);
 }

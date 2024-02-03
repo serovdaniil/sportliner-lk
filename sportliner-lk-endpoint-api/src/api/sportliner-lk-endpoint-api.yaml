@@ -636,12 +636,32 @@ paths:
         403:
           description: Access forbidden
 
-  /trialAttendance/{trialAttendanceId}:
+  /trialAttendance/{trialAttendanceId}/confirmAttendance:
     post:
       tags:
         - attendance
       operationId: confirmTrialAttendance
       summary: Confirm trial attendance
+      parameters:
+        - name: trialAttendanceId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Update status trial attendance
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /trialAttendance/{trialAttendanceId}/confirmPaid:
+    post:
+      tags:
+        - attendance
+      operationId: confirmPaidTrialAttendance
+      summary: Confirm paid trial attendance
       parameters:
         - name: trialAttendanceId
           in: path
@@ -1262,7 +1282,8 @@ components:
       type: string
       enum:
         - ATTENDED
-        - UNATTENDED
+        - PAID
+        - UNPAID
 
     AnalysisData:
       type: object

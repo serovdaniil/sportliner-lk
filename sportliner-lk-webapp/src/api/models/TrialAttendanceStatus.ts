@@ -19,7 +19,8 @@
  */
 export const TrialAttendanceStatus = {
     ATTENDED: 'ATTENDED',
-    UNATTENDED: 'UNATTENDED'
+    PAID: 'PAID',
+    UNPAID: 'UNPAID'
 } as const;
 export type TrialAttendanceStatus = typeof TrialAttendanceStatus[keyof typeof TrialAttendanceStatus];
 

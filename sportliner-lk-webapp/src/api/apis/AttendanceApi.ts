@@ -28,6 +28,10 @@ import {
     TrialAttendanceToJSON,
 } from '../models';
 
+export interface ConfirmPaidTrialAttendanceRequest {
+    trialAttendanceId: string;
+}
+
 export interface ConfirmTrialAttendanceRequest {
     trialAttendanceId: string;
 }
@@ -57,6 +61,43 @@ export interface SaveAttendancesRequest {
 export class AttendanceApi extends runtime.BaseAPI {
 
     /**
+     * Confirm paid trial attendance
+     */
+    async confirmPaidTrialAttendanceRaw(requestParameters: ConfirmPaidTrialAttendanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.trialAttendanceId === null || requestParameters.trialAttendanceId === undefined) {
+            throw new runtime.RequiredError('trialAttendanceId','Required parameter requestParameters.trialAttendanceId was null or undefined when calling confirmPaidTrialAttendance.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/trialAttendance/{trialAttendanceId}/confirmPaid`.replace(`{${"trialAttendanceId"}}`, encodeURIComponent(String(requestParameters.trialAttendanceId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Confirm paid trial attendance
+     */
+    async confirmPaidTrialAttendance(requestParameters: ConfirmPaidTrialAttendanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.confirmPaidTrialAttendanceRaw(requestParameters, initOverrides);
+    }
+
+    /**
      * Confirm trial attendance
      */
     async confirmTrialAttendanceRaw(requestParameters: ConfirmTrialAttendanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -77,7 +118,7 @@ export class AttendanceApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/trialAttendance/{trialAttendanceId}`.replace(`{${"trialAttendanceId"}}`, encodeURIComponent(String(requestParameters.trialAttendanceId))),
+            path: `/trialAttendance/{trialAttendanceId}/confirmAttendance`.replace(`{${"trialAttendanceId"}}`, encodeURIComponent(String(requestParameters.trialAttendanceId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

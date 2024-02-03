@@ -51,7 +51,7 @@ const AddTrialAttendanceModal: FC<Props> = observer((props: Props) => {
         phone: "",
         date: "",
         diagnosis: "",
-        status: TrialAttendanceStatus.UNATTENDED
+        status: TrialAttendanceStatus.UNPAID
     }
 
     const handleApply = async () => {

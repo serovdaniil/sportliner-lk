@@ -27,4 +27,11 @@ export class TrialAttendanceListPageStore {
         await this.init();
     }
 
+    @action.bound
+    async confirmPaidTrialAttendance(id: string): Promise<void> {
+        await attendanceApi.confirmPaidTrialAttendance({trialAttendanceId: id});
+
+        await this.init();
+    }
+
 }
