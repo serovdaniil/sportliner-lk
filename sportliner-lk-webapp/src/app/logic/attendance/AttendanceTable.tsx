@@ -32,7 +32,12 @@ const ClassScheduleListTable: React.FC<ClassScheduleTableProps> = (props: ClassS
         const result: ColumnsType<ChildInfo> = Array.from(props.editStore.schedules.entries())
             .map(([date, times]) => {
                 return {
-                    title: date,
+                    title:
+                        <Typography.Text
+                            style={{writingMode: "vertical-rl"}}
+                        >
+                            {date}
+                        </Typography.Text>,
                     key: date,
                     align: 'center',
                     children: times.map(it => {

@@ -70,7 +70,6 @@ const AddClassScheduleModal: FC<Props> = observer((props: Props) => {
                         rules={[requiredWithTrimValidator()]}
                     >
                         <Select>
-                            <Select.Option value=""> </Select.Option>
                             {Object.values(DayOfWeek).map((day) => {
                                 return (
                                     <Select.Option
@@ -91,7 +90,6 @@ const AddClassScheduleModal: FC<Props> = observer((props: Props) => {
                     >
 
                         <Select>
-                            <Select.Option value=""> </Select.Option>
                             {props.availableTrainers.map((trainer) => {
                                 return (
                                     <Select.Option

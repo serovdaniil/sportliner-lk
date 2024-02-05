@@ -20,7 +20,13 @@ export class AttendancePageStore {
     constructor() {
         this._trainer = !auth.isAdmin;
         this._editStore = new AttendanceEditStore();
-        this._period = "2023-12";
+
+        const date = new Date();
+        this._period = [
+            date.getFullYear(),
+            this.padTo2Digits(date.getMonth() + 1)
+        ].join('-');
+
         // this.setupReactions();
 
         makeObservable(this);
@@ -85,6 +91,10 @@ export class AttendancePageStore {
             period: this.period,
             childAttendance: this.editStore.toJson()
         });
+    }
+
+    private padTo2Digits(num: number) {
+        return num.toString().padStart(2, '0');
     }
 
     // setupReactions(): void {
