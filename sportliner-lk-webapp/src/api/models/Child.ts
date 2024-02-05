@@ -36,7 +36,7 @@ export interface Child {
      * @type {string}
      * @memberof Child
      */
-    readonly id: string;
+    id: string;
     /**
      * 
      * @type {string}
@@ -137,6 +137,7 @@ export function ChildToJSONTyped(value?: Child | null, ignoreDiscriminator: bool
     }
     return {
         
+        'id': value.id,
         'lastName': value.lastName,
         'branchOffice': BranchOfficeItemToJSON(value.branchOffice),
         'firstName': value.firstName,

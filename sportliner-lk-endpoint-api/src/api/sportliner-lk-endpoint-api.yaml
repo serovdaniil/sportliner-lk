@@ -1034,7 +1034,6 @@ components:
       properties:
         id:
           type: string
-          readOnly: true
         lastName:
           type: string
         branchOffice:

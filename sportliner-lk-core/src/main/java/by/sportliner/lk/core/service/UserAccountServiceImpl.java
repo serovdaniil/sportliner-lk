@@ -53,10 +53,8 @@ public class UserAccountServiceImpl implements UserAccountService {
             userAccount.setUpdateTimestamp(Instant.now());
         }
 
-
         UserAccount target = userAccountRepository.save(userAccount);
 
-        childService.deleteByParent(target); // TODO
         childService.save(children);
 
         return target;

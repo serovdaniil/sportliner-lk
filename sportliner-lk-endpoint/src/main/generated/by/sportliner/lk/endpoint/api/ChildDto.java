@@ -69,8 +69,8 @@ public class ChildDto {
    * Get id
    * @return id
   */
-  
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   public String getId() {
     return id;
   }
