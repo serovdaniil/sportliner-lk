@@ -1,0 +1,29 @@
+# OpenAPI Generator Config
+#
+# Refer to:
+# https://openapi-generator.tech/docs/configuration/
+# https://openapi-generator.tech/docs/generators/java
+
+sourceFolder: src/main/generated
+apiPackage: by.sportliner.lk.integration.epos.hgrosh.internal.api
+modelPackage: by.sportliner.lk.integration.epos.hgrosh.internal.api
+invokerPackage: by.sportliner.lk.integration.epos.hgrosh.internal
+java8: true
+useJakartaEe: true
+dateLibrary: custom
+hideGenerationTimestamp: true
+interfaceOnly: true
+skipDefaultInterface: true
+unhandledException: true
+useTags: true
+enablePostProcessFile: true
+booleanGetterPrefix: is
+useBeanValidation: true
+schemaMappings:
+  LocalDate: LocalDate
+  BigDecimal: BigDecimal
+  LocalDateTime: LocalDateTime
+importMappings:
+  LocalDate: java.time.LocalDate
+  BigDecimal: java.math.BigDecimal
+  LocalDateTime: java.time.LocalDateTime

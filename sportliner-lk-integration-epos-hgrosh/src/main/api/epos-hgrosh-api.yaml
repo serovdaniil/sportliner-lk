@@ -1,0 +1,3258 @@
+openapi: 3.0.3
+
+info:
+  title: EPOS public API
+  description: |-
+    **Public API сервиса E-POS**
+
+    For mode details refer to:
+    * [ Website ](https://www.e-pos.by)
+    * [API Docs](https://api-epos.hgrosh.by/public/swagger/index.html)
+
+  contact:
+    name: EPOS Public API Support
+    email: support-api@epos.by
+  version: v1
+
+tags:
+  - name: auth
+    description: Auth operations
+  - name: invoice
+    description: Invoice operations
+  - name: merchant
+    description: Merchant operations
+  - name: pay
+    description: Pay operations
+  - name: serviceProvider
+    description: Service provider operations
+  - name: transaction
+    description: Transaction operations
+
+servers:
+  - url: "/epos/public"
+
+paths:
+
+  "/connect/token":
+    post:
+      tags:
+        - auth
+      summary: Получение ключа API.
+      operationId: getApiKey
+      security: []
+      requestBody:
+        description: Получение ключа API
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                client_id:
+                  type: string
+                scope:
+                  type: string
+                client_secret:
+                  type: string
+            encoding:
+              grant_type:
+                style: form
+              client_id:
+                style: form
+              scope:
+                style: form
+              client_secret:
+                style: form
+      responses:
+        '200':
+          description: Auth
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+                  token_type:
+                    type: string
+                  scope:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice":
+    get:
+      tags:
+        - invoice
+      summary: Получение списка счетов.
+      operationId: getInvoices
+      parameters:
+        - name: beginDate
+          in: query
+          description: Начальная дата для поиска
+          required: false
+          schema:
+            type: string
+            $ref: '#/components/schemas/LocalDateTime'
+        - name: endDate
+          in: query
+          description: Конечная дата для поиска
+          required: false
+          schema:
+            type: string
+            $ref: '#/components/schemas/LocalDateTime'
+        - name: skip
+          in: query
+          description: Количество записей, которые необходимо пропустить.
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: count
+          in: query
+          description: Количество записй, которые необходимо вернуть.
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: states
+          in: query
+          description: Необходимые состояния инвойсов (передаются строкой, разделитель
+            точка с запятой)
+          required: false
+          schema:
+            type: string
+        - name: searchString
+          in: query
+          description: Строка поиска (поиск осуществляется по номеру счета)
+          required: false
+          schema:
+            type: string
+        - name: requestType
+          in: query
+          description: Тип запроса (по дате создания, по дате оплаты)
+          required: false
+          schema:
+            "$ref": "#/components/schemas/InvoiceQueryType"
+      responses:
+        '200':
+          description: Список счетов, согласно заданных условий.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/InvoiceListItemRecords"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Не найдено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+    post:
+      tags:
+        - invoice
+      summary: Добавление счета.
+      description: "Добавление счета может быть по нескольким сценариям:\r\n   - счет
+        выставляет ПУ, который подключен к сервису E-Pos напрямую,\r\n     в этом
+        случае в токене, с которым вызывается данный метод должна быть группа user.sp,\r\n
+        \    в выставляемом счете будет заменена информация merchantInfo.serviceProviderId
+        на информацию из токена\r\n   - счет выставляет сторонний сервис (в нашем
+        случае HutkiGrosh), который действует от имени конечного пользователя\r\n
+        \    и выставляемый счет, это корзина продуктов, которую необходимо оплатить.
+        Выставляемый таким образом счет не должен содержать\r\n     номер счета, так
+        как он будет сформирован автоматически и вернется после выполнения этого метада.
+        Так же этот счет имеет короткое\r\n     время жизни, которое определено глобальными
+        настройками сервиса E-Pos. Счета можно выставлять для любого ПУ, существующего
+        в сервисе\r\n     и на любой РТТ у данного ПУ. Если ПУ или РТТ заблокированы,
+        то счет не будет выставлен."
+      operationId: addNewInvoice
+      parameters:
+        - name: motifyBiometryType
+          in: query
+          description: Вид оплаты при биометрической оплате
+          required: false
+          schema:
+            "$ref": "#/components/schemas/BiometryPayTypeEnum"
+        - name: canPayAtOnce
+          in: query
+          description: Признак выставления инвойса сразу на оплату
+          required: false
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        description: Выставляемый счет.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Invoice"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Invoice"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}":
+    get:
+      tags:
+        - invoice
+      summary: Детальная информация о счете.
+      operationId: getInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Детальная информация о счете.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Invoice"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Не найдено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+    put:
+      tags:
+        - invoice
+      summary: Редактирование счета.
+      description: Счет можно изменить только если он находится в draft режиме.
+      operationId: updateInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: notifyServiceProvider
+          in: query
+          description: Флаг, указывающий о необходимости информирования производителя
+            услуг об изменениях.
+          required: false
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        description: Инвойс для редактирования
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Invoice"
+      responses:
+        '200':
+          description: Измененный счет.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Invoice"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '423':
+          description: Счет в режиме оплаты и не подлежит редактированию.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+    delete:
+      tags:
+        - invoice
+      summary: Удаление счета.
+      description: Счет можно удалить только если он находится в draft режиме.
+      operationId: deleteInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Удаление счета завершено успешно, в теле ответа информация
+            об удаленном счете.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '423':
+          description: Счет в режиме оплаты и не подлежит удалению.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}/cashboxnotify/again":
+    post:
+      tags:
+        - invoice
+      summary: Запрос повторной нотификации кассы по инвойсу.
+      operationId: cashBoxNotifyAgainInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: notifyBiometryType
+          in: query
+          description: Тип оплаты при оплате мобильным приложением
+          required: false
+          schema:
+            "$ref": "#/components/schemas/BiometryPayTypeEnum"
+      responses:
+        '200':
+          description: Успешная нотификация.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Не найдено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}/cashboxnotify/cancel":
+    post:
+      tags:
+        - invoice
+      summary: Запрос нотификации кассы по инвойсу после его отмены.
+      operationId: cashBoxNotifyCancelInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешная нотификация.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Не найдено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{number}":
+    get:
+      tags:
+        - invoice
+      summary: Детальная информация о счете.
+      operationId: getInvoiceInformationByNumber
+      parameters:
+        - name: number
+          in: path
+          description: Номер счета в формате SSSSS-RR-N.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Детальная информация о счете.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Invoice"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Не найдено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}/send":
+    post:
+      tags:
+        - invoice
+      summary: Перевод счета из draft режима в состояние, когда счет можно оплачивать.
+      operationId: sendInvoiceToPayById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: getCurrentDate
+          in: query
+          description: Параметр, определяющий необходимо ли менять дату активности счета
+            на текущую
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Задание на перевод счета в режим оплаты выполнено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}/cancel":
+    post:
+      tags:
+        - invoice
+      summary: Отмена возможности оплачивать счет.
+      operationId: cancelInvoiceToPayById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Задание на перевод счета в режим черновика выполнено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}/storno":
+    post:
+      tags:
+        - invoice
+      summary: Инициирование операции сторно по инвойсу.
+      operationId: stornoInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Задание на инициирование сторно по инвойсу принято.
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{id}/qrcode":
+    get:
+      tags:
+        - invoice
+      summary: Получение данных для формирования QR-кода.
+      operationId: qrcodeInvoiceById
+      parameters:
+        - name: id
+          in: path
+          description: Внутренний идентификатор счета.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: imgWidth
+          in: query
+          description: Ширина изображения
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 174
+        - name: imgHeight
+          in: query
+          description: Высота изображения
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 386
+        - name: getImage
+          in: query
+          description: Признак запроса изображения qr-кода (по умолчанию false)
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Запрос выполнен успешно.
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/InvoiceQRCode"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Счет не найден.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/invoicing/invoice/{number}/paybycardurl":
+    get:
+      tags:
+        - invoice
+      summary: Получение адреса-ссылки для возможности оплаты заказа картой.
+      operationId: payByCardUrlInvoiceByNumber
+      parameters:
+        - name: number
+          in: path
+          description: Номер счета в формате SSSSS-RR-N.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Запрос выполнен успешно.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Недостаточно прав.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Счет не найден.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/merchant/{id}":
+    get:
+      tags:
+        - merchant
+      summary: Получение публичной информации о РТТ
+      operationId: getMerchant
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор РТТ.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Сведения о РТТ.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/MerchantPublicInfo"
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+        '403':
+          description: Недостаточно прав.
+        '404':
+          description: Не найдено.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/merchant/zendesk/user":
+    post:
+      tags:
+        - merchant
+      summary: Получение информации о пользователе для ZenDesk
+      operationId: getUserMerchant
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_token:
+                  type: string
+                  format: uuid
+            encoding:
+              user_token:
+                style: form
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ZenDeskUserAuthorize"
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server Error
+
+  "/v1/merchant/serviceprovider":
+    get:
+      tags:
+        - merchant
+      summary: Получение информации о конкретном производителе услуг.
+      operationId: getServiceProviderMerchant
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ServiceProvider"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/merchant/serviceprovider/device/register":
+    get:
+      tags:
+        - merchant
+      summary: Получение информации о конкретном производителе услуг.
+      operationId: getServiceProviderDeviceRegisterMerchant
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OneSignalDeviceRegistrationInfo"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+    post:
+      tags:
+        - merchant
+      summary: Регистрация кассы в OneSignal
+      operationId: registerServiceProviderDeviceMerchant
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CashBoxRegistrationInfo"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/pay/webpay":
+    post:
+      tags:
+        - pay
+      summary: Получение формы для оплаты через WebPay
+      operationId: getFormWebPay
+      requestBody:
+        description: Параметры для формирования.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/WebPayParam"
+      responses:
+        '200':
+          description: Запрос выполнен успешно. В ответе находится форма для отображения
+            пользователю
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Неавторизованный запрос.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Счет не найден.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Ошибка на сервере.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/serviceprovier":
+    post:
+      tags:
+        - serviceProvider
+      summary: Добавление нового поставщика услуг.
+      operationId: addServiceProvider
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ServiceProvider"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ServiceProvider"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+  "/v1/transaction":
+    get:
+      tags:
+        - transaction
+      summary: Получение списка транзакций по параметрам
+      operationId: getTransactions
+      parameters:
+        - name: skip
+          in: query
+          description: Количество записей, которые необходимо пропустить.
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: count
+          in: query
+          description: Количество записй, которые необходимо вернуть.
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: transactionStatuses
+          in: query
+          description: Статус транзакции
+          required: false
+          schema:
+            type: string
+        - name: dateType
+          in: query
+          description: Тип даты для выборки
+          required: false
+          schema:
+            "$ref": "#/components/schemas/TransactionDateType"
+        - name: beginDateUTC
+          in: query
+          description: Начальная дата выборки
+          required: false
+          schema:
+            type: string
+            $ref: '#/components/schemas/LocalDateTime'
+        - name: endDateUTC
+          in: query
+          description: Конечная дата выборки
+          required: false
+          schema:
+            type: string
+            $ref: '#/components/schemas/LocalDateTime'
+        - name: eripTransactionId
+          in: query
+          description: Идентификатор транзакции ЕРИП
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: aggregatorCode
+          in: query
+          description: Агрегатор для поиска
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: serviceProviderUNP
+          in: query
+          description: УНП ПУ для поиска
+          required: false
+          schema:
+            type: string
+        - name: serviceProviderCode
+          in: query
+          description: Код ПУ
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: serviceId
+          in: query
+          description: Код сервиса
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: retailOutletId
+          in: query
+          description: Код РТТ
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: serviceProviderName
+          in: query
+          description: Наименование ПУ для поиска (или часть наименования)
+          required: false
+          schema:
+            type: string
+        - name: clientName
+          in: query
+          description: Наименование покупателя для поиска (или его часть)
+          required: false
+          schema:
+            type: string
+        - name: clientAddress
+          in: query
+          description: Адрес клиента для поиска (или его часть)
+          required: false
+          schema:
+            type: string
+        - name: show480ExcludeOnly
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TransactionRecords"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorStatus"
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        bank:
+          "$ref": "#/components/schemas/Bank"
+        currency:
+          type: string
+          description: Идентификатор валюты
+          nullable: true
+        iban:
+          type: string
+          description: Номер счета в международном виде
+          nullable: true
+      additionalProperties: false
+      description: Расчетные счета организации
+    Address:
+      type: object
+      properties:
+        country:
+          type: string
+          description: 2-х=символьный код страны
+          nullable: true
+        line1:
+          type: string
+          description: Первая строка адреса (например, дом, улице и т.п.).
+          nullable: true
+        line2:
+          type: string
+          description: Вторая строка адреса (например, номер апартаментов, квартиры
+            и т.п.).
+          nullable: true
+        city:
+          type: string
+          description: Город.
+          nullable: true
+        postalCode:
+          type: string
+          description: Почтовый индекс.
+          nullable: true
+        location:
+          "$ref": "#/components/schemas/GEOLocation"
+        fullAddress:
+          type: string
+          description: Полный адрес
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      description: Почтовый адрес.
+    Amount:
+      type: object
+      properties:
+        value:
+          type: number
+          description: Сумма.
+          format: double
+      additionalProperties: false
+      description: Сумма.
+    AppInfo:
+      type: object
+      properties:
+        appId:
+          type: string
+          description: Идентификатор приложения OneSignal
+          nullable: true
+        appAPIKey:
+          type: string
+          description: Клюя API для подключения к OneSignal
+          nullable: true
+      additionalProperties: false
+      description: Информация о приложении
+    Bank:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор банка
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          description: Наименование банка
+          nullable: true
+        bic:
+          type: string
+          description: Код банка (BIC)
+          nullable: true
+        code:
+          type: string
+          description: Код банка (старый)
+          nullable: true
+        address:
+          "$ref": "#/components/schemas/Address"
+      additionalProperties: false
+      description: Справочник банков
+    BillingInfo:
+      type: object
+      properties:
+        contact:
+          "$ref": "#/components/schemas/Person"
+        phone:
+          "$ref": "#/components/schemas/Phone"
+        email:
+          type: string
+          description: Электронный ящик для уведомлений.
+          nullable: true
+        address:
+          "$ref": "#/components/schemas/Address"
+      additionalProperties: false
+      description: Информация о плательщике.
+    BiometryPayTypeEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      type: integer
+      description: "Тип запроса\r\nПервоначальный запрос на оплату с помощью qr-кода\r\nQRPAY
+        = 0,\r\nПервоначальный запрос на оплату с помощью лица\r\nFACEPAY = 1,\r\nПовторный
+        запрос на проведение оплаты\r\nPROCESSFACEPAY = 2"
+      format: int32
+    BusinessCard:
+      type: object
+      properties:
+        postAddress:
+          "$ref": "#/components/schemas/Address"
+        phones:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Phone"
+          description: Контактные телефоны.
+          nullable: true
+        emails:
+          type: array
+          items:
+            type: string
+          description: Адреса электронной почты.
+          nullable: true
+        contacts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Contact"
+          description: Список контактов.
+          nullable: true
+      additionalProperties: false
+      description: Контактная информация компании.
+    CashBox:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Идентификатор кассы
+          format: int32
+        id:
+          type: string
+          description: Уникальный идентификатор (OneSignal - playerId) - замена на
+            external_user_id 01.02.2021
+          nullable: true
+        playerId:
+          type: string
+          description: Идентификатор устройства в OneSignal
+          nullable: true
+        connected:
+          type: boolean
+          description: Признак "связанности" кассы с устройством
+          readOnly: true
+        name:
+          type: string
+          description: Наименование кассы
+          nullable: true
+        lastActivateDate:
+          type: string
+          description: Дата и время последней активации кассы
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        registrationToken:
+          type: string
+          description: Текущий (если есть) токен для регистрации кассы
+          nullable: true
+        descr:
+          type: string
+          description: Описание кассы
+          nullable: true
+        notifiers:
+          "$ref": "#/components/schemas/CashBoxNotifiers"
+        isActive:
+          type: boolean
+          description: Признак активности
+      additionalProperties: false
+      description: Касса (для РТТ)
+    CashBoxNotifiers:
+      type: object
+      properties:
+        createInvoiceNotify:
+          "$ref": "#/components/schemas/CashBoxNotify"
+        startPayInvoiceNotify:
+          "$ref": "#/components/schemas/CashBoxNotify"
+        cancelPayInvoiceNotify:
+          "$ref": "#/components/schemas/CashBoxNotify"
+        confirmPayInvoiceNotify:
+          "$ref": "#/components/schemas/CashBoxNotify"
+        deleteInvoiceNotify:
+          "$ref": "#/components/schemas/CashBoxNotify"
+        stornoInvoiceNotify:
+          "$ref": "#/components/schemas/CashBoxNotify"
+        urlNotify:
+          type: string
+          description: Нотификация кассы после оплаты инвойса
+          nullable: true
+      additionalProperties: false
+      description: Нотификаторы кассы
+    CashBoxNotify:
+      type: object
+      properties:
+        oneSignalAppNotify:
+          "$ref": "#/components/schemas/OneSignalAppNotify"
+        isActive:
+          type: boolean
+          description: Признак активности нотификации
+      additionalProperties: false
+      description: Нотификация кассы
+    CashBoxRegistrationInfo:
+      type: object
+      properties:
+        serviceId:
+          type: integer
+          description: Идентификатор услуги
+          format: int32
+        rttCode:
+          type: integer
+          description: Идентификатор РТТ
+          format: int32
+        cashBoxCode:
+          type: integer
+          description: Идентификатор кассы
+          format: int32
+        playerId:
+          type: string
+          description: Идентификатор устройства в OneSignal
+          nullable: true
+      additionalProperties: false
+      description: Данные для регистрации устройства на кассе
+    Comission:
+      type: object
+      properties:
+        percent:
+          type: number
+          format: double
+          nullable: true
+        minAmount:
+          type: number
+          format: double
+          nullable: true
+        maxAmount:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    ConfigTypeEnum:
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+      type: integer
+      description: Тип канала уведомления.
+      format: int32
+    ConnectInfo:
+      type: object
+      properties:
+        invoiceUrl:
+          type: string
+          description: Базовый путь для работы с инвойсами
+          nullable: true
+        biometryPayUrl:
+          type: string
+          description: Базовый путь для оплаты биометрией
+          nullable: true
+        biometryStornoUrl:
+          type: string
+          description: Базовый путь для сторно с помощью биометрией
+          nullable: true
+      additionalProperties: false
+      description: Информация по подключению при работе с инвойсами
+    Contact:
+      type: object
+      properties:
+        preferable:
+          type: boolean
+          description: Предпочтительный контакт.
+        type:
+          type: string
+          description: Тип контакта (руководитель, бухгалтер, контактное лицо).
+          nullable: true
+        person:
+          "$ref": "#/components/schemas/Person"
+        phones:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Phone"
+          description: Телефоны.
+          nullable: true
+        emails:
+          type: array
+          items:
+            type: string
+          description: Адреса электронной почты.
+          nullable: true
+        birthday:
+          type: string
+          description: День рождения.
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        note:
+          type: string
+          description: Примечание.
+          nullable: true
+      additionalProperties: false
+      description: Контактное лицо.
+    Currency:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Международный код валюты (ISO 4217) (уникальный код).
+          format: int32
+        abbr:
+          type: string
+          description: Международная аббревиатура валюты (ISO 4217).
+          nullable: true
+        exponent:
+          type: integer
+          description: "Признак наличия разменных денежных единиц\r\n   0 — отсутствие
+            разменной денежной единицы (такая единица могла существовать в прошлом,
+            но в результате инфляции она обесценилась настолько, что в обращении не
+            участвует и/или для учёта не используется)\r\n   2 — наличие разменной
+            денежной единицы, которая равна 1⁄100 базовой валюты\r\n   3 — наличие
+            разменной денежной единицы, которая равна 1⁄1000 базовой валюты\r\n   null
+            — отсутствие разменной денежной единицы (используется для описания валютных
+            ценностей и фондов)"
+          format: int32
+          nullable: true
+        isNational:
+          type: boolean
+          description: Признак национальной валюты.
+        isMain:
+          type: boolean
+          description: Признак "основной" валюты.
+        name:
+          type: string
+          description: Наименование валюты.
+          nullable: true
+        isActive:
+          type: boolean
+          description: Признак активности валюты.
+      additionalProperties: false
+      description: Валюта.
+    CustomAmount:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Название дополнительной суммы (если label заполнен, то сумма
+            обязательно должна быть указана).
+          nullable: true
+        value:
+          type: number
+          description: Сумма
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Дополнительная сумма в счет.
+    Discount:
+      type: object
+      properties:
+        percent:
+          type: number
+          description: Дисконт в процентах от суммы (если заполнен)
+          format: double
+          nullable: true
+        amount:
+          type: number
+          description: Дисконт в фиксированной сумме (если заполнен)
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: "Дисконт (заполняется одно из двух полей)\r\nПриоритет имеет процент
+        скидки - если он заполнен, то фиксированная скидка не учитывается"
+    EripMCC:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Код категории
+          nullable: true
+        name:
+          type: string
+          description: Наименование категории
+          nullable: true
+      additionalProperties: false
+      description: Категории мерчантов по ЕРИП
+    ErrorStatus:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Код ошибки.
+          format: int64
+        message:
+          type: string
+          description: Сообщение об ошибке.
+          nullable: true
+      additionalProperties: false
+      description: Статус обработки запроса.
+    GEOLocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+          description: Широта.
+          format: double
+        longitude:
+          type: number
+          description: Долгота.
+          format: double
+      additionalProperties: false
+      description: Географические координаты.
+    GuidStringProperty:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Ключ.
+          format: uuid
+        value:
+          type: string
+          description: Значение.
+          nullable: true
+      additionalProperties: false
+      description: Пары ключ/значение.
+    IdentityType:
+      enum:
+        - 1
+        - 2
+      type: integer
+      description: Типы серверов авторизации
+      format: int32
+    InstallmentPayment:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Stage"
+          description: Этапы рассрочки.
+          nullable: true
+        penalty:
+          "$ref": "#/components/schemas/PenaltyRule"
+      additionalProperties: false
+      description: Оплата в рассрочку.
+    Int64StringProperty:
+      type: object
+      properties:
+        key:
+          type: integer
+          description: Ключ.
+          format: int64
+        value:
+          type: string
+          description: Значение.
+          nullable: true
+      additionalProperties: false
+      description: Пары ключ/значение.
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Внутренний идентификатор счета (guid).
+          format: uuid
+          nullable: true
+        addDateUTC:
+          type: string
+          description: Дата создания счета
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        parentId:
+          type: string
+          description: Идентификатор родительской записи.
+          format: uuid
+          nullable: true
+        number:
+          type: string
+          description: Номер счета.
+          nullable: true
+        currency:
+          type: string
+          description: Валюта инвойса. ISO 4217 трех символьный код валюты.
+          nullable: true
+        merchantInfo:
+          "$ref": "#/components/schemas/ServiceProviderInfo"
+        note:
+          type: string
+          description: Примечание к счету.
+          nullable: true
+        paymentDueTerms:
+          "$ref": "#/components/schemas/PaymentDueTerms"
+        tip:
+          "$ref": "#/components/schemas/TipOrConvenience"
+        billingInfo:
+          "$ref": "#/components/schemas/BillingInfo"
+        paymentRules:
+          "$ref": "#/components/schemas/PaymentRules"
+        shippingInfo:
+          "$ref": "#/components/schemas/ShippingInfo"
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/InvoiceItem"
+          description: Перечень продукции или услуг, включенный в счет.
+          nullable: true
+        dateInAirUTC:
+          type: string
+          description: Дата, с которой счет доступен на оплату (UTC).
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        discount:
+          "$ref": "#/components/schemas/Discount"
+        customAmount:
+          "$ref": "#/components/schemas/CustomAmount"
+        state:
+          "$ref": "#/components/schemas/InvoiceStateEnum"
+        installmentPayment:
+          "$ref": "#/components/schemas/InstallmentPayment"
+        paymentData:
+          "$ref": "#/components/schemas/PaymentData"
+        totalAmount:
+          type: number
+          description: Сумма к оплате по инвойсу на момент получения инвойса в национальной
+            валюте
+          format: double
+        totalCurrencyAmount:
+          type: number
+          description: Сумма к оплате по инвойсу на момент получения инвойса в валюте
+            инвойса
+          format: double
+        canPay:
+          type: boolean
+          description: Возможность оплаты счета на текущий момент
+          readOnly: true
+        origin:
+          "$ref": "#/components/schemas/Origin"
+        isClosed:
+          type: boolean
+          description: Признак для выборки
+        inElastic:
+          type: boolean
+          description: Инвойс в Elastic
+      additionalProperties: false
+      description: Счет.
+    InvoiceItem:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Артикул или код товара.
+          nullable: true
+        name:
+          type: string
+          description: Название товара или услуги.
+          nullable: true
+        description:
+          type: string
+          description: Краткое описание товара или услуги.
+          nullable: true
+        quantity:
+          type: integer
+          description: Количество в заданных единицах измерения.
+          format: int32
+        measure:
+          type: string
+          description: Единицы измерения.
+          nullable: true
+        unitPrice:
+          "$ref": "#/components/schemas/Amount"
+        discount:
+          "$ref": "#/components/schemas/Discount"
+      additionalProperties: false
+      description: Элемент счета.
+    InvoiceListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Внутренний идентификатор счета.
+          format: uuid
+        addDateUTC:
+          type: string
+          description: Дата создания счета
+          $ref: '#/components/schemas/LocalDateTime'
+        payDateUTC:
+          type: string
+          description: Дата оплаты счета
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        parentId:
+          type: string
+          description: Идентификатор родительской записи.
+          format: uuid
+          nullable: true
+        number:
+          type: string
+          description: Номер счета.
+          nullable: true
+        currency:
+          type: string
+          description: Валюта инвойса. ISO 4217 трех символьный код валюты.
+          nullable: true
+        merchantInfo:
+          "$ref": "#/components/schemas/ServiceProviderInfo"
+        billingInfo:
+          "$ref": "#/components/schemas/BillingInfo"
+        shippingInfo:
+          "$ref": "#/components/schemas/ShippingInfo"
+        dateInAirUTC:
+          type: string
+          description: Дата, с которой счет доступен на оплату (UTC).
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        paymentDueTerms:
+          "$ref": "#/components/schemas/PaymentDueTerms"
+        paymentRules:
+          "$ref": "#/components/schemas/PaymentRules"
+        terms:
+          type: string
+          description: Общие условия счета.
+          nullable: true
+        note:
+          type: string
+          description: Примечание к счету.
+          nullable: true
+        state:
+          "$ref": "#/components/schemas/InvoiceStateEnum"
+        amount:
+          type: number
+          description: Сумма по счету в валюте счета
+          format: double
+        totalAmount:
+          type: number
+          description: Сумма к оплате по инвойсу на момент получения инвойса
+          format: double
+        amountPaid:
+          type: number
+          description: Сумма оплаты по счету в валюте счета
+          format: double
+        memOrderNum:
+          type: string
+          description: Номер мем-ордера
+          nullable: true
+        memOrderDate:
+          type: string
+          description: Дата мем-ордера
+          $ref: '#/components/schemas/LocalDateTime'
+      additionalProperties: false
+      description: Класс для отображения элемента списка счетов
+    InvoiceListItemRecords:
+      type: object
+      properties:
+        start:
+          type: integer
+          description: Индекс начального элемента.
+          format: int32
+        count:
+          type: integer
+          description: Количество элементов в результате.
+          format: int32
+        total:
+          type: integer
+          description: Общее количество элементов, удовлетворяющих запросу.
+          format: int32
+        records:
+          type: array
+          items:
+            "$ref": "#/components/schemas/InvoiceListItem"
+          description: Запрошенные записи.
+          nullable: true
+      additionalProperties: false
+      description: Список элементов при постраничной выдаче.
+    InvoiceQRCode:
+      type: object
+      properties:
+        num:
+          type: string
+          description: Полный номер счета
+          nullable: true
+        address:
+          type: string
+          description: Адрес сервера для обработки qr-кода
+          nullable: true
+        tinyLink:
+          type: string
+          description: Короткая ссылка
+          nullable: true
+        qrData:
+          type: string
+          description: Массив с данными для формирования qr-кода
+          nullable: true
+        qrDataEncoded:
+          type: string
+          description: Енкодированная строка с данными
+          nullable: true
+          readOnly: true
+        image:
+          type: string
+          description: Изображение в виде массива байт (в случае, если getImage =
+            true )
+          format: byte
+          nullable: true
+      additionalProperties: false
+      description: Класс сформированного qr-кода для инвойса
+    InvoiceQueryType:
+      enum:
+        - 1
+        - 2
+        - 3
+      type: integer
+      description: Типы запросов инвойсов
+      format: int32
+    InvoiceStateEnum:
+      enum:
+        - 0
+        - 10
+        - 20
+        - 30
+        - 40
+        - 50
+        - 60
+        - 70
+        - 80
+        - 100
+        - 110
+        - -10
+      type: integer
+      description: "Состояние счета.\r\n0 - Счет создан (доступен для изменения)\r\n10
+        - Счет активен (доступен для оплаты)\r\n20 - Счет оплачен\r\n30 - Счет удален\r\n40
+        - Счет частично оплачен\r\n50 - Счет в состоянии оплаты (недоступен для повторной
+        оплаты)\r\n60 - Счет в состоянии начала оплаты через WebPay\r\n70 - Оплата
+        сверена\r\n80 - Отмена оплаты\r\n-10 - Инвойс сперва был оплачен, но было
+        произведено сторно оплаты\r\n100 - Инвойс создан автоматически, при внешнем
+        роутинге и проверке счета\r\n110 - Счет \"просрочен\""
+      format: int32
+    LegalInfo:
+      type: object
+      properties:
+        bcId:
+          type: string
+          description: ID из бизнес-аккаунта
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          description: Наименование организации.
+          nullable: true
+        shortName:
+          type: string
+          description: Сокращенное наименование организации.
+          nullable: true
+        okpo:
+          type: string
+          description: ОКПО организации.
+          nullable: true
+        unp:
+          type: string
+          description: УНП организации.
+          nullable: true
+        address:
+          "$ref": "#/components/schemas/Address"
+        account:
+          "$ref": "#/components/schemas/Account"
+        type:
+          "$ref": "#/components/schemas/OwnerShipTypeEnum"
+        activatedByERIP:
+          type: boolean
+          description: "Признак, что ПУ был когда-то активирован в ЕРИП\r\nАктуально
+            только для ПУ из BA"
+      additionalProperties: false
+      description: Класс юридической информации.
+    MCC:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 4-х-значный цифровой код категории
+          nullable: true
+        name:
+          type: string
+          description: Наименование категории
+          nullable: true
+      additionalProperties: false
+      description: Классификация мерчантов по системе MCC
+    MerchantInfo:
+      type: object
+      properties:
+        merchantName:
+          type: string
+          description: Наименование мерчанта в латинице.
+          nullable: true
+        merchantLocalityName:
+          type: string
+          description: Наименование мерчанта в локале.
+          nullable: true
+        localityCode:
+          type: string
+          description: Наименование локали.
+          nullable: true
+        isMobile:
+          type: boolean
+          description: Признак работы ПУ с мобильным приложением ЕРИП
+      additionalProperties: false
+      description: Информация о ПУ в qr-коде.
+    MerchantPublicInfo:
+      type: object
+      properties:
+        serviceProvider:
+          "$ref": "#/components/schemas/ServiceProviderPublicInfo"
+        retailOutletCard:
+          "$ref": "#/components/schemas/BusinessCard"
+        address:
+          "$ref": "#/components/schemas/Address"
+        merchantInfo:
+          "$ref": "#/components/schemas/RetailOutletMerchantInfo"
+        descr:
+          type: string
+          description: Описание РТТ (задается самим ПУ)
+          nullable: true
+      additionalProperties: false
+      description: "Отображение РТТ на его \"посадочной\" странице\r\nСодержится сокращенная
+        информация о ПУ и РТТ"
+    NotifyParams:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+          description: Список электронных адресов нотификации
+          nullable: true
+        smses:
+          type: array
+          items:
+            type: string
+          description: Список телефонов для смс-нотификации
+          nullable: true
+        urls:
+          type: array
+          items:
+            type: string
+          description: Список url для нотификации
+          nullable: true
+        users:
+          type: array
+          items:
+            type: string
+          description: Список пользователей для нотификации с помощью мессенджеров
+          nullable: true
+        oneSignalUsers:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Список пользователей onesignal, которых надо нотифицировать
+            в приложение
+          nullable: true
+        cashBoxNotifyUrl:
+          type: string
+          description: Адрес для нотификации кассы
+          nullable: true
+      additionalProperties: false
+      description: Структура для нотификаций
+    OAUTHSettings:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Адрес для запроса
+          nullable: true
+        clientId:
+          type: string
+          description: Идентификатор клиента
+          nullable: true
+        clientSecret:
+          type: string
+          description: Секрет клиента
+          nullable: true
+        scopes:
+          type: string
+          description: Запрашиваемые скоупы при авторизации
+          nullable: true
+        grantType:
+          type: string
+          description: Тип
+          nullable: true
+      additionalProperties: false
+      description: Параметры для OAUTH-сервера
+    OneSignalAppNotify:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Адрес для нотификации
+          nullable: true
+        appId:
+          type: string
+          description: Идентификатор приложения
+          nullable: true
+        apiKey:
+          type: string
+          description: Клюя для авторизации API
+          nullable: true
+      additionalProperties: false
+      description: Информация для нотификации с помощью onesignal
+    OneSignalDeviceRegistrationInfo:
+      type: object
+      properties:
+        appInfo:
+          "$ref": "#/components/schemas/AppInfo"
+        securityInfo:
+          "$ref": "#/components/schemas/SecurityInfo"
+        sp:
+          "$ref": "#/components/schemas/ServiceProvider"
+        connectInfo:
+          "$ref": "#/components/schemas/ConnectInfo"
+      additionalProperties: false
+      description: Информация для регистрации девайса в биометрии
+    Origin:
+      type: object
+      properties:
+        createUTC:
+          type: string
+          description: Дата создания элемента.
+          $ref: '#/components/schemas/LocalDateTime'
+        owner:
+          "$ref": "#/components/schemas/SourceInfo"
+        lastSavedUTC:
+          type: string
+          description: Дата последней модификации.
+          $ref: '#/components/schemas/LocalDateTime'
+        lastSavedBy:
+          "$ref": "#/components/schemas/SourceInfo"
+      additionalProperties: false
+      description: Происхождение информации.
+    OwnerShipTypeEnum:
+      enum:
+        - 10
+        - 20
+      type: integer
+      format: int32
+    PaymentData:
+      type: object
+      properties:
+        payDate:
+          type: string
+          description: Дата оплаты
+          $ref: '#/components/schemas/LocalDateTime'
+        verifyDate:
+          type: string
+          description: Дата сверки оплаты
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        memOrderNum:
+          type: integer
+          description: Номер мем-ордера
+          format: int64
+          nullable: true
+        memOrderDate:
+          type: string
+          description: Дата мем-ордера
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        bankCode:
+          type: string
+          description: Код банка
+          nullable: true
+        tranEripId:
+          type: integer
+          description: Код операции в ЕРИП
+          format: int64
+        authType:
+          type: string
+          description: Тип авторизации
+          nullable: true
+        currency:
+          "$ref": "#/components/schemas/Currency"
+        payAmount:
+          type: number
+          description: Оплаченная сумма покупателем в национальной валюте
+          format: double
+        currencyPayAmount:
+          type: number
+          description: Оплаченная сумма в валюте счета
+          format: double
+        currencyRate:
+          type: number
+          description: Курс конверсии
+          format: double
+        transferAmount:
+          type: number
+          description: Сумма, которая придет на счет ПУ
+          format: double
+          nullable: true
+        comissions:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: Комиссии по платежу
+          nullable: true
+        clientFIO:
+          type: string
+          description: ФИО покупателя
+          nullable: true
+        clientAddress:
+          type: string
+          description: Адрес клиента
+          nullable: true
+        clientEmail:
+          type: string
+          description: Электронный адрес клиента
+          nullable: true
+        clientPhone:
+          type: string
+          description: Телефон клиента
+          nullable: true
+        comissionsAmount:
+          type: number
+          description: Общая сумма комиссий
+          format: double
+          readOnly: true
+        penalty:
+          type: number
+          description: Начисленная пеня по платежу
+          format: double
+      additionalProperties: false
+      description: Информация по платежу инвойса
+    PaymentDueTerms:
+      type: object
+      properties:
+        dueUTC:
+          type: string
+          description: Передельная дата действия счета (если указано, то имеет приоритет
+            над полем termsDay).
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        termsDay:
+          type: integer
+          description: Срок действия счета в днях относительно даты с которой счет
+            доступен на оплату.
+          format: int32
+      additionalProperties: false
+      description: Крайний срок оплаты счета.
+    PaymentRules:
+      type: object
+      properties:
+        isTariff:
+          type: boolean
+          description: Счет является тарифом.
+          nullable: true
+        isTariffExpire:
+          type: boolean
+          description: Признак тарифа со сроком окончания действия
+        requestAmount:
+          type: boolean
+          description: Разрешает (true) или запрещает (false) редактирование суммы
+            счета при оплате.
+        requestAddress:
+          type: boolean
+          description: Разрешает (true) или запрещает (false) редактирование адреса
+            плательщика.
+        requestPersonName:
+          type: boolean
+          description: Разрешает (true) или запрещает (false) редактирование имени
+            плательщика.
+        requestPhone:
+          type: boolean
+          description: Запрос номера телефона
+        requestEMail:
+          type: boolean
+          description: Запрос электронного адреса
+        requestLoyalityNumber:
+          type: boolean
+          description: Запрос карты лояльности
+        requestPurpose:
+          type: boolean
+          description: Запрос назначения платежа
+        requestReferenceLoyalityNumber:
+          type: boolean
+          description: Запрос "рекомендателя" карты лояльности
+        canMakeStorno:
+          type: boolean
+          description: Признак возможности проведения операции сторно по инвойсу
+        partialPymentay:
+          type: boolean
+          description: Признак возможности частичной оплаты
+      additionalProperties: false
+      description: Правила оплаты счета.
+    PenaltyRule:
+      type: object
+      properties:
+        percent:
+          type: number
+          description: Процент начисления.
+          format: double
+        type:
+          "$ref": "#/components/schemas/PenaltyTypeEnum"
+        minAmount:
+          type: number
+          description: Минимальный размер пени. Устанавливается сразу при первом начислении
+            пени, если расчетное значение меньше этого параметра.
+          format: double
+        maxAmount:
+          type: number
+          description: Максимальный размер пени. Если рассчитанное значение превышает
+            данный параметр, то используется это значение.
+          format: double
+      additionalProperties: false
+      description: Правила начисления пени.
+    PenaltyTypeEnum:
+      enum:
+        - 1
+        - 2
+      type: integer
+      description: Тип процента начисления пени.
+      format: int32
+    PeriodicityTypeEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+      type: integer
+      description: Расписание формирования отчетов
+      format: int32
+    Person:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: Имя.
+          nullable: true
+        lastName:
+          type: string
+          description: Фамилия.
+          nullable: true
+        middleName:
+          type: string
+          description: Отчество.
+          nullable: true
+        fullName:
+          type: string
+          description: Полное имя
+          nullable: true
+      additionalProperties: false
+      description: Представитель
+    Phone:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Тип телефонного номера (рабочий, мобильный, факс).
+          nullable: true
+        countryCode:
+          type: string
+          description: 'Код страны (Шаблон: ^[0-9]{1,3}?$).'
+          nullable: true
+        nationalNumber:
+          type: string
+          description: 'Национальный номер (Шаблон: ^[0-9]{1,14}?$).'
+          nullable: true
+        isMain:
+          type: boolean
+          description: Основной номер телефона.
+        fullNumber:
+          type: string
+          description: Полный номер телефона
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      description: Номер телефона.
+    Report:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Идентификатор отчета
+          format: int32
+        name:
+          type: string
+          description: Наименование отчета
+          nullable: true
+        periodicity:
+          "$ref": "#/components/schemas/PeriodicityTypeEnum"
+        descr:
+          type: string
+          description: Описание отчета
+          nullable: true
+        defaultTemplateName:
+          type: string
+          description: Имя шаблона по умолчанию
+          nullable: true
+        defaultFileName:
+          type: string
+          description: Имя файла по умолчанию
+          nullable: true
+        attachTypes:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ReportAttachFileType"
+          description: Типы возможных вложений для отчета
+          nullable: true
+        isActive:
+          type: boolean
+          description: Признак активности отчета
+      additionalProperties: false
+      description: Структура отчета
+    ReportAttachFileType:
+      enum:
+        - 10
+        - 20
+        - 30
+        - 40
+        - 50
+      type: integer
+      format: int32
+    RetailOutlet:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Уникальный числовой/строковый код РТТ.
+          format: int32
+          nullable: true
+        address:
+          "$ref": "#/components/schemas/Address"
+        businessCard:
+          "$ref": "#/components/schemas/BusinessCard"
+        retailOutletMerchantInfo:
+          "$ref": "#/components/schemas/RetailOutletMerchantInfo"
+        eripMcc:
+          "$ref": "#/components/schemas/EripMCC"
+        mcc:
+          "$ref": "#/components/schemas/MCC"
+        cashBoxes:
+          type: array
+          items:
+            "$ref": "#/components/schemas/CashBox"
+          description: Кассы РТТ
+          nullable: true
+        descr:
+          type: string
+          description: Описание РТТ.
+          nullable: true
+        notifyParams:
+          "$ref": "#/components/schemas/NotifyParams"
+        state:
+          "$ref": "#/components/schemas/ServiceProviderStateEnum"
+      additionalProperties: false
+      description: РТТ - розничная торговая точка.
+    RetailOutletMerchantInfo:
+      type: object
+      properties:
+        storeName:
+          type: string
+          description: Наименование магазина латиницей.
+          nullable: true
+        storeLocalityName:
+          type: string
+          description: Наименование РТТ в локале
+          nullable: true
+        localityCode:
+          type: string
+          description: Наименование локали
+          nullable: true
+        storeCity:
+          type: string
+          description: Наименование населенного пункта РТТ латиницей.
+          nullable: true
+        storeLocalityCity:
+          type: string
+          description: Наименование населенного пункта РТТ в локале.
+          nullable: true
+        trerminalLabel:
+          type: string
+          description: Идентификатор терминала
+          nullable: true
+      additionalProperties: false
+      description: Формирование информации об Ртт в qr-коде.
+    SecurityInfo:
+      type: object
+      properties:
+        type:
+          "$ref": "#/components/schemas/IdentityType"
+        settings:
+          "$ref": "#/components/schemas/OAUTHSettings"
+      additionalProperties: false
+      description: Информация по подключению к серверу авторизации
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Уникальный код сервиса сервис-провайдера
+          format: int64
+          nullable: true
+        name:
+          type: string
+          description: Наименование сервиса
+          nullable: true
+        eripServiceCode:
+          type: string
+          description: Код услуги в дереве ЕРИП
+          nullable: true
+        restrictions:
+          "$ref": "#/components/schemas/ServiceRestriction"
+        comissions:
+          "$ref": "#/components/schemas/ServiceComission"
+        account:
+          "$ref": "#/components/schemas/Account"
+        notifyParams:
+          "$ref": "#/components/schemas/NotifyParams"
+        state:
+          "$ref": "#/components/schemas/ServiceProviderStateEnum"
+        eripState:
+          "$ref": "#/components/schemas/ServiceProviderERIPStateEnum"
+        requestServiceProvider:
+          type: boolean
+          description: Признак запроса информации у самого ПУ (внешний роутинг)
+        requestUrl:
+          type: string
+          description: Адрес для запроса информации у ПУ по данному сервису (если  requestServiceProvider
+            = true)
+          nullable: true
+      additionalProperties: false
+      description: Сервис сервис-провайдера
+    ServiceComission:
+      type: object
+      properties:
+        erip:
+          "$ref": "#/components/schemas/Comission"
+        aggregator:
+          "$ref": "#/components/schemas/Comission"
+      additionalProperties: false
+    ServiceProvider:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Уникальный код ПУ.
+          format: int64
+        legalInfo:
+          "$ref": "#/components/schemas/LegalInfo"
+        businessCard:
+          "$ref": "#/components/schemas/BusinessCard"
+        merchant:
+          "$ref": "#/components/schemas/MerchantInfo"
+        contract:
+          "$ref": "#/components/schemas/ServiceProviderContract"
+        services:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Service"
+          description: Сервисы ПУ.
+          nullable: true
+        contacts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Contact"
+          description: Контакты ПУ
+          nullable: true
+        currencies:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Currency"
+          description: Список доступных валют ПУ.
+          nullable: true
+        retailOutlets:
+          type: array
+          items:
+            "$ref": "#/components/schemas/RetailOutlet"
+          description: РТТ ПУ.
+          nullable: true
+        state:
+          "$ref": "#/components/schemas/ServiceProviderStateEnum"
+        eripState:
+          "$ref": "#/components/schemas/ServiceProviderStateEnum"
+        reports:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ServiceProviderReport"
+          description: Отчеты ПУ
+          nullable: true
+        loyalityCode:
+          type: string
+          description: Код ПУ в системе лояльности.
+          nullable: true
+        notifyParams:
+          "$ref": "#/components/schemas/NotifyParams"
+        canBiometryPay:
+          type: boolean
+          description: Признак возможности оплаты с помощью биометрии
+        iiiInfo:
+          "$ref": "#/components/schemas/ServiceProviderIII"
+        origin:
+          "$ref": "#/components/schemas/Origin"
+      additionalProperties: false
+      description: Производитель услуг.
+    ServiceProviderContract:
+      type: object
+      properties:
+        num:
+          type: string
+          description: Номер договора
+          nullable: true
+        beginDate:
+          type: string
+          description: Дата начала действия договора
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        endDate:
+          type: string
+          description: Дата окончания действия договора
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        signActDate:
+          type: string
+          description: Дата подписания акта
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+      additionalProperties: false
+      description: Контракт ПУ
+    ServiceProviderERIPStateEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+    ServiceProviderIII:
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: Идентификатор агрегатора
+          nullable: true
+        clientSecret:
+          type: string
+          description: '"Секрет" ПУ для доступа на сервер идентификации'
+          nullable: true
+        prefixId:
+          type: string
+          description: Префикс идентификатора агрегатора на сервере идентификации
+          nullable: true
+        enable:
+          type: boolean
+          description: Признак активности агрегатора на сервере идентификации
+      additionalProperties: false
+      description: Данные для интеграции
+    ServiceProviderInfo:
+      type: object
+      properties:
+        serviceProviderId:
+          type: integer
+          description: Уникальный идентификатор производителя услуг.
+          format: int64
+        serviceProviderName:
+          type: string
+          description: Наименование ПУ
+          nullable: true
+        serviceId:
+          type: integer
+          description: Идентификатор услуги.
+          format: int64
+        serviceName:
+          type: string
+          description: Наименование услуги
+          nullable: true
+        notificationChannel:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ConfigTypeEnum"
+          description: Способ уведомления производителя услуг.
+          nullable: true
+        retailOutlet:
+          "$ref": "#/components/schemas/RetailOutlet"
+        cashBox:
+          "$ref": "#/components/schemas/CashBox"
+      additionalProperties: false
+      description: Информация о производителе услуг.
+    ServiceProviderPublicInfo:
+      type: object
+      properties:
+        legalInfo:
+          "$ref": "#/components/schemas/LegalInfo"
+        serviceProviderCard:
+          "$ref": "#/components/schemas/BusinessCard"
+      additionalProperties: false
+      description: Общая информация о ПУ
+    ServiceProviderReport:
+      type: object
+      properties:
+        report:
+          "$ref": "#/components/schemas/Report"
+        emails:
+          type: array
+          items:
+            type: string
+          description: Список адресов для рассылки
+          nullable: true
+        lastSendDate:
+          type: string
+          description: Дата последней отправки отчета
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+      additionalProperties: false
+      description: Структура отчета для ПУ
+    ServiceProviderStateEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+        - -1
+      type: integer
+      format: int32
+    ServiceRestriction:
+      type: object
+      properties:
+        minAmount:
+          type: number
+          description: Минимальная сумма выставления по услуге
+          format: double
+        maxAmount:
+          type: number
+          description: Максимальная сумма выставления по услуге
+          format: double
+        canMakeStorno:
+          type: boolean
+          description: Определеляет возможность проведения операции сторно по данной
+            услуге
+          readOnly: true
+        eripStorno:
+          type: boolean
+          description: Признак возможности проведения сторно на стороне ЕРИП
+        aggregatorStorno:
+          type: boolean
+          description: Признак возможности проведения сторно на стороне агрегатора
+      additionalProperties: false
+      description: Ограничения сервиса
+    ShippingInfo:
+      type: object
+      properties:
+        contact:
+          "$ref": "#/components/schemas/Person"
+        phone:
+          "$ref": "#/components/schemas/Phone"
+        email:
+          type: string
+          description: Адрес электронной почты.
+          nullable: true
+        address:
+          "$ref": "#/components/schemas/Address"
+        amount:
+          "$ref": "#/components/schemas/Amount"
+      additionalProperties: false
+      description: Информация о доставке.
+    SourceInfo:
+      type: object
+      properties:
+        networkSource:
+          type: string
+          description: IP адрес.
+          nullable: true
+        user:
+          "$ref": "#/components/schemas/GuidStringProperty"
+        service:
+          "$ref": "#/components/schemas/Int64StringProperty"
+        serviceProvider:
+          "$ref": "#/components/schemas/Int64StringProperty"
+      additionalProperties: false
+      description: Информация об источнике.
+    Stage:
+      type: object
+      properties:
+        lastPaymentUTC:
+          type: string
+          description: "Крайний срок оплаты счета без начисления пени (UTC).\r\nУчитывается
+            только дата"
+          $ref: '#/components/schemas/LocalDateTime'
+        payDateUTC:
+          type: string
+          description: Реальная дата оплаты
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        minPayment:
+          type: number
+          description: Минимальная сумма оплаты.
+          format: double
+        amountPaid:
+          type: number
+          description: Оплачено по данному этапу
+          format: double
+        penalty:
+          type: number
+          description: Пеня по платежу
+          format: double
+        isCompleted:
+          type: boolean
+          description: Этап оплачен
+          readOnly: true
+      additionalProperties: false
+      description: Этап оплаты счета в рассрочку.
+    TipOrConvenience:
+      type: object
+      properties:
+        type:
+          "$ref": "#/components/schemas/TipOrConvenienceEnum"
+        flatFee:
+          type: number
+          description: Комиссия задана в фиксированной сумме.
+          format: double
+          nullable: true
+        percentFee:
+          type: number
+          description: Комиссия задана в процентах от суммы оплаты.
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Тип комиссии за операцию или запрос у плательщика на extrapay(чаевые
+        торговцу).
+    TipOrConvenienceEnum:
+      enum:
+        - 1
+        - 2
+        - 3
+      type: integer
+      description: Тип комиссии или extrapay.
+      format: int32
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор транзакции
+          format: uuid
+        serviceData:
+          "$ref": "#/components/schemas/TransactionServiceData"
+        amount:
+          "$ref": "#/components/schemas/TransactionAmount"
+        eripId:
+          type: integer
+          description: Идентификатор транзакции в ЕРИП
+          format: int64
+        eposId:
+          type: integer
+          description: Внутренний идентификатор транзакции EPos
+          format: int64
+        aggregatorId:
+          type: integer
+          description: Идентификатор транзакции у агрегатора
+          format: int64
+        spTranId:
+          type: integer
+          description: Идентификатор транзакции самого ПУ
+          format: int64
+        dates:
+          "$ref": "#/components/schemas/TransactionDate"
+        client:
+          "$ref": "#/components/schemas/TransactionClient"
+        state:
+          "$ref": "#/components/schemas/TransactionStateEnum"
+        bankData:
+          "$ref": "#/components/schemas/TransactionBankData"
+        invoice:
+          "$ref": "#/components/schemas/TransactionInvoice"
+        eposInfo:
+          type: string
+          description: Информация по транзакции и суммам
+          nullable: true
+      additionalProperties: false
+      description: Прошедшая транзакция оплаты
+    TransactionAmount:
+      type: object
+      properties:
+        currency:
+          "$ref": "#/components/schemas/Currency"
+        amount:
+          type: number
+          description: Оплаченная покупателем сумма
+          format: double
+        transferAmount:
+          type: number
+          description: Перечисленная ПУ сумма (c учетом вычета)
+          format: double
+          nullable: true
+        bankComission:
+          type: number
+          description: Комиссия расчетного агента
+          format: double
+          nullable: true
+        eripComission:
+          type: number
+          description: Комиссия ЕРИП
+          format: double
+          nullable: true
+        aggregatorComission:
+          type: number
+          description: Комиссия агрегатора
+          format: double
+          nullable: true
+        rate:
+          type: number
+          description: Курс пересчета
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Структура платежа
+    TransactionBankData:
+      type: object
+      properties:
+        bankCode:
+          type: integer
+          description: Код банка, осуществившего платеж
+          format: int32
+          nullable: true
+        authType:
+          type: string
+          description: Тип авторизации плательщика
+          nullable: true
+        memOrderDate:
+          type: string
+          description: Дата формирования ведомости перечислений
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        memOrderNum:
+          type: integer
+          description: Номер мемориального ордера
+          format: int64
+          nullable: true
+        payType:
+          type: integer
+          description: Тип устройства
+          format: int32
+          nullable: true
+        payTypeName:
+          type: string
+          description: Расшифрованный тип устройства
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      description: Дополнительная структура об оплате
+    TransactionClient:
+      type: object
+      properties:
+        fio:
+          type: string
+          description: ФИО плательщика
+          nullable: true
+        address:
+          type: string
+          description: Адрес плательщика
+          nullable: true
+      additionalProperties: false
+      description: Структура плательщика
+    TransactionDate:
+      type: object
+      properties:
+        dateStartUTC:
+          type: string
+          description: Дата начаала оплаты (submitPayment)
+          $ref: '#/components/schemas/LocalDateTime'
+        dateResultUTC:
+          type: string
+          description: Дата завершения оплаты (confirmPayment)
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+        dateVerifiedUTC:
+          type: string
+          description: Дата сверки по транзакции
+          $ref: '#/components/schemas/LocalDateTime'
+          nullable: true
+      additionalProperties: false
+      description: Структура дат транзакции
+    TransactionDateType:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      type: integer
+      description: "Типы даты для выборки\r\nPAYMENT_STARTDATE = 0 - дата начала оплаты\r\nPAYMENT_RESULTDATE
+        = 1 - дата завершения оплаты\r\nPAYMENT_VERIFYDATE = 2 - дата сверки\r\nPAYMENT_MEMORDERDATE
+        = 3 - дата мем-ордера"
+      format: int32
+    TransactionInvoice:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор оплаченного инвойса
+          format: uuid
+        parentId:
+          type: string
+          description: Идентификатор родительского инвойса
+          format: uuid
+          nullable: true
+        number:
+          type: string
+          description: Номер инвойса
+          nullable: true
+        fullNumber:
+          type: string
+          description: Полный номер инвойса с учетом ПУ и сервиса
+          nullable: true
+        dateAddUTC:
+          type: string
+          description: Дата создания инвойса в utc-формате
+          $ref: '#/components/schemas/LocalDateTime'
+      additionalProperties: false
+      description: Данные по инвойсу транзакции
+    TransactionRecords:
+      type: object
+      properties:
+        start:
+          type: integer
+          description: Индекс начального элемента.
+          format: int32
+        count:
+          type: integer
+          description: Количество элементов в результате.
+          format: int32
+        total:
+          type: integer
+          description: Общее количество элементов, удовлетворяющих запросу.
+          format: int32
+        records:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Transaction"
+          description: Запрошенные записи.
+          nullable: true
+      additionalProperties: false
+      description: Список элементов при постраничной выдаче.
+    TransactionServiceData:
+      type: object
+      properties:
+        serviceProviderCode:
+          type: integer
+          description: ПУ
+          format: int64
+        serviceId:
+          type: integer
+          description: Код сервиса ПУ
+          format: int32
+      additionalProperties: false
+      description: Общие сведения о сервисе
+    TransactionStateEnum:
+      enum:
+        - 0
+        - 10
+        - 20
+        - 30
+        - -20
+        - -10
+      type: integer
+      description: "Возможные состояния транзакции\r\n0 - Начало оплаты\r\n10 - Оплата
+        сверена\r\n20 - Оплата произведена\r\n30 - Отмена оплаты\r\n-10 - Сторно оплаты\r\n-20
+        - Отказ регистрации"
+      format: int32
+    WebPayParam:
+      type: object
+      properties:
+        invoice:
+          "$ref": "#/components/schemas/Invoice"
+        amount:
+          type: number
+          description: Сумма к оплате по инвойсу
+          format: double
+          nullable: true
+        successReturnUrl:
+          type: string
+          description: Адрес, на который переходит клиент в случае успешной оплаты
+          nullable: true
+        cancelReturnUrl:
+          type: string
+          description: Адрес, на который переходит клиент в случае неуспешной оплаты
+          nullable: true
+        notifyUrl:
+          type: string
+          description: Адрес для нотификации в случае отсутствия адресов перехода
+            успешной и неуспешной оплаты
+          nullable: true
+        submitValue:
+          type: string
+          description: Надпись на кнопке для оплаты
+          nullable: true
+        isTestMode:
+          type: boolean
+          description: 'Режим оплаты: false или null - реальная оплата, true - тестовая
+            оплата'
+          nullable: true
+      additionalProperties: false
+      description: Класс запроса на получение ссылки оплаты через WebPay
+
+    LocalDate:
+      type: string
+      description: |
+        A date without a time-zone in the ISO-8601 calendar system.
+      format: LocalDate
+      example: 2022-10-25
+
+    LocalDateTime:
+      type: string
+      description: |
+        A date-time without a time-zone in the ISO-8601 calendar system.
+      format: LocalDateTime
+      example: 2007-12-03T10:15:30
+
+    ZenDeskUserAuthorize:
+      type: object
+      properties:
+        jwt:
+          type: string
+          description: Токен пользователя
+          nullable: true
+      additionalProperties: false
+      description: Ответ для ZenDesk по пользователю
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header
+security:
+  - Bearer: []
