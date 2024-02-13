@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.openapitools.jackson.nullable.JsonNullable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -56,7 +55,7 @@ public class TransactionInvoice {
   private JsonNullable<String> fullNumber = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_DATE_ADD_U_T_C = "dateAddUTC";
-  private LocalDateTime dateAddUTC;
+  private java.time.LocalDateTime dateAddUTC;
 
   public TransactionInvoice() {
   }
@@ -195,7 +194,7 @@ public class TransactionInvoice {
   }
 
 
-  public TransactionInvoice dateAddUTC(LocalDateTime dateAddUTC) {
+  public TransactionInvoice dateAddUTC(java.time.LocalDateTime dateAddUTC) {
     
     this.dateAddUTC = dateAddUTC;
     return this;
@@ -211,14 +210,14 @@ public class TransactionInvoice {
   @JsonProperty(JSON_PROPERTY_DATE_ADD_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDateAddUTC() {
+  public java.time.LocalDateTime getDateAddUTC() {
     return dateAddUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DATE_ADD_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDateAddUTC(LocalDateTime dateAddUTC) {
+  public void setDateAddUTC(java.time.LocalDateTime dateAddUTC) {
     this.dateAddUTC = dateAddUTC;
   }
 

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -64,7 +63,7 @@ public class Contact {
   private JsonNullable<List<String>> emails = JsonNullable.<List<String>>undefined();
 
   public static final String JSON_PROPERTY_BIRTHDAY = "birthday";
-  private LocalDateTime birthday;
+  private java.time.LocalDateTime birthday;
 
   public static final String JSON_PROPERTY_NOTE = "note";
   private JsonNullable<String> note = JsonNullable.<String>undefined();
@@ -257,7 +256,7 @@ public class Contact {
   }
 
 
-  public Contact birthday(LocalDateTime birthday) {
+  public Contact birthday(java.time.LocalDateTime birthday) {
     
     this.birthday = birthday;
     return this;
@@ -273,14 +272,14 @@ public class Contact {
   @JsonProperty(JSON_PROPERTY_BIRTHDAY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getBirthday() {
+  public java.time.LocalDateTime getBirthday() {
     return birthday;
   }
 
 
   @JsonProperty(JSON_PROPERTY_BIRTHDAY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBirthday(LocalDateTime birthday) {
+  public void setBirthday(java.time.LocalDateTime birthday) {
     this.birthday = birthday;
   }
 

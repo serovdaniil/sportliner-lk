@@ -3,7 +3,9 @@ package by.sportliner.lk.endpoint.api;
 import java.net.URI;
 import java.util.Objects;
 import by.sportliner.lk.endpoint.api.BranchOfficeItemDto;
+import by.sportliner.lk.endpoint.api.PayingEntityDto;
 import by.sportliner.lk.endpoint.api.PaymentTypeDto;
+import by.sportliner.lk.endpoint.api.TariffDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -51,11 +53,20 @@ public class ChildDto {
   @JsonProperty("tuitionBalance")
   private Integer tuitionBalance;
 
-  @JsonProperty("numberClassesPerMonth")
-  private Integer numberClassesPerMonth;
+  @JsonProperty("tariff")
+  private TariffDto tariff;
+
+  @JsonProperty("invoiceNumber")
+  private String invoiceNumber;
 
   @JsonProperty("paymentType")
   private PaymentTypeDto paymentType;
+
+  @JsonProperty("payingEntity")
+  private PayingEntityDto payingEntity;
+
+  @JsonProperty("benefits")
+  private Boolean benefits;
 
   @JsonProperty("notes")
   private String notes;
@@ -212,23 +223,42 @@ public class ChildDto {
     this.tuitionBalance = tuitionBalance;
   }
 
-  public ChildDto numberClassesPerMonth(Integer numberClassesPerMonth) {
-    this.numberClassesPerMonth = numberClassesPerMonth;
+  public ChildDto tariff(TariffDto tariff) {
+    this.tariff = tariff;
     return this;
   }
 
   /**
-   * Get numberClassesPerMonth
-   * @return numberClassesPerMonth
+   * Get tariff
+   * @return tariff
   */
-  @NotNull 
-  @Schema(name = "numberClassesPerMonth", requiredMode = Schema.RequiredMode.REQUIRED)
-  public Integer getNumberClassesPerMonth() {
-    return numberClassesPerMonth;
+  @NotNull @Valid 
+  @Schema(name = "tariff", requiredMode = Schema.RequiredMode.REQUIRED)
+  public TariffDto getTariff() {
+    return tariff;
   }
 
-  public void setNumberClassesPerMonth(Integer numberClassesPerMonth) {
-    this.numberClassesPerMonth = numberClassesPerMonth;
+  public void setTariff(TariffDto tariff) {
+    this.tariff = tariff;
+  }
+
+  public ChildDto invoiceNumber(String invoiceNumber) {
+    this.invoiceNumber = invoiceNumber;
+    return this;
+  }
+
+  /**
+   * Get invoiceNumber
+   * @return invoiceNumber
+  */
+  
+  @Schema(name = "invoiceNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  public String getInvoiceNumber() {
+    return invoiceNumber;
+  }
+
+  public void setInvoiceNumber(String invoiceNumber) {
+    this.invoiceNumber = invoiceNumber;
   }
 
   public ChildDto paymentType(PaymentTypeDto paymentType) {
@@ -248,6 +278,44 @@ public class ChildDto {
 
   public void setPaymentType(PaymentTypeDto paymentType) {
     this.paymentType = paymentType;
+  }
+
+  public ChildDto payingEntity(PayingEntityDto payingEntity) {
+    this.payingEntity = payingEntity;
+    return this;
+  }
+
+  /**
+   * Get payingEntity
+   * @return payingEntity
+  */
+  @NotNull @Valid 
+  @Schema(name = "payingEntity", requiredMode = Schema.RequiredMode.REQUIRED)
+  public PayingEntityDto getPayingEntity() {
+    return payingEntity;
+  }
+
+  public void setPayingEntity(PayingEntityDto payingEntity) {
+    this.payingEntity = payingEntity;
+  }
+
+  public ChildDto benefits(Boolean benefits) {
+    this.benefits = benefits;
+    return this;
+  }
+
+  /**
+   * Get benefits
+   * @return benefits
+  */
+  @NotNull 
+  @Schema(name = "benefits", requiredMode = Schema.RequiredMode.REQUIRED)
+  public Boolean isBenefits() {
+    return benefits;
+  }
+
+  public void setBenefits(Boolean benefits) {
+    this.benefits = benefits;
   }
 
   public ChildDto notes(String notes) {
@@ -286,14 +354,17 @@ public class ChildDto {
         Objects.equals(this.birthdate, child.birthdate) &&
         Objects.equals(this.diagnosis, child.diagnosis) &&
         Objects.equals(this.tuitionBalance, child.tuitionBalance) &&
-        Objects.equals(this.numberClassesPerMonth, child.numberClassesPerMonth) &&
+        Objects.equals(this.tariff, child.tariff) &&
+        Objects.equals(this.invoiceNumber, child.invoiceNumber) &&
         Objects.equals(this.paymentType, child.paymentType) &&
+        Objects.equals(this.payingEntity, child.payingEntity) &&
+        Objects.equals(this.benefits, child.benefits) &&
         Objects.equals(this.notes, child.notes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, lastName, branchOffice, firstName, patronymic, birthdate, diagnosis, tuitionBalance, numberClassesPerMonth, paymentType, notes);
+    return Objects.hash(id, lastName, branchOffice, firstName, patronymic, birthdate, diagnosis, tuitionBalance, tariff, invoiceNumber, paymentType, payingEntity, benefits, notes);
   }
 
   @Override
@@ -308,8 +379,11 @@ public class ChildDto {
     sb.append("    birthdate: ").append(toIndentedString(birthdate)).append("\n");
     sb.append("    diagnosis: ").append(toIndentedString(diagnosis)).append("\n");
     sb.append("    tuitionBalance: ").append(toIndentedString(tuitionBalance)).append("\n");
-    sb.append("    numberClassesPerMonth: ").append(toIndentedString(numberClassesPerMonth)).append("\n");
+    sb.append("    tariff: ").append(toIndentedString(tariff)).append("\n");
+    sb.append("    invoiceNumber: ").append(toIndentedString(invoiceNumber)).append("\n");
     sb.append("    paymentType: ").append(toIndentedString(paymentType)).append("\n");
+    sb.append("    payingEntity: ").append(toIndentedString(payingEntity)).append("\n");
+    sb.append("    benefits: ").append(toIndentedString(benefits)).append("\n");
     sb.append("    notes: ").append(toIndentedString(notes)).append("\n");
     sb.append("}");
     return sb.toString();

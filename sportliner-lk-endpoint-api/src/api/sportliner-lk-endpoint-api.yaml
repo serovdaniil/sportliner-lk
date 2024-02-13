@@ -921,7 +921,7 @@ components:
         - birthday
         - diagnosis
         - tuitionBalance
-        - numberClassesPerMonth
+        - tariff
       properties:
         id:
           type: string
@@ -934,8 +934,8 @@ components:
           type: string
         tuitionBalance:
           type: integer
-        numberClassesPerMonth:
-          type: integer
+        tariff:
+          $ref: '#/components/schemas/Tariff'
         notes:
           type: string
 
@@ -1029,8 +1029,10 @@ components:
         - birthday
         - diagnosis
         - tuitionBalance
-        - numberClassesPerMonth
+        - tariff
         - paymentType
+        - benefits
+        - payingEntity
       properties:
         id:
           type: string
@@ -1048,12 +1050,26 @@ components:
           type: string
         tuitionBalance:
           type: integer
-        numberClassesPerMonth:
-          type: integer
+        tariff:
+          $ref: '#/components/schemas/Tariff'
+        invoiceNumber:
+          type: string
         paymentType:
           $ref: '#/components/schemas/PaymentType'
+        payingEntity:
+          $ref: '#/components/schemas/PayingEntity'
+        benefits:
+          type: boolean
         notes:
           type: string
+
+    Tariff:
+      type: string
+      enum:
+        - ONE_LESSON_PER_WEEK
+        - TWO_LESSONS_PER_WEEK
+        - THREE_LESSONS_PER_WEEK
+        - UNLIM
 
     PaymentType:
       type: string
@@ -1061,6 +1077,12 @@ components:
         - PREPAYMENT
         - POST_PAYMENT
         - PER_LESSON
+
+    PayingEntity:
+      type: string
+      enum:
+        - MICHALENIA
+        - SPORTLINER
 
     UserAccountListItem:
       type: object

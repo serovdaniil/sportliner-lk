@@ -1,0 +1,189 @@
+package by.sportliner.lk.core.service;
+
+import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.PaymentType;
+import by.sportliner.lk.core.model.Tariff;
+import by.sportliner.lk.core.model.Transaction;
+import by.sportliner.lk.core.repository.TransactionRepository;
+import by.sportliner.lk.core.service.integration.epos.EposHgroshService;
+import by.sportliner.lk.integration.epos.hgrosh.internal.api.TransactionRecords;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.function.Predicate;
+
+@Service
+@Transactional
+public class TransactionServiceImpl implements TransactionService {
+
+    private static final double BENEFIT_DISCOUNT = 0.1;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private ChildService childService;
+
+    @Autowired
+    private EposHgroshService eposHgroshService;
+
+    @Override
+    public Transaction addNewTransactionForChild(Child child) {
+        if (child.getPaymentType().equals(PaymentType.PER_LESSON)) {
+            return null;
+        }
+
+        Transaction transaction = toTransaction(child);
+
+        eposHgroshService.updateInvoiceFor(child.getInvoiceNumber(), transaction);
+
+        return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public Transaction addTransactionForNewChild(Child child) {
+        BigDecimal totalAmount;
+        Tariff childTariff = child.getTariff();
+        int countLessons = 0;
+
+        if (childTariff.equals(Tariff.UNLIM)) {
+            BigDecimal currentDay = BigDecimal.valueOf(LocalDate.now().getDayOfMonth());
+            BigDecimal allDay = BigDecimal.valueOf(YearMonth.now().lengthOfMonth());
+
+            BigDecimal percentage = currentDay.divide(allDay, 2, RoundingMode.HALF_UP);
+
+            totalAmount = BigDecimal.valueOf(Tariff.UNLIM.getPrice())
+                .multiply(BigDecimal.ONE.subtract(percentage));
+        } else {
+            Calendar cal = Calendar.getInstance();
+
+            cal.set(Calendar.YEAR, Year.now().getValue());
+            cal.set(Calendar.MONTH, YearMonth.now().getMonthValue());
+
+            LocalDate currentDate = LocalDate.now();
+            DayOfWeek day = currentDate.getDayOfWeek();
+
+            if (day.equals(DayOfWeek.FRIDAY)) {
+                cal.set(Calendar.DAY_OF_MONTH, currentDate.plusDays(3).getDayOfMonth());
+            } else if (day.equals(DayOfWeek.SATURDAY)) {
+                cal.set(Calendar.DAY_OF_MONTH, currentDate.plusDays(2).getDayOfMonth());
+            } else if (day.equals(DayOfWeek.SUNDAY)) {
+                cal.set(Calendar.DAY_OF_MONTH, currentDate.plusDays(1).getDayOfMonth());
+            } else {
+                cal.set(Calendar.DAY_OF_MONTH, currentDate.getDayOfMonth());
+            }
+
+            int countWeeks = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            countLessons = countWeeks * childTariff.getLessonsPerWeek();
+
+            totalAmount = BigDecimal.valueOf(countLessons * childTariff.getPrice());
+        }
+
+        if (child.isBenefits()) {
+            totalAmount = totalAmount.divide(BigDecimal.valueOf(1 - BENEFIT_DISCOUNT), 2, RoundingMode.HALF_UP);
+        }
+
+        Transaction transaction = new Transaction();
+
+        transaction.setChild(child);
+        transaction.setDate(LocalDate.now());
+        transaction.setStatus(Transaction.Status.UNPAID);
+        transaction.setInvoiceAmount(totalAmount);
+        transaction.setNumberOfLessons(countLessons);
+
+        eposHgroshService.updateInvoiceFor(child.getFullInvoiceNumber(), transaction);
+
+        transactionRepository.save(transaction);
+
+        return transaction;
+    }
+
+    @Scheduled(cron = "0 0 0 1 * *")
+    public void monthlyBilling() {
+        List<Child> children = childService.findAll();
+        List<Transaction> transactions = new ArrayList<>();
+
+        for (Child child : children) {
+            if ((child.getTuitionBalance() > child.getTariff().getLessonsPerWeek() * 4)
+                || child.getPaymentType().equals(PaymentType.PER_LESSON)) {
+                continue;
+            }
+
+            Transaction transaction = addNewTransactionForChild(child);
+            transactions.add(transaction);
+        }
+
+        // TODO добавить нотификацию на почту
+    }
+
+    @Scheduled(cron = "0 48 21 * * *")
+    public void dailyCheckInvoices() {
+        LocalDate currentDate = LocalDate.now();
+        List<Transaction> transactions = transactionRepository.findByStatus(Transaction.Status.UNPAID);
+        TransactionRecords transactionRecords = eposHgroshService.findTransactionInvoices(currentDate);
+
+        Predicate<Child> containsInTransactionRecords = child -> transactionRecords.getRecords().stream()
+            .anyMatch(it -> it.getInvoice().getNumber().equals(child.getInvoiceNumber()));
+
+        for (Transaction transaction : transactions) {
+            Child child = transaction.getChild();
+
+            if (containsInTransactionRecords.test(child)) {
+                transaction.setStatus(Transaction.Status.PAID);
+                transactionRepository.save(transaction);
+
+                child.incrementTuitionBalance(transaction.getNumberOfLessons());
+                childService.save(child);
+            }
+        }
+
+        List<Child> children = childService.findWithPerLessonPaymentTypeAndAttendanceForDay(currentDate);
+
+        for (Child child : children) {
+            if (containsInTransactionRecords.test(child)) {
+                child.incrementTuitionBalance();
+                childService.save(child);
+            }
+        }
+
+        // TODO нотификация на почту о неоплаченных счетах
+
+    }
+
+    private BigDecimal countInvoiceAmount(Child child) {
+        Tariff tariff = child.getTariff();
+        BigDecimal amount;
+
+        if (tariff.equals(Tariff.UNLIM)) {
+            amount = BigDecimal.valueOf(tariff.getPrice());
+        } else {
+            amount = BigDecimal.valueOf(child.getAmountClassesForPay() * tariff.getPrice());
+        }
+
+        return child.isBenefits() ? amount.multiply(BigDecimal.valueOf(1 - BENEFIT_DISCOUNT)) : amount;
+    }
+
+    private Transaction toTransaction(Child child) {
+        Transaction transaction = new Transaction();
+
+        transaction.setChild(child);
+        transaction.setDate(LocalDate.now());
+        transaction.setStatus(Transaction.Status.UNPAID);
+        transaction.setInvoiceAmount(countInvoiceAmount(child));
+        transaction.setNumberOfLessons(child.getAmountClassesForPay());
+
+        return transaction;
+    }
+
+}

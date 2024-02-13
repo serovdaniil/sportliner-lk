@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -82,7 +81,7 @@ public class Invoice {
   private JsonNullable<UUID> id = JsonNullable.<UUID>undefined();
 
   public static final String JSON_PROPERTY_ADD_DATE_U_T_C = "addDateUTC";
-  private LocalDateTime addDateUTC;
+  private java.time.LocalDateTime addDateUTC;
 
   public static final String JSON_PROPERTY_PARENT_ID = "parentId";
   private JsonNullable<UUID> parentId = JsonNullable.<UUID>undefined();
@@ -118,7 +117,7 @@ public class Invoice {
   private JsonNullable<List<InvoiceItem>> items = JsonNullable.<List<InvoiceItem>>undefined();
 
   public static final String JSON_PROPERTY_DATE_IN_AIR_U_T_C = "dateInAirUTC";
-  private LocalDateTime dateInAirUTC;
+  private java.time.LocalDateTime dateInAirUTC;
 
   public static final String JSON_PROPERTY_DISCOUNT = "discount";
   private Discount discount;
@@ -200,7 +199,7 @@ public class Invoice {
   }
 
 
-  public Invoice addDateUTC(LocalDateTime addDateUTC) {
+  public Invoice addDateUTC(java.time.LocalDateTime addDateUTC) {
     
     this.addDateUTC = addDateUTC;
     return this;
@@ -216,14 +215,14 @@ public class Invoice {
   @JsonProperty(JSON_PROPERTY_ADD_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getAddDateUTC() {
+  public java.time.LocalDateTime getAddDateUTC() {
     return addDateUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_ADD_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAddDateUTC(LocalDateTime addDateUTC) {
+  public void setAddDateUTC(java.time.LocalDateTime addDateUTC) {
     this.addDateUTC = addDateUTC;
   }
 
@@ -585,7 +584,7 @@ public class Invoice {
   }
 
 
-  public Invoice dateInAirUTC(LocalDateTime dateInAirUTC) {
+  public Invoice dateInAirUTC(java.time.LocalDateTime dateInAirUTC) {
     
     this.dateInAirUTC = dateInAirUTC;
     return this;
@@ -601,14 +600,14 @@ public class Invoice {
   @JsonProperty(JSON_PROPERTY_DATE_IN_AIR_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDateInAirUTC() {
+  public java.time.LocalDateTime getDateInAirUTC() {
     return dateInAirUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DATE_IN_AIR_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDateInAirUTC(LocalDateTime dateInAirUTC) {
+  public void setDateInAirUTC(java.time.LocalDateTime dateInAirUTC) {
     this.dateInAirUTC = dateInAirUTC;
   }
 

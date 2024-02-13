@@ -9,6 +9,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":sportliner-lk-integration-epos-hgrosh"))
+
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -18,6 +20,8 @@ dependencies {
     implementation("commons-io:commons-io:1.3.1")
 
     implementation("commons-codec:commons-codec:1.15")
+
+    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 
     // telegram
     implementation("org.telegram:telegrambots-abilities:6.9.0")

@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.openapitools.jackson.nullable.JsonNullable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -68,10 +67,10 @@ public class InvoiceListItem {
   private UUID id;
 
   public static final String JSON_PROPERTY_ADD_DATE_U_T_C = "addDateUTC";
-  private LocalDateTime addDateUTC;
+  private java.time.LocalDateTime addDateUTC;
 
   public static final String JSON_PROPERTY_PAY_DATE_U_T_C = "payDateUTC";
-  private LocalDateTime payDateUTC;
+  private java.time.LocalDateTime payDateUTC;
 
   public static final String JSON_PROPERTY_PARENT_ID = "parentId";
   private JsonNullable<UUID> parentId = JsonNullable.<UUID>undefined();
@@ -92,7 +91,7 @@ public class InvoiceListItem {
   private ShippingInfo shippingInfo;
 
   public static final String JSON_PROPERTY_DATE_IN_AIR_U_T_C = "dateInAirUTC";
-  private LocalDateTime dateInAirUTC;
+  private java.time.LocalDateTime dateInAirUTC;
 
   public static final String JSON_PROPERTY_PAYMENT_DUE_TERMS = "paymentDueTerms";
   private PaymentDueTerms paymentDueTerms;
@@ -122,7 +121,7 @@ public class InvoiceListItem {
   private JsonNullable<String> memOrderNum = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_MEM_ORDER_DATE = "memOrderDate";
-  private LocalDateTime memOrderDate;
+  private java.time.LocalDateTime memOrderDate;
 
   public InvoiceListItem() {
   }
@@ -155,7 +154,7 @@ public class InvoiceListItem {
   }
 
 
-  public InvoiceListItem addDateUTC(LocalDateTime addDateUTC) {
+  public InvoiceListItem addDateUTC(java.time.LocalDateTime addDateUTC) {
     
     this.addDateUTC = addDateUTC;
     return this;
@@ -171,19 +170,19 @@ public class InvoiceListItem {
   @JsonProperty(JSON_PROPERTY_ADD_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getAddDateUTC() {
+  public java.time.LocalDateTime getAddDateUTC() {
     return addDateUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_ADD_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAddDateUTC(LocalDateTime addDateUTC) {
+  public void setAddDateUTC(java.time.LocalDateTime addDateUTC) {
     this.addDateUTC = addDateUTC;
   }
 
 
-  public InvoiceListItem payDateUTC(LocalDateTime payDateUTC) {
+  public InvoiceListItem payDateUTC(java.time.LocalDateTime payDateUTC) {
     
     this.payDateUTC = payDateUTC;
     return this;
@@ -199,14 +198,14 @@ public class InvoiceListItem {
   @JsonProperty(JSON_PROPERTY_PAY_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getPayDateUTC() {
+  public java.time.LocalDateTime getPayDateUTC() {
     return payDateUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_PAY_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPayDateUTC(LocalDateTime payDateUTC) {
+  public void setPayDateUTC(java.time.LocalDateTime payDateUTC) {
     this.payDateUTC = payDateUTC;
   }
 
@@ -401,7 +400,7 @@ public class InvoiceListItem {
   }
 
 
-  public InvoiceListItem dateInAirUTC(LocalDateTime dateInAirUTC) {
+  public InvoiceListItem dateInAirUTC(java.time.LocalDateTime dateInAirUTC) {
     
     this.dateInAirUTC = dateInAirUTC;
     return this;
@@ -417,14 +416,14 @@ public class InvoiceListItem {
   @JsonProperty(JSON_PROPERTY_DATE_IN_AIR_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDateInAirUTC() {
+  public java.time.LocalDateTime getDateInAirUTC() {
     return dateInAirUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DATE_IN_AIR_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDateInAirUTC(LocalDateTime dateInAirUTC) {
+  public void setDateInAirUTC(java.time.LocalDateTime dateInAirUTC) {
     this.dateInAirUTC = dateInAirUTC;
   }
 
@@ -699,7 +698,7 @@ public class InvoiceListItem {
   }
 
 
-  public InvoiceListItem memOrderDate(LocalDateTime memOrderDate) {
+  public InvoiceListItem memOrderDate(java.time.LocalDateTime memOrderDate) {
     
     this.memOrderDate = memOrderDate;
     return this;
@@ -715,14 +714,14 @@ public class InvoiceListItem {
   @JsonProperty(JSON_PROPERTY_MEM_ORDER_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getMemOrderDate() {
+  public java.time.LocalDateTime getMemOrderDate() {
     return memOrderDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_MEM_ORDER_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMemOrderDate(LocalDateTime memOrderDate) {
+  public void setMemOrderDate(java.time.LocalDateTime memOrderDate) {
     this.memOrderDate = memOrderDate;
   }
 

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.validation.constraints.*;
@@ -40,10 +39,10 @@ import jakarta.validation.Valid;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class Stage {
   public static final String JSON_PROPERTY_LAST_PAYMENT_U_T_C = "lastPaymentUTC";
-  private LocalDateTime lastPaymentUTC;
+  private java.time.LocalDateTime lastPaymentUTC;
 
   public static final String JSON_PROPERTY_PAY_DATE_U_T_C = "payDateUTC";
-  private LocalDateTime payDateUTC;
+  private java.time.LocalDateTime payDateUTC;
 
   public static final String JSON_PROPERTY_MIN_PAYMENT = "minPayment";
   private Double minPayment;
@@ -68,7 +67,7 @@ public class Stage {
     this.isCompleted = isCompleted;
   }
 
-  public Stage lastPaymentUTC(LocalDateTime lastPaymentUTC) {
+  public Stage lastPaymentUTC(java.time.LocalDateTime lastPaymentUTC) {
     
     this.lastPaymentUTC = lastPaymentUTC;
     return this;
@@ -84,19 +83,19 @@ public class Stage {
   @JsonProperty(JSON_PROPERTY_LAST_PAYMENT_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getLastPaymentUTC() {
+  public java.time.LocalDateTime getLastPaymentUTC() {
     return lastPaymentUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_LAST_PAYMENT_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLastPaymentUTC(LocalDateTime lastPaymentUTC) {
+  public void setLastPaymentUTC(java.time.LocalDateTime lastPaymentUTC) {
     this.lastPaymentUTC = lastPaymentUTC;
   }
 
 
-  public Stage payDateUTC(LocalDateTime payDateUTC) {
+  public Stage payDateUTC(java.time.LocalDateTime payDateUTC) {
     
     this.payDateUTC = payDateUTC;
     return this;
@@ -112,14 +111,14 @@ public class Stage {
   @JsonProperty(JSON_PROPERTY_PAY_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getPayDateUTC() {
+  public java.time.LocalDateTime getPayDateUTC() {
     return payDateUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_PAY_DATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPayDateUTC(LocalDateTime payDateUTC) {
+  public void setPayDateUTC(java.time.LocalDateTime payDateUTC) {
     this.payDateUTC = payDateUTC;
   }
 

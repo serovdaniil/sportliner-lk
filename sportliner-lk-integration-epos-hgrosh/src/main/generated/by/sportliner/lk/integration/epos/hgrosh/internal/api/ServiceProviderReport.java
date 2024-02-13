@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -50,7 +49,7 @@ public class ServiceProviderReport {
   private JsonNullable<List<String>> emails = JsonNullable.<List<String>>undefined();
 
   public static final String JSON_PROPERTY_LAST_SEND_DATE = "lastSendDate";
-  private LocalDateTime lastSendDate;
+  private java.time.LocalDateTime lastSendDate;
 
   public ServiceProviderReport() {
   }
@@ -130,7 +129,7 @@ public class ServiceProviderReport {
   }
 
 
-  public ServiceProviderReport lastSendDate(LocalDateTime lastSendDate) {
+  public ServiceProviderReport lastSendDate(java.time.LocalDateTime lastSendDate) {
     
     this.lastSendDate = lastSendDate;
     return this;
@@ -146,14 +145,14 @@ public class ServiceProviderReport {
   @JsonProperty(JSON_PROPERTY_LAST_SEND_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getLastSendDate() {
+  public java.time.LocalDateTime getLastSendDate() {
     return lastSendDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_LAST_SEND_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLastSendDate(LocalDateTime lastSendDate) {
+  public void setLastSendDate(java.time.LocalDateTime lastSendDate) {
     this.lastSendDate = lastSendDate;
   }
 

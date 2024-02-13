@@ -18,10 +18,18 @@ import {
     BranchOfficeItemFromJSON,
     BranchOfficeItemFromJSONTyped,
     BranchOfficeItemToJSON,
+    PayingEntity,
+    PayingEntityFromJSON,
+    PayingEntityFromJSONTyped,
+    PayingEntityToJSON,
     PaymentType,
     PaymentTypeFromJSON,
     PaymentTypeFromJSONTyped,
     PaymentTypeToJSON,
+    Tariff,
+    TariffFromJSON,
+    TariffFromJSONTyped,
+    TariffToJSON,
 } from './';
 
 
@@ -82,16 +90,34 @@ export interface Child {
     tuitionBalance: number;
     /**
      * 
-     * @type {number}
+     * @type {Tariff}
      * @memberof Child
      */
-    numberClassesPerMonth: number;
+    tariff: Tariff;
+    /**
+     * 
+     * @type {string}
+     * @memberof Child
+     */
+    invoiceNumber?: string;
     /**
      * 
      * @type {PaymentType}
      * @memberof Child
      */
     paymentType: PaymentType;
+    /**
+     * 
+     * @type {PayingEntity}
+     * @memberof Child
+     */
+    payingEntity: PayingEntity;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Child
+     */
+    benefits: boolean;
     /**
      * 
      * @type {string}
@@ -118,8 +144,11 @@ export function ChildFromJSONTyped(json: any, ignoreDiscriminator: boolean): Chi
         'birthdate': !exists(json, 'birthdate') ? undefined : json['birthdate'],
         'diagnosis': json['diagnosis'],
         'tuitionBalance': json['tuitionBalance'],
-        'numberClassesPerMonth': json['numberClassesPerMonth'],
+        'tariff': TariffFromJSON(json['tariff']),
+        'invoiceNumber': !exists(json, 'invoiceNumber') ? undefined : json['invoiceNumber'],
         'paymentType': PaymentTypeFromJSON(json['paymentType']),
+        'payingEntity': PayingEntityFromJSON(json['payingEntity']),
+        'benefits': json['benefits'],
         'notes': !exists(json, 'notes') ? undefined : json['notes'],
     };
 }
@@ -145,8 +174,11 @@ export function ChildToJSONTyped(value?: Child | null, ignoreDiscriminator: bool
         'birthdate': value.birthdate,
         'diagnosis': value.diagnosis,
         'tuitionBalance': value.tuitionBalance,
-        'numberClassesPerMonth': value.numberClassesPerMonth,
+        'tariff': TariffToJSON(value.tariff),
+        'invoiceNumber': value.invoiceNumber,
         'paymentType': PaymentTypeToJSON(value.paymentType),
+        'payingEntity': PayingEntityToJSON(value.payingEntity),
+        'benefits': value.benefits,
         'notes': value.notes,
     };
 }

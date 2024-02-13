@@ -25,6 +25,9 @@ public interface AttendanceRepository extends JpaRepositoryImplementation<Attend
     )
     List<Attendance> findByChildAndPeriod(Child child, LocalDate fromDate, LocalDate toDate);
 
+    @Query("select a.child from Attendance a inner join a.child q where q.paymentType = 'PER_LESSON' AND a.date = :date")
+    List<Child> findByDateAndPerLessonPaymentType(LocalDate date);
+
     List<Attendance> findByChild(Child child);
 
     @Modifying

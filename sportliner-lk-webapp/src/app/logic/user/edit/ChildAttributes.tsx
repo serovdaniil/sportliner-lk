@@ -1,4 +1,4 @@
-import {BranchOfficeItem, Child, PaymentType} from 'api';
+import {BranchOfficeItem, Child, PayingEntity, PaymentType, Tariff} from 'api';
 import {action, makeObservable, observable, toJS} from 'mobx';
 
 interface ChildAttributesValues {
@@ -10,9 +10,12 @@ interface ChildAttributesValues {
     branchOffice?: BranchOfficeItem;
     diagnosis?: string;
     notes?: string;
-    numberClassesPerMonth?: number;
+    tariff?: Tariff;
     tuitionBalance?: number;
     paymentType?: PaymentType;
+    benefits?: boolean;
+    invoiceNumber?: string;
+    payingEntity?: PayingEntity;
 }
 
 export class ChildAttributes implements ChildAttributesValues {
@@ -44,10 +47,20 @@ export class ChildAttributes implements ChildAttributesValues {
     private _tuitionBalance?: number;
 
     @observable
-    private _numberClassesPerMonth?: number;
+    private _tariff?: Tariff;
 
     @observable
     private _paymentType?: PaymentType;
+
+    @observable
+    private _benefits: boolean;
+
+    @observable
+    private _invoiceNumber?: string;
+
+    @observable
+    private _payingEntity?: PayingEntity;
+
 
     constructor(values?: ChildAttributesValues) {
         this._id = values?.id;
@@ -58,9 +71,12 @@ export class ChildAttributes implements ChildAttributesValues {
         this._branchOffice = values?.branchOffice;
         this._diagnosis = values?.diagnosis;
         this._notes = values?.notes;
-        this._numberClassesPerMonth = values?.numberClassesPerMonth;
+        this._tariff = values?.tariff;
         this._tuitionBalance = values?.tuitionBalance;
         this._paymentType = values?.paymentType;
+        this._benefits = values?.benefits || false;
+        this._invoiceNumber = values?.invoiceNumber;
+        this._payingEntity = values?.payingEntity;
 
         makeObservable(this);
     }
@@ -101,13 +117,27 @@ export class ChildAttributes implements ChildAttributesValues {
         return this._tuitionBalance;
     }
 
-    get numberClassesPerMonth(): number | undefined {
-        return this._numberClassesPerMonth;
+    get tariff(): Tariff | undefined {
+        return this._tariff;
     }
 
 
     get paymentType(): PaymentType | undefined {
         return this._paymentType;
+    }
+
+
+    get benefits(): boolean | undefined {
+        return this._benefits;
+    }
+
+
+    get invoiceNumber(): string | undefined {
+        return this._invoiceNumber;
+    }
+
+    get payingEntity(): PayingEntity | undefined {
+        return this._payingEntity;
     }
 
     @action.bound
@@ -151,13 +181,28 @@ export class ChildAttributes implements ChildAttributesValues {
     }
 
     @action.bound
-    updateNumberClassesPerMonth(value?: number) {
-        this._numberClassesPerMonth = value;
+    updateTariff(value?: Tariff) {
+        this._tariff = value;
     }
 
     @action.bound
     updatePaymentType(value: PaymentType) {
         this._paymentType = value;
+    }
+
+    @action.bound
+    updateBenefits(value: boolean) {
+        this._benefits = value;
+    }
+
+    @action.bound
+    updateInvoiceNumber(value: string) {
+        this._invoiceNumber = value;
+    }
+
+    @action.bound
+    updatePayingEntity(value: PayingEntity) {
+        this._payingEntity = value;
     }
 
     isValid(): boolean {
@@ -168,7 +213,7 @@ export class ChildAttributes implements ChildAttributesValues {
             && this._diagnosis != null
             && this._branchOffice != null
             && this._tuitionBalance != null
-            && this._numberClassesPerMonth != null
+            && this._tariff != null
             && this._paymentType != null;
     }
 
@@ -183,8 +228,11 @@ export class ChildAttributes implements ChildAttributesValues {
             diagnosis: toJS(this._diagnosis!),
             notes: toJS(this._notes!),
             tuitionBalance: toJS(this._tuitionBalance!),
-            numberClassesPerMonth: toJS(this._numberClassesPerMonth!),
-            paymentType: toJS(this._paymentType!)
+            tariff: toJS(this._tariff!),
+            paymentType: toJS(this._paymentType!),
+            invoiceNumber: toJS(this._invoiceNumber),
+            benefits: toJS(this.benefits!),
+            payingEntity: toJS(this._payingEntity!)
         }
     }
 

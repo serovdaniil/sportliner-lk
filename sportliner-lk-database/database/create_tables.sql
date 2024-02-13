@@ -69,18 +69,22 @@ CREATE TABLE class_schedule (
 );
 
 CREATE TABLE children (
-    id                         UUID  NOT NULL,
-    parent_id                  UUID  NOT NULL,
-    branch_office_id           UUID  NOT NULL,
-    person_last_name           TEXT  NOT NULL,
-    person_first_name          TEXT  NOT NULL,
-    person_patronymic          TEXT  NOT NULL,
-    birthday                   DATE  NOT NULL,
-    diagnosis                  TEXT  NOT NULL,
-    tuition_balance            int   NOT NULL,
-    number_classes_per_month   int   NOT NULL,
-    payment_type               TEXT  NOT NULL,
-    notes                      TEXT  NULL,
+    id                         UUID     NOT NULL,
+    parent_id                  UUID     NOT NULL,
+    branch_office_id           UUID     NOT NULL,
+    person_last_name           TEXT     NOT NULL,
+    person_first_name          TEXT     NOT NULL,
+    person_patronymic          TEXT     NOT NULL,
+    birthday                   DATE     NOT NULL,
+    diagnosis                  TEXT     NOT NULL,
+    tuition_balance            int      NOT NULL,
+    number_classes_per_week    int      NOT NULL,
+    payment_type               TEXT     NOT NULL,
+    invoice_number             TEXT     NOT NULL,
+    tariff                     TEXT     NOT NULL,
+    benefits                   BOOLEAN  NOT NULL,
+    paying_entity              TEXT     NOT NULL
+    notes                      TEXT     NULL,
     CONSTRAINT pk_children PRIMARY KEY (id)
 );
 
@@ -113,3 +117,20 @@ CREATE TABLE telegram_chat (
     create_timestamp IMESTAMPTZ NOT NULL,
     CONSTRAINT pk_telegram_chat PRIMARY KEY (id)
 )
+
+CREATE TABLE transaction (
+    id                 UUID    NOT NULL,
+    child_id           UUID    NOT NULL,
+    date               DATE    NOT NULL,
+    invoice_amount     NUMERIC NOT NULL,
+    number_of_lessons  NUMERIC NOT NULL,
+    status             TEXT    NOT NULL,
+    CONSTRAINT pk_transaction PRIMARY KEY (id)
+);
+
+CREATE TABLE application_settings
+(
+    id    TEXT NOT NULL,
+    value TEXT NOT NULL,
+    CONSTRAINT pk_application_settings PRIMARY KEY (id)
+);

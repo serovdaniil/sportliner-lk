@@ -20,10 +20,10 @@ enablePostProcessFile: true
 booleanGetterPrefix: is
 useBeanValidation: true
 schemaMappings:
-  LocalDate: LocalDate
-  BigDecimal: BigDecimal
-  LocalDateTime: LocalDateTime
-importMappings:
+  LocalDate: java.time.LocalDate
+  BigDecimal: java.math.BigDecimal
+  LocalDateTime: java.time.LocalDateTime
+typeMappings:
   LocalDate: java.time.LocalDate
   BigDecimal: java.math.BigDecimal
   LocalDateTime: java.time.LocalDateTime

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -50,7 +49,7 @@ public class TransactionBankData {
   private JsonNullable<String> authType = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_MEM_ORDER_DATE = "memOrderDate";
-  private LocalDateTime memOrderDate;
+  private java.time.LocalDateTime memOrderDate;
 
   public static final String JSON_PROPERTY_MEM_ORDER_NUM = "memOrderNum";
   private JsonNullable<Long> memOrderNum = JsonNullable.<Long>undefined();
@@ -142,7 +141,7 @@ public class TransactionBankData {
   }
 
 
-  public TransactionBankData memOrderDate(LocalDateTime memOrderDate) {
+  public TransactionBankData memOrderDate(java.time.LocalDateTime memOrderDate) {
     
     this.memOrderDate = memOrderDate;
     return this;
@@ -158,14 +157,14 @@ public class TransactionBankData {
   @JsonProperty(JSON_PROPERTY_MEM_ORDER_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getMemOrderDate() {
+  public java.time.LocalDateTime getMemOrderDate() {
     return memOrderDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_MEM_ORDER_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMemOrderDate(LocalDateTime memOrderDate) {
+  public void setMemOrderDate(java.time.LocalDateTime memOrderDate) {
     this.memOrderDate = memOrderDate;
   }
 

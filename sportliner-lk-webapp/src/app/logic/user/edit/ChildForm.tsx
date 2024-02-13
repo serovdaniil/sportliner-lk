@@ -1,13 +1,12 @@
-import {Form, Input, Select, Space} from "antd";
+import {Checkbox, Form, Input, Select, Space} from "antd";
 import {observer} from "mobx-react";
 import React, {FC} from "react";
 import {ChildAttributes} from "./ChildAttributes";
-import {maxValueValidator, minValueValidator, requiredWithTrimValidator} from "../../Validators";
-import {BranchOfficeItem, DayOfWeek, PaymentType} from "../../../../api";
+import {minValueValidator, requiredWithTrimValidator} from "../../Validators";
+import {BranchOfficeItem, PayingEntity, PaymentType, Tariff} from "../../../../api";
 import LocalDatePicker from "../../../components/LocalDatePicker/LocalDatePicker";
 import TextArea from "antd/es/input/TextArea";
 import {useForm} from "antd/es/form/Form";
-import {formatDayOfWeek} from "../../branchOffice/edit/BranchOfficeEditPage";
 
 interface Props {
     child: ChildAttributes;
@@ -34,8 +33,11 @@ const ChildForm: FC<Props> = (props: Props) => {
                     notes: child.notes,
                     branchOffice: child.branchOffice?.id,
                     tuitionBalance: child.tuitionBalance,
-                    numberClassesPerMonth: child.numberClassesPerMonth,
-                    paymentType: child.paymentType
+                    tariff: child.tariff,
+                    paymentType: child.paymentType,
+                    benefits: child.benefits,
+                    invoiceNumber: child.invoiceNumber,
+                    payingEntity: child.payingEntity
                 }}
             >
                 <Space direction={"horizontal"}>
@@ -119,32 +121,62 @@ const ChildForm: FC<Props> = (props: Props) => {
                     </Form.Item>
                 </Space>
 
-                <Form.Item
-                    name="branchOffice"
-                    label="Филиал для посещения занятий:"
-                    rules={[requiredWithTrimValidator()]}
-                >
-
-                    <Select
-                        onChange={(value) => {
-                            const branchOfficeId = value;
-                            const index = props.branchOffices.findIndex(it => it.id === branchOfficeId);
-
-                            child.updateBranchOffice(props.branchOffices[index]);
-                        }}
+                <Space direction={"horizontal"}>
+                    <Form.Item
+                        name="branchOffice"
+                        label="Филиал для посещения занятий:"
+                        style={{width: 300}}
+                        rules={[requiredWithTrimValidator()]}
                     >
-                        {props.branchOffices.map((branchOffice) => {
-                            return (
-                                <Select.Option
-                                    key={branchOffice.id}
-                                    value={branchOffice.id}
-                                >
-                                    {branchOffice.address}
-                                </Select.Option>
-                            )
-                        })}
-                    </Select>
-                </Form.Item>
+
+                        <Select
+                            onChange={(value) => {
+                                const branchOfficeId = value;
+                                const index = props.branchOffices.findIndex(it => it.id === branchOfficeId);
+
+                                child.updateBranchOffice(props.branchOffices[index]);
+                            }}
+                        >
+                            {props.branchOffices.map((branchOffice) => {
+                                return (
+                                    <Select.Option
+                                        key={branchOffice.id}
+                                        value={branchOffice.id}
+                                    >
+                                        {branchOffice.address}
+                                    </Select.Option>
+                                )
+                            })}
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="payingEntity"
+                        label="Организация-получатель:"
+                        style={{width: 300}}
+                        rules={[requiredWithTrimValidator()]}
+                    >
+                        <Select
+                            onChange={(value) => {
+                                child.updatePayingEntity(value)
+                            }}>
+                            <Select.Option value={PayingEntity.MICHALENIA}>ИП Михаленя А.М.</Select.Option>
+                            <Select.Option value={PayingEntity.SPORTLINER}>ООО "Спортлинер"</Select.Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="invoiceNumber"
+                        label="Номер счета в EPOS:"
+                        style={{width: 200}}
+                    >
+                        <Input
+                            onBlur={(event) => {
+                                child.updateInvoiceNumber(event.currentTarget.value);
+                            }}
+                        />
+                    </Form.Item>
+                </Space>
 
                 <Form.Item
                     name="tuitionBalance"
@@ -158,14 +190,20 @@ const ChildForm: FC<Props> = (props: Props) => {
                 </Form.Item>
 
                 <Form.Item
-                    name="numberClassesPerMonth"
-                    label="Количество посещений в месяц:"
-                    rules={[requiredWithTrimValidator(), maxValueValidator(31), minValueValidator(1)]}
+                    name="tariff"
+                    label="Количество посещений в неделю:"
+                    rules={[requiredWithTrimValidator()]}
                     style={{width: 300}}
                 >
-                    <Input
-                        onChange={event => child.updateNumberClassesPerMonth(Number(event.target.value))}
-                    />
+                    <Select
+                        onChange={(value) => {
+                            child.updateTariff(value)
+                        }}>
+                        <Select.Option value={Tariff.UNLIM}>Безлимитный абонемент</Select.Option>
+                        <Select.Option value={Tariff.ONE_LESSON_PER_WEEK}>Одно занятие в неделю</Select.Option>
+                        <Select.Option value={Tariff.TWO_LESSONS_PER_WEEK}>Два занятия в неделю</Select.Option>
+                        <Select.Option value={Tariff.THREE_LESSONS_PER_WEEK}>Три занятия в неделю</Select.Option>
+                    </Select>
                 </Form.Item>
 
                 <Form.Item
@@ -181,6 +219,16 @@ const ChildForm: FC<Props> = (props: Props) => {
                         <Select.Option value={PaymentType.POST_PAYMENT}>Оплата по факту</Select.Option>
                         <Select.Option value={PaymentType.PER_LESSON}>День в день</Select.Option>
                     </Select>
+                </Form.Item>
+
+                <Form.Item
+                    name="benefits"
+                    label="Применять льготы:"
+                >
+                    <Checkbox
+                        checked={child.benefits}
+                        onChange={event => child.updateBenefits(event.target.checked)}
+                    />
                 </Form.Item>
 
             </Form>

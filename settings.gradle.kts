@@ -12,6 +12,8 @@ include("sportliner-lk-core")
 include("sportliner-lk-endpoint")
 include("sportliner-lk-endpoint-api")
 
+include("sportliner-lk-integration-epos-hgrosh")
+
 include("sportliner-lk-database")
 
 include("sportliner-lk-webapp")

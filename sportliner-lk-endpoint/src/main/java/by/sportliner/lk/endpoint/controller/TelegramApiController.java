@@ -1,5 +1,6 @@
 package by.sportliner.lk.endpoint.controller;
 
+import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.TelegramChat;
 import by.sportliner.lk.core.service.telegram.TelegramService;
 import by.sportliner.lk.endpoint.api.BranchOfficeItemDto;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,8 +25,7 @@ public class TelegramApiController implements TelegramApi {
     public ResponseEntity<List<TelegramBotApplicationDto>> getTelegramApplications() {
         return ResponseEntity.ok(telegramService.findAll().stream()
             .sorted(Comparator.comparing(TelegramChat::getCreateTimestamp).reversed())
-            .map(it -> convert(it)
-            )
+            .map(this::convert)
             .collect(Collectors.toList())
         );
     }
@@ -37,14 +38,21 @@ public class TelegramApiController implements TelegramApi {
     }
 
     private TelegramBotApplicationDto convert(TelegramChat telegramChat) {
+        Function<BranchOffice, BranchOfficeItemDto> convertBranchOffice = (branchOffice -> {
+            if (branchOffice == null) {
+                return null;
+            }
+
+            return new BranchOfficeItemDto()
+                .id(telegramChat.getBranchOffice().getId())
+                .address(telegramChat.getBranchOffice().getAddress().getFullAddress());
+        });
+
         return new TelegramBotApplicationDto()
             .id(telegramChat.getId())
             .telegramUsername(telegramChat.getUsername())
             .createTimestamp(telegramChat.getCreateTimestamp())
-            .branchOffice(new BranchOfficeItemDto()
-                .id(telegramChat.getBranchOffice().getId())
-                .address(telegramChat.getBranchOffice().getAddress().getFullAddress())
-            )
+            .branchOffice(convertBranchOffice.apply(telegramChat.getBranchOffice()))
             .phone(telegramChat.getPhone());
     }
 }

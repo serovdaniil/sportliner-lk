@@ -8,8 +8,6 @@ import by.sportliner.lk.integration.epos.hgrosh.internal.api.Invoice;
 import by.sportliner.lk.integration.epos.hgrosh.internal.api.InvoiceListItemRecords;
 import by.sportliner.lk.integration.epos.hgrosh.internal.api.InvoiceQRCode;
 import by.sportliner.lk.integration.epos.hgrosh.internal.api.InvoiceQueryType;
-
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import java.util.Collections;
@@ -91,7 +89,7 @@ public class InvoiceApi {
      */
     public ResponseEntity<List<Invoice>> addNewInvoiceWithHttpInfo(BiometryPayTypeEnum motifyBiometryType, Boolean canPayAtOnce, Invoice invoice) throws RestClientException {
         Object localVarPostBody = invoice;
-
+        
 
         final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
         final HttpHeaders localVarHeaderParams = new HttpHeaders();
@@ -101,11 +99,11 @@ public class InvoiceApi {
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "motifyBiometryType", motifyBiometryType));
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "canPayAtOnce", canPayAtOnce));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        final String[] localVarContentTypes = {
+        final String[] localVarContentTypes = { 
             "application/json"
          };
         final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
@@ -117,7 +115,7 @@ public class InvoiceApi {
     }
     /**
      * Отмена возможности оплачивать счет.
-     *
+     * 
      * <p><b>200</b> - Задание на перевод счета в режим черновика выполнено.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -133,7 +131,7 @@ public class InvoiceApi {
 
     /**
      * Отмена возможности оплачивать счет.
-     *
+     * 
      * <p><b>200</b> - Задание на перевод счета в режим черновика выполнено.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -145,12 +143,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<ErrorStatus> cancelInvoiceToPayByIdWithHttpInfo(UUID id) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling cancelInvoiceToPayById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -160,7 +158,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -174,7 +172,7 @@ public class InvoiceApi {
     }
     /**
      * Запрос повторной нотификации кассы по инвойсу.
-     *
+     * 
      * <p><b>200</b> - Успешная нотификация.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -192,7 +190,7 @@ public class InvoiceApi {
 
     /**
      * Запрос повторной нотификации кассы по инвойсу.
-     *
+     * 
      * <p><b>200</b> - Успешная нотификация.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -206,12 +204,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<ErrorStatus> cashBoxNotifyAgainInvoiceByIdWithHttpInfo(UUID id, BiometryPayTypeEnum notifyBiometryType) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling cashBoxNotifyAgainInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -223,7 +221,7 @@ public class InvoiceApi {
 
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "notifyBiometryType", notifyBiometryType));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -237,7 +235,7 @@ public class InvoiceApi {
     }
     /**
      * Запрос нотификации кассы по инвойсу после его отмены.
-     *
+     * 
      * <p><b>200</b> - Успешная нотификация.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -254,7 +252,7 @@ public class InvoiceApi {
 
     /**
      * Запрос нотификации кассы по инвойсу после его отмены.
-     *
+     * 
      * <p><b>200</b> - Успешная нотификация.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -267,12 +265,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<ErrorStatus> cashBoxNotifyCancelInvoiceByIdWithHttpInfo(UUID id) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling cashBoxNotifyCancelInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -282,7 +280,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -328,12 +326,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<ErrorStatus> deleteInvoiceByIdWithHttpInfo(UUID id) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling deleteInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -343,7 +341,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -357,7 +355,7 @@ public class InvoiceApi {
     }
     /**
      * Детальная информация о счете.
-     *
+     * 
      * <p><b>200</b> - Детальная информация о счете.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -374,7 +372,7 @@ public class InvoiceApi {
 
     /**
      * Детальная информация о счете.
-     *
+     * 
      * <p><b>200</b> - Детальная информация о счете.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -387,12 +385,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<Invoice> getInvoiceByIdWithHttpInfo(UUID id) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling getInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -402,7 +400,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -416,7 +414,7 @@ public class InvoiceApi {
     }
     /**
      * Детальная информация о счете.
-     *
+     * 
      * <p><b>200</b> - Детальная информация о счете.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -433,7 +431,7 @@ public class InvoiceApi {
 
     /**
      * Детальная информация о счете.
-     *
+     * 
      * <p><b>200</b> - Детальная информация о счете.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -446,12 +444,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<Invoice> getInvoiceInformationByNumberWithHttpInfo(String number) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'number' is set
         if (number == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'number' when calling getInvoiceInformationByNumber");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("number", number);
@@ -461,7 +459,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -475,7 +473,7 @@ public class InvoiceApi {
     }
     /**
      * Получение списка счетов.
-     *
+     * 
      * <p><b>200</b> - Список счетов, согласно заданных условий.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -492,13 +490,13 @@ public class InvoiceApi {
      * @return InvoiceListItemRecords
      * @throws RestClientException if an error occurs while attempting to invoke the API
      */
-    public InvoiceListItemRecords getInvoices(LocalDateTime beginDate, LocalDateTime endDate, Integer skip, Integer count, String states, String searchString, InvoiceQueryType requestType) throws RestClientException {
+    public InvoiceListItemRecords getInvoices(java.time.LocalDateTime beginDate, java.time.LocalDateTime endDate, Integer skip, Integer count, String states, String searchString, InvoiceQueryType requestType) throws RestClientException {
         return getInvoicesWithHttpInfo(beginDate, endDate, skip, count, states, searchString, requestType).getBody();
     }
 
     /**
      * Получение списка счетов.
-     *
+     * 
      * <p><b>200</b> - Список счетов, согласно заданных условий.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -515,9 +513,9 @@ public class InvoiceApi {
      * @return ResponseEntity&lt;InvoiceListItemRecords&gt;
      * @throws RestClientException if an error occurs while attempting to invoke the API
      */
-    public ResponseEntity<InvoiceListItemRecords> getInvoicesWithHttpInfo(LocalDateTime beginDate, LocalDateTime endDate, Integer skip, Integer count, String states, String searchString, InvoiceQueryType requestType) throws RestClientException {
+    public ResponseEntity<InvoiceListItemRecords> getInvoicesWithHttpInfo(java.time.LocalDateTime beginDate, java.time.LocalDateTime endDate, Integer skip, Integer count, String states, String searchString, InvoiceQueryType requestType) throws RestClientException {
         Object localVarPostBody = null;
-
+        
 
         final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
         final HttpHeaders localVarHeaderParams = new HttpHeaders();
@@ -532,7 +530,7 @@ public class InvoiceApi {
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "searchString", searchString));
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "requestType", requestType));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -546,7 +544,7 @@ public class InvoiceApi {
     }
     /**
      * Получение адреса-ссылки для возможности оплаты заказа картой.
-     *
+     * 
      * <p><b>200</b> - Запрос выполнен успешно.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -563,7 +561,7 @@ public class InvoiceApi {
 
     /**
      * Получение адреса-ссылки для возможности оплаты заказа картой.
-     *
+     * 
      * <p><b>200</b> - Запрос выполнен успешно.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -576,12 +574,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<String> payByCardUrlInvoiceByNumberWithHttpInfo(String number) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'number' is set
         if (number == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'number' when calling payByCardUrlInvoiceByNumber");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("number", number);
@@ -591,7 +589,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -605,7 +603,7 @@ public class InvoiceApi {
     }
     /**
      * Получение данных для формирования QR-кода.
-     *
+     * 
      * <p><b>200</b> - Запрос выполнен успешно.
      * <p><b>202</b> - Accepted
      * <p><b>400</b> - Неверный запрос.
@@ -625,7 +623,7 @@ public class InvoiceApi {
 
     /**
      * Получение данных для формирования QR-кода.
-     *
+     * 
      * <p><b>200</b> - Запрос выполнен успешно.
      * <p><b>202</b> - Accepted
      * <p><b>400</b> - Неверный запрос.
@@ -642,12 +640,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<Void> qrcodeInvoiceByIdWithHttpInfo(UUID id, Integer imgWidth, Integer imgHeight, Boolean getImage) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling qrcodeInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -661,7 +659,7 @@ public class InvoiceApi {
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "imgHeight", imgHeight));
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "getImage", getImage));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -675,7 +673,7 @@ public class InvoiceApi {
     }
     /**
      * Перевод счета из draft режима в состояние, когда счет можно оплачивать.
-     *
+     * 
      * <p><b>200</b> - Задание на перевод счета в режим оплаты выполнено.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -692,7 +690,7 @@ public class InvoiceApi {
 
     /**
      * Перевод счета из draft режима в состояние, когда счет можно оплачивать.
-     *
+     * 
      * <p><b>200</b> - Задание на перевод счета в режим оплаты выполнено.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -705,12 +703,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<ErrorStatus> sendInvoiceToPayByIdWithHttpInfo(UUID id, Boolean getCurrentDate) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling sendInvoiceToPayById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -722,7 +720,7 @@ public class InvoiceApi {
 
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "getCurrentDate", getCurrentDate));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -736,7 +734,7 @@ public class InvoiceApi {
     }
     /**
      * Инициирование операции сторно по инвойсу.
-     *
+     * 
      * <p><b>202</b> - Задание на инициирование сторно по инвойсу принято.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -751,7 +749,7 @@ public class InvoiceApi {
 
     /**
      * Инициирование операции сторно по инвойсу.
-     *
+     * 
      * <p><b>202</b> - Задание на инициирование сторно по инвойсу принято.
      * <p><b>400</b> - Неверный запрос.
      * <p><b>401</b> - Неавторизованный запрос.
@@ -763,12 +761,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<Void> stornoInvoiceByIdWithHttpInfo(UUID id) throws RestClientException {
         Object localVarPostBody = null;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling stornoInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -778,7 +776,7 @@ public class InvoiceApi {
         final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
         final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -828,12 +826,12 @@ public class InvoiceApi {
      */
     public ResponseEntity<Invoice> updateInvoiceByIdWithHttpInfo(UUID id, Boolean notifyServiceProvider, Invoice invoice) throws RestClientException {
         Object localVarPostBody = invoice;
-
+        
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'id' when calling updateInvoiceById");
         }
-
+        
         // create path and map variables
         final Map<String, Object> uriVariables = new HashMap<String, Object>();
         uriVariables.put("id", id);
@@ -845,11 +843,11 @@ public class InvoiceApi {
 
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "notifyServiceProvider", notifyServiceProvider));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        final String[] localVarContentTypes = {
+        final String[] localVarContentTypes = { 
             "application/json"
          };
         final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);

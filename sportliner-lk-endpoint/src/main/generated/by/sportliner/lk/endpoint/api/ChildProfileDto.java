@@ -2,9 +2,11 @@ package by.sportliner.lk.endpoint.api;
 
 import java.net.URI;
 import java.util.Objects;
+import by.sportliner.lk.endpoint.api.TariffDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -39,8 +41,8 @@ public class ChildProfileDto {
   @JsonProperty("tuitionBalance")
   private Integer tuitionBalance;
 
-  @JsonProperty("numberClassesPerMonth")
-  private Integer numberClassesPerMonth;
+  @JsonProperty("tariff")
+  private TariffDto tariff;
 
   @JsonProperty("notes")
   private String notes;
@@ -140,23 +142,23 @@ public class ChildProfileDto {
     this.tuitionBalance = tuitionBalance;
   }
 
-  public ChildProfileDto numberClassesPerMonth(Integer numberClassesPerMonth) {
-    this.numberClassesPerMonth = numberClassesPerMonth;
+  public ChildProfileDto tariff(TariffDto tariff) {
+    this.tariff = tariff;
     return this;
   }
 
   /**
-   * Get numberClassesPerMonth
-   * @return numberClassesPerMonth
+   * Get tariff
+   * @return tariff
   */
-  @NotNull 
-  @Schema(name = "numberClassesPerMonth", requiredMode = Schema.RequiredMode.REQUIRED)
-  public Integer getNumberClassesPerMonth() {
-    return numberClassesPerMonth;
+  @NotNull @Valid 
+  @Schema(name = "tariff", requiredMode = Schema.RequiredMode.REQUIRED)
+  public TariffDto getTariff() {
+    return tariff;
   }
 
-  public void setNumberClassesPerMonth(Integer numberClassesPerMonth) {
-    this.numberClassesPerMonth = numberClassesPerMonth;
+  public void setTariff(TariffDto tariff) {
+    this.tariff = tariff;
   }
 
   public ChildProfileDto notes(String notes) {
@@ -192,13 +194,13 @@ public class ChildProfileDto {
         Objects.equals(this.birthdate, childProfile.birthdate) &&
         Objects.equals(this.diagnosis, childProfile.diagnosis) &&
         Objects.equals(this.tuitionBalance, childProfile.tuitionBalance) &&
-        Objects.equals(this.numberClassesPerMonth, childProfile.numberClassesPerMonth) &&
+        Objects.equals(this.tariff, childProfile.tariff) &&
         Objects.equals(this.notes, childProfile.notes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, fullName, birthdate, diagnosis, tuitionBalance, numberClassesPerMonth, notes);
+    return Objects.hash(id, fullName, birthdate, diagnosis, tuitionBalance, tariff, notes);
   }
 
   @Override
@@ -210,7 +212,7 @@ public class ChildProfileDto {
     sb.append("    birthdate: ").append(toIndentedString(birthdate)).append("\n");
     sb.append("    diagnosis: ").append(toIndentedString(diagnosis)).append("\n");
     sb.append("    tuitionBalance: ").append(toIndentedString(tuitionBalance)).append("\n");
-    sb.append("    numberClassesPerMonth: ").append(toIndentedString(numberClassesPerMonth)).append("\n");
+    sb.append("    tariff: ").append(toIndentedString(tariff)).append("\n");
     sb.append("    notes: ").append(toIndentedString(notes)).append("\n");
     sb.append("}");
     return sb.toString();

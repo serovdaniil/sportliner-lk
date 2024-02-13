@@ -1,9 +1,6 @@
 package by.sportliner.lk.endpoint.controller;
 
-import by.sportliner.lk.core.model.Child;
-import by.sportliner.lk.core.model.PaymentType;
-import by.sportliner.lk.core.model.UserAccount;
-import by.sportliner.lk.core.model.UserRole;
+import by.sportliner.lk.core.model.*;
 import by.sportliner.lk.core.service.BranchOfficeService;
 import by.sportliner.lk.core.service.ChildService;
 import by.sportliner.lk.core.service.UserAccountCriteria;
@@ -71,8 +68,11 @@ public class UsersApiController implements UsersApi {
                         .address(it.getBranchOffice().getAddress().getFullAddress())
                     )
                     .tuitionBalance(it.getTuitionBalance())
-                    .numberClassesPerMonth(it.getNumberClassesPerMonth())
+                    .tariff(TariffDto.valueOf(it.getTariff().name()))
                     .paymentType(PaymentTypeDto.valueOf(it.getPaymentType().name()))
+                    .benefits(it.isBenefits())
+                    .invoiceNumber(it.getInvoiceNumber())
+                    .payingEntity(PayingEntityDto.valueOf(it.getPayingEntity().name()))
                     .notes(it.getNotes())
                 )
                 .toList()
@@ -160,8 +160,11 @@ public class UsersApiController implements UsersApi {
                 child.setParent(parent);
                 child.setBranchOffice(branchOfficeService.getById(it.getBranchOffice().getId()));
                 child.setTuitionBalance(it.getTuitionBalance());
-                child.setNumberClassesPerMonth(it.getNumberClassesPerMonth());
+                child.setTariff(Tariff.valueOf(it.getTariff().name()));
                 child.setPaymentType(PaymentType.valueOf(it.getPaymentType().name()));
+                child.setBenefits(it.isBenefits());
+                child.setInvoiceNumber(it.getInvoiceNumber());
+                child.setPayingEntity(PayingEntity.valueOf(it.getPayingEntity().name()));
 
                 return child;
             }).collect(Collectors.toList());

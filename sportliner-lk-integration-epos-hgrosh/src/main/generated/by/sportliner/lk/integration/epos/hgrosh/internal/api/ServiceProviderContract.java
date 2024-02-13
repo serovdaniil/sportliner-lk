@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -45,13 +44,13 @@ public class ServiceProviderContract {
   private JsonNullable<String> num = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_BEGIN_DATE = "beginDate";
-  private LocalDateTime beginDate;
+  private java.time.LocalDateTime beginDate;
 
   public static final String JSON_PROPERTY_END_DATE = "endDate";
-  private LocalDateTime endDate;
+  private java.time.LocalDateTime endDate;
 
   public static final String JSON_PROPERTY_SIGN_ACT_DATE = "signActDate";
-  private LocalDateTime signActDate;
+  private java.time.LocalDateTime signActDate;
 
   public ServiceProviderContract() {
   }
@@ -91,7 +90,7 @@ public class ServiceProviderContract {
   }
 
 
-  public ServiceProviderContract beginDate(LocalDateTime beginDate) {
+  public ServiceProviderContract beginDate(java.time.LocalDateTime beginDate) {
     
     this.beginDate = beginDate;
     return this;
@@ -107,19 +106,19 @@ public class ServiceProviderContract {
   @JsonProperty(JSON_PROPERTY_BEGIN_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getBeginDate() {
+  public java.time.LocalDateTime getBeginDate() {
     return beginDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_BEGIN_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBeginDate(LocalDateTime beginDate) {
+  public void setBeginDate(java.time.LocalDateTime beginDate) {
     this.beginDate = beginDate;
   }
 
 
-  public ServiceProviderContract endDate(LocalDateTime endDate) {
+  public ServiceProviderContract endDate(java.time.LocalDateTime endDate) {
     
     this.endDate = endDate;
     return this;
@@ -135,19 +134,19 @@ public class ServiceProviderContract {
   @JsonProperty(JSON_PROPERTY_END_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getEndDate() {
+  public java.time.LocalDateTime getEndDate() {
     return endDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_END_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setEndDate(LocalDateTime endDate) {
+  public void setEndDate(java.time.LocalDateTime endDate) {
     this.endDate = endDate;
   }
 
 
-  public ServiceProviderContract signActDate(LocalDateTime signActDate) {
+  public ServiceProviderContract signActDate(java.time.LocalDateTime signActDate) {
     
     this.signActDate = signActDate;
     return this;
@@ -163,14 +162,14 @@ public class ServiceProviderContract {
   @JsonProperty(JSON_PROPERTY_SIGN_ACT_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getSignActDate() {
+  public java.time.LocalDateTime getSignActDate() {
     return signActDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_SIGN_ACT_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSignActDate(LocalDateTime signActDate) {
+  public void setSignActDate(java.time.LocalDateTime signActDate) {
     this.signActDate = signActDate;
   }
 

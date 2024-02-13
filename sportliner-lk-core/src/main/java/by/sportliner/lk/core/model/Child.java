@@ -71,10 +71,11 @@ public class Child extends AbstractDataObject {
     private int tuitionBalance;
 
     /**
-     * Number of classes per month.
+     * Tariff.
      */
-    @Column(name = "number_classes_per_month", nullable = false)
-    private int numberClassesPerMonth;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tariff", nullable = false)
+    private Tariff tariff;
 
     /**
      * Payment type.
@@ -82,6 +83,25 @@ public class Child extends AbstractDataObject {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType;
+
+    /**
+     * Invoice number.
+     */
+    @Column(name = "invoice_number", nullable = false)
+    private String invoiceNumber;
+
+    /**
+     * Benefits.
+     */
+    @Column(name = "benefits", nullable = false)
+    private boolean benefits;
+
+    /**
+     * Paying entity.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "paying_entity", nullable = false)
+    private PayingEntity payingEntity;
 
     public UserAccount getParent() {
         return parent;
@@ -155,12 +175,12 @@ public class Child extends AbstractDataObject {
         this.tuitionBalance = tuitionBalance;
     }
 
-    public int getNumberClassesPerMonth() {
-        return numberClassesPerMonth;
+    public Tariff getTariff() {
+        return tariff;
     }
 
-    public void setNumberClassesPerMonth(int numberClassesPerMonth) {
-        this.numberClassesPerMonth = numberClassesPerMonth;
+    public void setTariff(Tariff tariff) {
+        this.tariff = tariff;
     }
 
     public PaymentType getPaymentType() {
@@ -169,6 +189,46 @@ public class Child extends AbstractDataObject {
 
     public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    public boolean isBenefits() {
+        return benefits;
+    }
+
+    public void setBenefits(boolean benefits) {
+        this.benefits = benefits;
+    }
+
+    public PayingEntity getPayingEntity() {
+        return payingEntity;
+    }
+
+    public void setPayingEntity(PayingEntity payingEntity) {
+        this.payingEntity = payingEntity;
+    }
+
+    public int getAmountClassesForPay() {
+        if (paymentType.equals(PaymentType.PREPAYMENT)) {
+            return (tariff.getLessonsPerWeek() * 4) - tuitionBalance;
+        } else {
+            return tuitionBalance * -1; // необходимо, для перевода в положительное количество занятий
+        }
+    }
+
+    public void incrementTuitionBalance() {
+        tuitionBalance++;
+    }
+
+    public void incrementTuitionBalance(int numberOfLessons) {
+        tuitionBalance = tuitionBalance + numberOfLessons;
     }
 
     public String getFullName() {
@@ -187,6 +247,13 @@ public class Child extends AbstractDataObject {
 
     public void minusFewClasses(int count) {
         tuitionBalance = tuitionBalance - count;
+    }
+
+    public String getFullInvoiceNumber() {
+        return "${serviceProviderId}-${serviceId}-${invoiceNumber}"
+            .replace("${serviceProviderId}", payingEntity.getServiceProviderId())
+            .replace("${serviceId}", payingEntity.getServiceId())
+            .replace("${invoiceNumber}", invoiceNumber);
     }
 
 }

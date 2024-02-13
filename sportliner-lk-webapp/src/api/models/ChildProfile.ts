@@ -13,6 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    Tariff,
+    TariffFromJSON,
+    TariffFromJSONTyped,
+    TariffToJSON,
+} from './';
 
 
 /**
@@ -54,10 +60,10 @@ export interface ChildProfile {
     tuitionBalance: number;
     /**
      * 
-     * @type {number}
+     * @type {Tariff}
      * @memberof ChildProfile
      */
-    numberClassesPerMonth: number;
+    tariff: Tariff;
     /**
      * 
      * @type {string}
@@ -81,7 +87,7 @@ export function ChildProfileFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'birthdate': !exists(json, 'birthdate') ? undefined : json['birthdate'],
         'diagnosis': json['diagnosis'],
         'tuitionBalance': json['tuitionBalance'],
-        'numberClassesPerMonth': json['numberClassesPerMonth'],
+        'tariff': TariffFromJSON(json['tariff']),
         'notes': !exists(json, 'notes') ? undefined : json['notes'],
     };
 }
@@ -103,7 +109,7 @@ export function ChildProfileToJSONTyped(value?: ChildProfile | null, ignoreDiscr
         'birthdate': value.birthdate,
         'diagnosis': value.diagnosis,
         'tuitionBalance': value.tuitionBalance,
-        'numberClassesPerMonth': value.numberClassesPerMonth,
+        'tariff': TariffToJSON(value.tariff),
         'notes': value.notes,
     };
 }

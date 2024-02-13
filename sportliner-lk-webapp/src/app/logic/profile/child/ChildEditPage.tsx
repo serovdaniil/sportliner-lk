@@ -1,4 +1,4 @@
-import {Button, Descriptions, Form, Input, Row, Space, Typography} from 'antd';
+import {Button, Descriptions, Form, Row, Select, Space, Typography} from 'antd';
 import {requestHandlerStore} from 'app/App';
 import LoadingBlock from 'app/components/LoadingBlock/LoadingBlock';
 import {useNavigator} from "app/logic/Navigator";
@@ -7,9 +7,10 @@ import React, {FC, useEffect, useState} from 'react';
 import ChildEditPageStore from "./ChildEditPageStore";
 import PageBorder from "../../border/PageBorder";
 import DescriptionsItem from "antd/es/descriptions/Item";
-import {maxValueValidator, minValueValidator, requiredWithTrimValidator} from "../../Validators";
+import {requiredWithTrimValidator} from "../../Validators";
 import TextArea from "antd/es/input/TextArea";
 import ChildAttendancesTable from "./ChildAttendancesTable";
+import {Tariff} from "../../../../api";
 
 const PAGE_TITLE: string = "Данные о ребенке";
 
@@ -110,7 +111,7 @@ const ChildEditPage: FC<Props> = (props: Props) => {
                         initialValues={{
                             diagnosis: store.child.diagnosis,
                             notes: store.child.notes,
-                            numberClassesPerMonth: store.child.numberClassesPerMonth
+                            tariff: store.child.tariff
                         }}
                     >
                         <Form.Item
@@ -137,17 +138,21 @@ const ChildEditPage: FC<Props> = (props: Props) => {
                                 }}
                             />
                         </Form.Item>
-
                         <Form.Item
-                            name="numberClassesPerMonth"
-                            label="Количество посещений в месяц:"
-                            rules={[maxValueValidator(31), minValueValidator(1)]}
+                            name="tariff"
+                            label="Количество посещений в неделю:"
+                            rules={[requiredWithTrimValidator()]}
                             style={{width: 300}}
                         >
-                            <Input
-                                value={store.child.numberClassesPerMonth}
-                                onChange={event => store.child.numberClassesPerMonth = Number(event.target.value)}
-                            />
+                            <Select
+                                onChange={(value) => {
+                                    store.child.tariff = value
+                                }}>
+                                <Select.Option value={Tariff.UNLIM}>Безлимитный абонемент</Select.Option>
+                                <Select.Option value={Tariff.ONE_LESSON_PER_WEEK}>Одно занятие в неделю</Select.Option>
+                                <Select.Option value={Tariff.TWO_LESSONS_PER_WEEK}>Два занятия в неделю</Select.Option>
+                                <Select.Option value={Tariff.THREE_LESSONS_PER_WEEK}>Три занятия в неделю</Select.Option>
+                            </Select>
                         </Form.Item>
                     </Form>
 

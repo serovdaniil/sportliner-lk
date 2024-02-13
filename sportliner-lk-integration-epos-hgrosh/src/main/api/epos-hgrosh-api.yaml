@@ -1204,14 +1204,14 @@ paths:
           required: false
           schema:
             type: string
-            $ref: '#/components/schemas/LocalDateTime'
+            $ref: '#/components/schemas/LocalDate'
         - name: endDateUTC
           in: query
           description: Конечная дата выборки
           required: false
           schema:
             type: string
-            $ref: '#/components/schemas/LocalDateTime'
+            $ref: '#/components/schemas/LocalDate'
         - name: eripTransactionId
           in: query
           description: Идентификатор транзакции ЕРИП

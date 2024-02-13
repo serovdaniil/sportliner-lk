@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.validation.constraints.*;
@@ -36,7 +35,7 @@ import jakarta.validation.Valid;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class PaymentDueTerms {
   public static final String JSON_PROPERTY_DUE_U_T_C = "dueUTC";
-  private LocalDateTime dueUTC;
+  private java.time.LocalDateTime dueUTC;
 
   public static final String JSON_PROPERTY_TERMS_DAY = "termsDay";
   private Integer termsDay;
@@ -44,7 +43,7 @@ public class PaymentDueTerms {
   public PaymentDueTerms() {
   }
 
-  public PaymentDueTerms dueUTC(LocalDateTime dueUTC) {
+  public PaymentDueTerms dueUTC(java.time.LocalDateTime dueUTC) {
     
     this.dueUTC = dueUTC;
     return this;
@@ -60,14 +59,14 @@ public class PaymentDueTerms {
   @JsonProperty(JSON_PROPERTY_DUE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDueUTC() {
+  public java.time.LocalDateTime getDueUTC() {
     return dueUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DUE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDueUTC(LocalDateTime dueUTC) {
+  public void setDueUTC(java.time.LocalDateTime dueUTC) {
     this.dueUTC = dueUTC;
   }
 

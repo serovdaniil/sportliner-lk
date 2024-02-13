@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -64,7 +63,7 @@ public class CashBox {
   private JsonNullable<String> name = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_LAST_ACTIVATE_DATE = "lastActivateDate";
-  private LocalDateTime lastActivateDate;
+  private java.time.LocalDateTime lastActivateDate;
 
   public static final String JSON_PROPERTY_REGISTRATION_TOKEN = "registrationToken";
   private JsonNullable<String> registrationToken = JsonNullable.<String>undefined();
@@ -237,7 +236,7 @@ public class CashBox {
   }
 
 
-  public CashBox lastActivateDate(LocalDateTime lastActivateDate) {
+  public CashBox lastActivateDate(java.time.LocalDateTime lastActivateDate) {
     
     this.lastActivateDate = lastActivateDate;
     return this;
@@ -253,14 +252,14 @@ public class CashBox {
   @JsonProperty(JSON_PROPERTY_LAST_ACTIVATE_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getLastActivateDate() {
+  public java.time.LocalDateTime getLastActivateDate() {
     return lastActivateDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_LAST_ACTIVATE_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLastActivateDate(LocalDateTime lastActivateDate) {
+  public void setLastActivateDate(java.time.LocalDateTime lastActivateDate) {
     this.lastActivateDate = lastActivateDate;
   }
 

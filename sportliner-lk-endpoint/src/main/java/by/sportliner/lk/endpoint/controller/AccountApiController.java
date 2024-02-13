@@ -1,6 +1,7 @@
 package by.sportliner.lk.endpoint.controller;
 
 import by.sportliner.lk.core.model.Child;
+import by.sportliner.lk.core.model.Tariff;
 import by.sportliner.lk.core.model.UserAccount;
 import by.sportliner.lk.core.model.UserAuthority;
 import by.sportliner.lk.core.security.AuthenticationRequest;
@@ -80,7 +81,7 @@ public class AccountApiController implements AccountApi {
             .birthdate(child.getBirthday())
             .diagnosis(child.getDiagnosis())
             .tuitionBalance(child.getTuitionBalance())
-            .numberClassesPerMonth(child.getNumberClassesPerMonth())
+            .tariff(TariffDto.valueOf(child.getTariff().name()))
             .notes(child.getNotes())
         );
     }
@@ -89,7 +90,7 @@ public class AccountApiController implements AccountApi {
     public ResponseEntity<Void> updateChildTargetAccount(String id, ChildProfileDto childProfileDto) {
         Child child = childService.getChildById(id);
 
-        child.setNumberClassesPerMonth(childProfileDto.getNumberClassesPerMonth());
+        child.setTariff(Tariff.valueOf(childProfileDto.getTariff().name()));
         child.setDiagnosis(childProfileDto.getDiagnosis());
         child.setNotes(childProfileDto.getNotes());
 

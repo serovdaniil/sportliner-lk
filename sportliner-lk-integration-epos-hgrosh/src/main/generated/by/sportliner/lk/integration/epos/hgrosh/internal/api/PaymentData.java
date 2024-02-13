@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -60,16 +59,16 @@ import jakarta.validation.Valid;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class PaymentData {
   public static final String JSON_PROPERTY_PAY_DATE = "payDate";
-  private LocalDateTime payDate;
+  private java.time.LocalDateTime payDate;
 
   public static final String JSON_PROPERTY_VERIFY_DATE = "verifyDate";
-  private LocalDateTime verifyDate;
+  private java.time.LocalDateTime verifyDate;
 
   public static final String JSON_PROPERTY_MEM_ORDER_NUM = "memOrderNum";
   private JsonNullable<Long> memOrderNum = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_MEM_ORDER_DATE = "memOrderDate";
-  private LocalDateTime memOrderDate;
+  private java.time.LocalDateTime memOrderDate;
 
   public static final String JSON_PROPERTY_BANK_CODE = "bankCode";
   private JsonNullable<String> bankCode = JsonNullable.<String>undefined();
@@ -127,7 +126,7 @@ public class PaymentData {
     this.comissionsAmount = comissionsAmount;
   }
 
-  public PaymentData payDate(LocalDateTime payDate) {
+  public PaymentData payDate(java.time.LocalDateTime payDate) {
     
     this.payDate = payDate;
     return this;
@@ -143,19 +142,19 @@ public class PaymentData {
   @JsonProperty(JSON_PROPERTY_PAY_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getPayDate() {
+  public java.time.LocalDateTime getPayDate() {
     return payDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_PAY_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPayDate(LocalDateTime payDate) {
+  public void setPayDate(java.time.LocalDateTime payDate) {
     this.payDate = payDate;
   }
 
 
-  public PaymentData verifyDate(LocalDateTime verifyDate) {
+  public PaymentData verifyDate(java.time.LocalDateTime verifyDate) {
     
     this.verifyDate = verifyDate;
     return this;
@@ -171,14 +170,14 @@ public class PaymentData {
   @JsonProperty(JSON_PROPERTY_VERIFY_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getVerifyDate() {
+  public java.time.LocalDateTime getVerifyDate() {
     return verifyDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_VERIFY_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setVerifyDate(LocalDateTime verifyDate) {
+  public void setVerifyDate(java.time.LocalDateTime verifyDate) {
     this.verifyDate = verifyDate;
   }
 
@@ -218,7 +217,7 @@ public class PaymentData {
   }
 
 
-  public PaymentData memOrderDate(LocalDateTime memOrderDate) {
+  public PaymentData memOrderDate(java.time.LocalDateTime memOrderDate) {
     
     this.memOrderDate = memOrderDate;
     return this;
@@ -234,14 +233,14 @@ public class PaymentData {
   @JsonProperty(JSON_PROPERTY_MEM_ORDER_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getMemOrderDate() {
+  public java.time.LocalDateTime getMemOrderDate() {
     return memOrderDate;
   }
 
 
   @JsonProperty(JSON_PROPERTY_MEM_ORDER_DATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMemOrderDate(LocalDateTime memOrderDate) {
+  public void setMemOrderDate(java.time.LocalDateTime memOrderDate) {
     this.memOrderDate = memOrderDate;
   }
 

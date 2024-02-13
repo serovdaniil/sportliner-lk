@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.validation.constraints.*;
@@ -39,13 +38,13 @@ import jakarta.validation.Valid;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class Origin {
   public static final String JSON_PROPERTY_CREATE_U_T_C = "createUTC";
-  private LocalDateTime createUTC;
+  private java.time.LocalDateTime createUTC;
 
   public static final String JSON_PROPERTY_OWNER = "owner";
   private SourceInfo owner;
 
   public static final String JSON_PROPERTY_LAST_SAVED_U_T_C = "lastSavedUTC";
-  private LocalDateTime lastSavedUTC;
+  private java.time.LocalDateTime lastSavedUTC;
 
   public static final String JSON_PROPERTY_LAST_SAVED_BY = "lastSavedBy";
   private SourceInfo lastSavedBy;
@@ -53,7 +52,7 @@ public class Origin {
   public Origin() {
   }
 
-  public Origin createUTC(LocalDateTime createUTC) {
+  public Origin createUTC(java.time.LocalDateTime createUTC) {
     
     this.createUTC = createUTC;
     return this;
@@ -69,14 +68,14 @@ public class Origin {
   @JsonProperty(JSON_PROPERTY_CREATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getCreateUTC() {
+  public java.time.LocalDateTime getCreateUTC() {
     return createUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_CREATE_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCreateUTC(LocalDateTime createUTC) {
+  public void setCreateUTC(java.time.LocalDateTime createUTC) {
     this.createUTC = createUTC;
   }
 
@@ -109,7 +108,7 @@ public class Origin {
   }
 
 
-  public Origin lastSavedUTC(LocalDateTime lastSavedUTC) {
+  public Origin lastSavedUTC(java.time.LocalDateTime lastSavedUTC) {
     
     this.lastSavedUTC = lastSavedUTC;
     return this;
@@ -125,14 +124,14 @@ public class Origin {
   @JsonProperty(JSON_PROPERTY_LAST_SAVED_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getLastSavedUTC() {
+  public java.time.LocalDateTime getLastSavedUTC() {
     return lastSavedUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_LAST_SAVED_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLastSavedUTC(LocalDateTime lastSavedUTC) {
+  public void setLastSavedUTC(java.time.LocalDateTime lastSavedUTC) {
     this.lastSavedUTC = lastSavedUTC;
   }
 

@@ -6,7 +6,6 @@ import by.sportliner.lk.integration.epos.hgrosh.internal.api.ErrorStatus;
 import by.sportliner.lk.integration.epos.hgrosh.internal.api.TransactionDateType;
 import by.sportliner.lk.integration.epos.hgrosh.internal.api.TransactionRecords;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +51,7 @@ public class TransactionApi {
 
     /**
      * Получение списка транзакций по параметрам
-     *
+     * 
      * <p><b>200</b> - Success
      * <p><b>400</b> - Bad Request
      * <p><b>401</b> - Unauthorized
@@ -77,13 +76,13 @@ public class TransactionApi {
      * @return TransactionRecords
      * @throws RestClientException if an error occurs while attempting to invoke the API
      */
-    public TransactionRecords getTransactions(Integer skip, Integer count, String transactionStatuses, TransactionDateType dateType, LocalDateTime beginDateUTC, LocalDateTime endDateUTC, Long eripTransactionId, Integer aggregatorCode, String serviceProviderUNP, Long serviceProviderCode, Integer serviceId, Integer retailOutletId, String serviceProviderName, String clientName, String clientAddress, Boolean show480ExcludeOnly) throws RestClientException {
+    public TransactionRecords getTransactions(Integer skip, Integer count, String transactionStatuses, TransactionDateType dateType, java.time.LocalDate beginDateUTC, java.time.LocalDate endDateUTC, Long eripTransactionId, Integer aggregatorCode, String serviceProviderUNP, Long serviceProviderCode, Integer serviceId, Integer retailOutletId, String serviceProviderName, String clientName, String clientAddress, Boolean show480ExcludeOnly) throws RestClientException {
         return getTransactionsWithHttpInfo(skip, count, transactionStatuses, dateType, beginDateUTC, endDateUTC, eripTransactionId, aggregatorCode, serviceProviderUNP, serviceProviderCode, serviceId, retailOutletId, serviceProviderName, clientName, clientAddress, show480ExcludeOnly).getBody();
     }
 
     /**
      * Получение списка транзакций по параметрам
-     *
+     * 
      * <p><b>200</b> - Success
      * <p><b>400</b> - Bad Request
      * <p><b>401</b> - Unauthorized
@@ -108,9 +107,9 @@ public class TransactionApi {
      * @return ResponseEntity&lt;TransactionRecords&gt;
      * @throws RestClientException if an error occurs while attempting to invoke the API
      */
-    public ResponseEntity<TransactionRecords> getTransactionsWithHttpInfo(Integer skip, Integer count, String transactionStatuses, TransactionDateType dateType, LocalDateTime beginDateUTC, LocalDateTime endDateUTC, Long eripTransactionId, Integer aggregatorCode, String serviceProviderUNP, Long serviceProviderCode, Integer serviceId, Integer retailOutletId, String serviceProviderName, String clientName, String clientAddress, Boolean show480ExcludeOnly) throws RestClientException {
+    public ResponseEntity<TransactionRecords> getTransactionsWithHttpInfo(Integer skip, Integer count, String transactionStatuses, TransactionDateType dateType, java.time.LocalDate beginDateUTC, java.time.LocalDate endDateUTC, Long eripTransactionId, Integer aggregatorCode, String serviceProviderUNP, Long serviceProviderCode, Integer serviceId, Integer retailOutletId, String serviceProviderName, String clientName, String clientAddress, Boolean show480ExcludeOnly) throws RestClientException {
         Object localVarPostBody = null;
-
+        
 
         final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
         final HttpHeaders localVarHeaderParams = new HttpHeaders();
@@ -134,7 +133,7 @@ public class TransactionApi {
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "clientAddress", clientAddress));
         localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "show480ExcludeOnly", show480ExcludeOnly));
 
-        final String[] localVarAccepts = {
+        final String[] localVarAccepts = { 
             "application/json"
          };
         final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);

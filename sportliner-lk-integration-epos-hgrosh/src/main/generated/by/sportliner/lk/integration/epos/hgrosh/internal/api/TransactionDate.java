@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.validation.constraints.*;
@@ -37,18 +36,18 @@ import jakarta.validation.Valid;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class TransactionDate {
   public static final String JSON_PROPERTY_DATE_START_U_T_C = "dateStartUTC";
-  private LocalDateTime dateStartUTC;
+  private java.time.LocalDateTime dateStartUTC;
 
   public static final String JSON_PROPERTY_DATE_RESULT_U_T_C = "dateResultUTC";
-  private LocalDateTime dateResultUTC;
+  private java.time.LocalDateTime dateResultUTC;
 
   public static final String JSON_PROPERTY_DATE_VERIFIED_U_T_C = "dateVerifiedUTC";
-  private LocalDateTime dateVerifiedUTC;
+  private java.time.LocalDateTime dateVerifiedUTC;
 
   public TransactionDate() {
   }
 
-  public TransactionDate dateStartUTC(LocalDateTime dateStartUTC) {
+  public TransactionDate dateStartUTC(java.time.LocalDateTime dateStartUTC) {
     
     this.dateStartUTC = dateStartUTC;
     return this;
@@ -64,19 +63,19 @@ public class TransactionDate {
   @JsonProperty(JSON_PROPERTY_DATE_START_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDateStartUTC() {
+  public java.time.LocalDateTime getDateStartUTC() {
     return dateStartUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DATE_START_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDateStartUTC(LocalDateTime dateStartUTC) {
+  public void setDateStartUTC(java.time.LocalDateTime dateStartUTC) {
     this.dateStartUTC = dateStartUTC;
   }
 
 
-  public TransactionDate dateResultUTC(LocalDateTime dateResultUTC) {
+  public TransactionDate dateResultUTC(java.time.LocalDateTime dateResultUTC) {
     
     this.dateResultUTC = dateResultUTC;
     return this;
@@ -92,19 +91,19 @@ public class TransactionDate {
   @JsonProperty(JSON_PROPERTY_DATE_RESULT_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDateResultUTC() {
+  public java.time.LocalDateTime getDateResultUTC() {
     return dateResultUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DATE_RESULT_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDateResultUTC(LocalDateTime dateResultUTC) {
+  public void setDateResultUTC(java.time.LocalDateTime dateResultUTC) {
     this.dateResultUTC = dateResultUTC;
   }
 
 
-  public TransactionDate dateVerifiedUTC(LocalDateTime dateVerifiedUTC) {
+  public TransactionDate dateVerifiedUTC(java.time.LocalDateTime dateVerifiedUTC) {
     
     this.dateVerifiedUTC = dateVerifiedUTC;
     return this;
@@ -120,14 +119,14 @@ public class TransactionDate {
   @JsonProperty(JSON_PROPERTY_DATE_VERIFIED_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public LocalDateTime getDateVerifiedUTC() {
+  public java.time.LocalDateTime getDateVerifiedUTC() {
     return dateVerifiedUTC;
   }
 
 
   @JsonProperty(JSON_PROPERTY_DATE_VERIFIED_U_T_C)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDateVerifiedUTC(LocalDateTime dateVerifiedUTC) {
+  public void setDateVerifiedUTC(java.time.LocalDateTime dateVerifiedUTC) {
     this.dateVerifiedUTC = dateVerifiedUTC;
   }
 
