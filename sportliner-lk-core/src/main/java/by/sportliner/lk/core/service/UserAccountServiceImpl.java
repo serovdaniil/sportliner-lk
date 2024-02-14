@@ -63,7 +63,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         UserAccount target = userAccountRepository.save(userAccount);
 
         for (Child child : children) {
-            if (child.getId() != null || child.getInvoiceNumber() != null) {
+            if (child.getId() != null || (child.getId() == null && child.getInvoiceNumber() != null)) {
                 childService.save(child);
                 continue;
             }

@@ -6,7 +6,6 @@ import by.sportliner.lk.core.model.Tariff;
 import by.sportliner.lk.core.model.Transaction;
 import by.sportliner.lk.core.repository.TransactionRepository;
 import by.sportliner.lk.core.service.integration.epos.EposHgroshService;
-import by.sportliner.lk.integration.epos.hgrosh.internal.api.TransactionRecords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,10 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -66,25 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
             totalAmount = BigDecimal.valueOf(Tariff.UNLIM.getPrice())
                 .multiply(BigDecimal.ONE.subtract(percentage));
         } else {
-            Calendar cal = Calendar.getInstance();
-
-            cal.set(Calendar.YEAR, Year.now().getValue());
-            cal.set(Calendar.MONTH, YearMonth.now().getMonthValue());
-
-            LocalDate currentDate = LocalDate.now();
-            DayOfWeek day = currentDate.getDayOfWeek();
-
-            if (day.equals(DayOfWeek.FRIDAY)) {
-                cal.set(Calendar.DAY_OF_MONTH, currentDate.plusDays(3).getDayOfMonth());
-            } else if (day.equals(DayOfWeek.SATURDAY)) {
-                cal.set(Calendar.DAY_OF_MONTH, currentDate.plusDays(2).getDayOfMonth());
-            } else if (day.equals(DayOfWeek.SUNDAY)) {
-                cal.set(Calendar.DAY_OF_MONTH, currentDate.plusDays(1).getDayOfMonth());
-            } else {
-                cal.set(Calendar.DAY_OF_MONTH, currentDate.getDayOfMonth());
-            }
-
-            int countWeeks = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            int countWeeks = countWeeksBetweenCurrentDateAndEndDate();
             countLessons = countWeeks * childTariff.getLessonsPerWeek();
 
             totalAmount = BigDecimal.valueOf(countLessons * childTariff.getPrice());
@@ -127,13 +106,14 @@ public class TransactionServiceImpl implements TransactionService {
         // TODO добавить нотификацию на почту
     }
 
-    @Scheduled(cron = "0 48 21 * * *")
+    @Scheduled(cron = "0 45 23 * * *")
     public void dailyCheckInvoices() {
         LocalDate currentDate = LocalDate.now();
         List<Transaction> transactions = transactionRepository.findByStatus(Transaction.Status.UNPAID);
-        TransactionRecords transactionRecords = eposHgroshService.findTransactionInvoices(currentDate);
+        List<by.sportliner.lk.integration.epos.hgrosh.internal.api.Transaction> transactionRecords =
+            eposHgroshService.findTransactionInvoices(currentDate);
 
-        Predicate<Child> containsInTransactionRecords = child -> transactionRecords.getRecords().stream()
+        Predicate<Child> containsInTransactionRecords = child -> transactionRecords.stream()
             .anyMatch(it -> it.getInvoice().getNumber().equals(child.getInvoiceNumber()));
 
         for (Transaction transaction : transactions) {
@@ -159,6 +139,33 @@ public class TransactionServiceImpl implements TransactionService {
 
         // TODO нотификация на почту о неоплаченных счетах
 
+    }
+
+    private int countWeeksBetweenCurrentDateAndEndDate() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate endDate = YearMonth.now().atEndOfMonth();
+
+        if (currentDate.getDayOfWeek().equals(DayOfWeek.FRIDAY)) {
+            currentDate = currentDate.plusDays(3);
+        } else if (currentDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+            currentDate = currentDate.plusDays(2);
+        } else if (currentDate.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            currentDate = currentDate.plusDays(1);
+        }
+
+        int countDays = endDate.getDayOfMonth() - currentDate.getDayOfMonth() + 1;
+
+        if (countDays > 28) {
+            return 5;
+        } else if (countDays > 21) {
+            return 4;
+        } else if (countDays > 14) {
+            return 3;
+        } else if (countDays > 7) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 
     private BigDecimal countInvoiceAmount(Child child) {

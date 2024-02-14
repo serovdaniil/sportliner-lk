@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,43 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class EposHgroshServiceImpl implements EposHgroshService {
+
+    @Value("${sportliner.lk.intergration.epos.eposBasePath}")
+    private String eposBasePath;
+
+    @Value("${sportliner.lk.intergration.epos.eposGrantType}")
+    private String eposGrantType;
+
+    @Value("${sportliner.lk.intergration.epos.eposScope}")
+    private String eposScope;
+
+    @Value("${sportliner.lk.intergration.epos.eposSportlinerClientId}")
+    private String eposSportlinerClientId;
+
+    @Value("${sportliner.lk.intergration.epos.eposMichaleniaClientId}")
+    private String eposMichaleniaClientId;
+
+    @Value("${sportliner.lk.intergration.epos.eposSportlinerClientSecret}")
+    private String eposSportlinerClientSecret;
+
+    @Value("${sportliner.lk.intergration.epos.eposMichaleniaClientSecret}")
+    private String eposMichaleniaClientSecret;
 
     @Autowired
     private ApplicationSettingsRepository applicationSettingsRepository;
 
     @Override
     public String createInvoiceFor(Child child) {
-        InvoiceApi api = invoiceApi();
+        String apiKey = child.getPayingEntity().equals(PayingEntity.MICHALENIA)
+            ? getApiKey(eposMichaleniaClientId, eposMichaleniaClientSecret)
+            : getApiKey(eposSportlinerClientId, eposSportlinerClientSecret);
+
+        InvoiceApi api = invoiceApi(apiKey);
 
         Invoice invoice = createInvoiceWithDefaultSettigns(child);
 
@@ -42,7 +69,11 @@ public class EposHgroshServiceImpl implements EposHgroshService {
 
     @Override
     public String updateInvoiceFor(String number, Transaction transaction) {
-        InvoiceApi api = invoiceApi();
+        String apiKey = transaction.getChild().getPayingEntity().equals(PayingEntity.MICHALENIA)
+            ? getApiKey(eposMichaleniaClientId, eposMichaleniaClientSecret)
+            : getApiKey(eposSportlinerClientId, eposSportlinerClientSecret);
+
+        InvoiceApi api = invoiceApi(apiKey);
 
         Invoice invoice = api.getInvoiceInformationByNumber(number);
 
@@ -57,21 +88,33 @@ public class EposHgroshServiceImpl implements EposHgroshService {
     }
 
     @Override
-    public TransactionRecords findTransactionInvoices(LocalDate date) {
-        return transactionApi().getTransactions(null, 1000, null, null,
-            date, date.plusDays(1), null,
-            null, null, null, null, null,
-            null, null, null, null
-        );
+    public List<by.sportliner.lk.integration.epos.hgrosh.internal.api.Transaction> findTransactionInvoices(LocalDate date) {
+        List<by.sportliner.lk.integration.epos.hgrosh.internal.api.Transaction> transactions = new ArrayList<>();
+
+        for (PayingEntity payingEntity : PayingEntity.values()) {
+            String apiKey = payingEntity.equals(PayingEntity.MICHALENIA)
+                ? getApiKey(eposMichaleniaClientId, eposMichaleniaClientSecret)
+                : getApiKey(eposSportlinerClientId, eposSportlinerClientSecret);
+
+            TransactionRecords transactionRecords = transactionApi(apiKey).getTransactions(null, 1000, null,
+                null, date, date.plusDays(1), null, null, null,
+                null, Integer.parseInt(payingEntity.getServiceId()), null,
+                null, null, null, null
+            );
+
+            transactions.addAll(transactionRecords.getRecords());
+        }
+
+        return transactions;
     }
 
-    private String getApiKey() {
+    private String getApiKey(String clientId, String clientSecret) {
         ApiClient apiClient = new ApiClient();
 
-        apiClient.setBasePath("https://iii.by");
+        apiClient.setBasePath(eposBasePath);
 
         GetApiKey200Response response = new AuthApi(apiClient).getApiKey(
-            "client_credentials", "193218544", "epos.public.invoice", "fd33815a-8021-4fda-bba3-f5ee500e903f"
+            eposGrantType, clientId, eposScope, clientSecret
         );
 
         return response.getAccessToken();
@@ -98,7 +141,7 @@ public class EposHgroshServiceImpl implements EposHgroshService {
             .serviceProviderId(Long.parseLong(child.getPayingEntity().getServiceId()))
             .serviceId(Long.parseLong(child.getPayingEntity().getServiceId()))
             .retailOutlet(new RetailOutlet()
-                .code(Integer.parseInt(child.getPayingEntity().getServiceId()))
+                .code(1)
             )
         );
         invoice.items(generateInvoiceItems(child));
@@ -143,7 +186,7 @@ public class EposHgroshServiceImpl implements EposHgroshService {
     }
 
 
-    private InvoiceApi invoiceApi() {
+    private InvoiceApi invoiceApi(String apiKey) {
         RestTemplate restTemplate = new RestTemplate();
 
         restTemplate.getMessageConverters()
@@ -154,13 +197,13 @@ public class EposHgroshServiceImpl implements EposHgroshService {
 
         ApiClient apiClient = new ApiClient(restTemplate);
         apiClient.setBasePath("https://api-epos.hgrosh.by/public/");
-        apiClient.setApiKey(getApiKey());
+        apiClient.setApiKey(apiKey);
         apiClient.setApiKeyPrefix("Bearer");
 
         return new InvoiceApi(apiClient);
     }
 
-    private TransactionApi transactionApi() {
+    private TransactionApi transactionApi(String apiKey) {
         RestTemplate restTemplate = new RestTemplate();
 
         restTemplate.getMessageConverters()
@@ -171,7 +214,7 @@ public class EposHgroshServiceImpl implements EposHgroshService {
 
         ApiClient apiClient = new ApiClient(restTemplate);
         apiClient.setBasePath("https://api-epos.hgrosh.by/public/");
-        apiClient.setApiKey(getApiKey());
+        apiClient.setApiKey(apiKey);
         apiClient.setApiKeyPrefix("Bearer");
 
         return new TransactionApi(apiClient);

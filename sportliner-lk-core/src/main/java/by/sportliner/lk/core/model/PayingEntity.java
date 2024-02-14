@@ -4,7 +4,7 @@ public enum PayingEntity {
 
     MICHALENIA("epos.lastIndexInvoiceNumber.Michalenia", "1", "10609"),
 
-    SPORTLINER("epos.lastIndexInvoiceNumber.Sportliner", "1", "10609"); // TODO изменить индекс сервиса оплаты и номер клиента
+    SPORTLINER("epos.lastIndexInvoiceNumber.Sportliner", "2", "15844");
 
     PayingEntity(String id, String serviceId, String serviceProviderId) {
         this.id = id;

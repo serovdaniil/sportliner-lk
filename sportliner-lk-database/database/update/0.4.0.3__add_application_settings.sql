@@ -6,5 +6,5 @@ CREATE TABLE application_settings
 );
 
 INSERT INTO application_settings(id, value)
-VALUES ('epos.lastIndexInvoiceNumber.Michalenia', '1000'),
-('epos.lastIndexInvoiceNumber.Sportliner', '1000');
+VALUES ('epos.lastIndexInvoiceNumber.Michalenia', '1200'),
+('epos.lastIndexInvoiceNumber.Sportliner', '1200');

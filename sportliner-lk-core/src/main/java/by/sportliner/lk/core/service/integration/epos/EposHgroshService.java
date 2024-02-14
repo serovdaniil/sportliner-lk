@@ -5,6 +5,7 @@ import by.sportliner.lk.core.model.Transaction;
 import by.sportliner.lk.integration.epos.hgrosh.internal.api.TransactionRecords;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface EposHgroshService {
 
@@ -12,6 +13,6 @@ public interface EposHgroshService {
 
     String updateInvoiceFor(String number, Transaction transaction);
 
-    TransactionRecords findTransactionInvoices(LocalDate date);
+    List<by.sportliner.lk.integration.epos.hgrosh.internal.api.Transaction> findTransactionInvoices(LocalDate date);
 
 }
