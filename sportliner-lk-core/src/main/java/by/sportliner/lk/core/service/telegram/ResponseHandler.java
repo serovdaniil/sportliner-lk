@@ -7,6 +7,7 @@ import by.sportliner.lk.core.model.TelegramChat;
 import by.sportliner.lk.core.repository.TelegramChatRepository;
 import by.sportliner.lk.core.repository.TrialAttendanceRepository;
 import by.sportliner.lk.core.service.BranchOfficeService;
+import by.sportliner.lk.core.service.email.EmailService;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -39,15 +40,15 @@ public class ResponseHandler {
 
     private BranchOfficeService branchOfficeService;
     private TelegramChatRepository telegramChatRepository;
-    private TrialAttendanceRepository trialAttendanceRepository;
+    private EmailService emailService;
 
     public ResponseHandler(SilentSender sender, DBContext db,
                            BranchOfficeService branchOfficeService, TelegramChatRepository telegramChatRepository,
-                           TrialAttendanceRepository trialAttendanceRepository) {
+                           EmailService emailService) {
         this.sender = sender;
         this.branchOfficeService = branchOfficeService;
         this.telegramChatRepository = telegramChatRepository;
-        this.trialAttendanceRepository = trialAttendanceRepository;
+        this.emailService = emailService;
 
         chatStates = new HashMap<>();
     }
@@ -159,7 +160,7 @@ public class ResponseHandler {
             messageText = messageText + "\n" + scheduleForDay;
         }
 
-        messageText = messageText + "\nПожалуйста, введите Ваш контактный телефон";
+        messageText = messageText + "\n\n Пожалуйста, введите Ваш контактный телефон";
 
         SendMessage responseMessage = new SendMessage();
         responseMessage.setChatId(chatId);
@@ -187,7 +188,7 @@ public class ResponseHandler {
         telegramChat.setPhone(message.getText());
 
         telegramChatRepository.save(telegramChat);
-
+emailService.notifyAboutNewTelegramChat(telegramChat);
         SendMessage responseMessage = new SendMessage();
         responseMessage.setChatId(chatId);
         responseMessage.setText(

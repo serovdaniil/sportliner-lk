@@ -9,6 +9,9 @@ public interface UserAccountService {
 
     List<UserAccount> findAll(UserAccountCriteria criteria);
 
+
+    List<UserAccount> findAllAdmin();
+
     UserAccount getById(String id);
 
     List<UserAccount> getTrainers();

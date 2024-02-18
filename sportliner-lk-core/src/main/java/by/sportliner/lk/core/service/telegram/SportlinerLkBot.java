@@ -1,8 +1,8 @@
 package by.sportliner.lk.core.service.telegram;
 
 import by.sportliner.lk.core.repository.TelegramChatRepository;
-import by.sportliner.lk.core.repository.TrialAttendanceRepository;
 import by.sportliner.lk.core.service.BranchOfficeService;
+import by.sportliner.lk.core.service.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,11 +32,11 @@ public class SportlinerLkBot extends AbilityBot {
                            @Value("${sportliner.lk.bot.username}") String username,
                            @Autowired BranchOfficeService branchOfficeService,
                            @Autowired TelegramChatRepository telegramChatRepository,
-                           @Autowired TrialAttendanceRepository trialAttendanceRepository) {
+                           @Autowired EmailService emailService) {
         super(token, username);
 
         responseHandler = new ResponseHandler(
-            silent, db, branchOfficeService, telegramChatRepository, trialAttendanceRepository
+            silent, db, branchOfficeService, telegramChatRepository, emailService
         );
     }
 

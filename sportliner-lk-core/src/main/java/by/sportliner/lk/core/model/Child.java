@@ -216,6 +216,10 @@ public class Child extends AbstractDataObject {
     }
 
     public int getAmountClassesForPay() {
+        if (tariff.equals(Tariff.UNLIM)) {
+            return 0;
+        }
+
         if (paymentType.equals(PaymentType.PREPAYMENT)) {
             return (tariff.getLessonsPerWeek() * 4) - tuitionBalance;
         } else {

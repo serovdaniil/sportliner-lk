@@ -5,6 +5,8 @@ import by.sportliner.lk.core.model.PaymentType;
 import by.sportliner.lk.core.model.Tariff;
 import by.sportliner.lk.core.model.Transaction;
 import by.sportliner.lk.core.repository.TransactionRepository;
+import by.sportliner.lk.core.service.email.EmailService;
+import by.sportliner.lk.core.service.email.UpdatedInvoicesData;
 import by.sportliner.lk.core.service.integration.epos.EposHgroshService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +37,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private EposHgroshService eposHgroshService;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public Transaction addNewTransactionForChild(Child child) {
         if (child.getPaymentType().equals(PaymentType.PER_LESSON)) {
@@ -43,7 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = toTransaction(child);
 
-        eposHgroshService.updateInvoiceFor(child.getInvoiceNumber(), transaction);
+        eposHgroshService.updateInvoiceFor(child.getFullInvoiceNumber(), transaction);
 
         return transactionRepository.save(transaction);
     }
@@ -88,7 +93,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @Scheduled(cron = "0 0 0 1 * *")
+    @Scheduled(cron = "0 30 12 18 * *")
     public void monthlyBilling() {
         List<Child> children = childService.findAll();
         List<Transaction> transactions = new ArrayList<>();
@@ -103,7 +108,10 @@ public class TransactionServiceImpl implements TransactionService {
             transactions.add(transaction);
         }
 
-        // TODO добавить нотификацию на почту
+        UpdatedInvoicesData updatedInvoicesData = new UpdatedInvoicesData()
+            .data(transactions);
+
+        emailService.notifyAboutUpdatedInvoices(updatedInvoicesData);
     }
 
     @Scheduled(cron = "0 45 23 * * *")
@@ -116,6 +124,7 @@ public class TransactionServiceImpl implements TransactionService {
         Predicate<Child> containsInTransactionRecords = child -> transactionRecords.stream()
             .anyMatch(it -> it.getInvoice().getNumber().equals(child.getInvoiceNumber()));
 
+        List<Transaction> paidTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {
             Child child = transaction.getChild();
 
@@ -125,6 +134,10 @@ public class TransactionServiceImpl implements TransactionService {
 
                 child.incrementTuitionBalance(transaction.getNumberOfLessons());
                 childService.save(child);
+
+                paidTransactions.add(transaction);
+
+                emailService.notifyAboutPaidInvoices(paidTransactions);
             }
         }
 
@@ -135,10 +148,21 @@ public class TransactionServiceImpl implements TransactionService {
                 child.incrementTuitionBalance();
                 childService.save(child);
             }
+
+            emailService.notifyAboutUnpaidPerLessonInvoice(child);
         }
 
-        // TODO нотификация на почту о неоплаченных счетах
+    }
 
+    @Scheduled(cron = "0 0 9 16 * *")
+    public void notifyAboutUnpaidInvoices() {
+        List<Transaction> transactions = transactionRepository.findByStatus(Transaction.Status.UNPAID);
+
+        if (transactions.isEmpty()) {
+            return;
+        }
+
+        emailService.notifyAboutUnpaidInvoices(transactions);
     }
 
     private int countWeeksBetweenCurrentDateAndEndDate() {
