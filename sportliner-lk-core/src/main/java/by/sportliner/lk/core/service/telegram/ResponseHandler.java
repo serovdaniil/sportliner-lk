@@ -5,7 +5,6 @@ import by.sportliner.lk.core.model.BranchOffice;
 import by.sportliner.lk.core.model.ClassSchedule;
 import by.sportliner.lk.core.model.TelegramChat;
 import by.sportliner.lk.core.repository.TelegramChatRepository;
-import by.sportliner.lk.core.repository.TrialAttendanceRepository;
 import by.sportliner.lk.core.service.BranchOfficeService;
 import by.sportliner.lk.core.service.email.EmailService;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static by.sportliner.lk.core.service.telegram.UserState.*;
@@ -80,10 +81,6 @@ public class ResponseHandler {
     }
 
     private void stopChat(long chatId, Message message) {
-        TelegramChat telegramChat = getTelegramChat(chatId, message.getChat().getUserName());
-
-        telegramChatRepository.delete(telegramChat);
-
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText("Благодарим Вас за заявку на пробное занятие!\nНажмите /start для возобновления диалога.");
@@ -132,9 +129,9 @@ public class ResponseHandler {
         for (DayOfWeek day : DayOfWeek.values()) {
             Function<DayOfWeek, String> renderDayOfWeek = (dayOfWeek) -> switch (dayOfWeek) {
                 case MONDAY -> "Понедельник";
-                case THURSDAY -> "Вторник";
+                case TUESDAY -> "Вторник";
                 case WEDNESDAY -> "Среда";
-                case TUESDAY -> "Четверг";
+                case THURSDAY -> "Четверг";
                 case FRIDAY -> "Пятница";
                 case SATURDAY -> "Суббота";
                 case SUNDAY -> "Воскресенье";
@@ -172,7 +169,9 @@ public class ResponseHandler {
     }
 
     private void addPhone(long chatId, Message message) {
-        if (message.getText().equals("Вернуться к списку филиалов")) {
+        String messageText = message.getText();
+
+        if (messageText.equals("Вернуться к списку филиалов")) {
             SendMessage responseMessage = new SendMessage();
             responseMessage.setChatId(chatId);
             responseMessage.setText("Пожалуйста, выберите филиал для пробного занятия");
@@ -183,12 +182,30 @@ public class ResponseHandler {
             return;
         }
 
+        Matcher matcher = Pattern.compile("^\\+375 \\((17|29|33|44|25)\\) [0-9]{3}-[0-9]{2}-[0-9]{2}$")
+            .matcher(messageText);
+
+        if (!matcher.matches()) {
+            SendMessage responseMessage = new SendMessage();
+
+            responseMessage.setChatId(chatId);
+            responseMessage.setText("Пожалуйста, введите телефон в формате +375 (29) 123-45-67");
+
+            sender.execute(responseMessage);
+
+            chatStates.put(chatId, AWAITING_PHONE);
+
+            return;
+        }
+
         TelegramChat telegramChat = getTelegramChat(chatId, message.getChat().getUserName());
 
-        telegramChat.setPhone(message.getText());
+        telegramChat.setPhone(messageText);
 
         telegramChatRepository.save(telegramChat);
-emailService.notifyAboutNewTelegramChat(telegramChat);
+
+        emailService.notifyAboutNewTelegramChat(telegramChat);
+
         SendMessage responseMessage = new SendMessage();
         responseMessage.setChatId(chatId);
         responseMessage.setText(

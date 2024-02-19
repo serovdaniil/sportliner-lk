@@ -3,7 +3,6 @@ package by.sportliner.lk.core.model;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "telegram_chat")
@@ -18,7 +17,7 @@ public class TelegramChat extends AbstractDataObject {
     /**
      * Username.
      */
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
     private String username;
 
     /**
