@@ -157,7 +157,7 @@ public class ResponseHandler {
             messageText = messageText + "\n" + scheduleForDay;
         }
 
-        messageText = messageText + "\n\n Пожалуйста, введите Ваш контактный телефон";
+        messageText = messageText + "\n\nПожалуйста, введите Ваш контактный телефон";
 
         SendMessage responseMessage = new SendMessage();
         responseMessage.setChatId(chatId);
