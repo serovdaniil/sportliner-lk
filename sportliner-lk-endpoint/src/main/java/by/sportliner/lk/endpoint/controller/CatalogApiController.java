@@ -32,6 +32,17 @@ public class CatalogApiController implements CatalogApi {
     }
 
     @Override
+    public ResponseEntity<List<UserAccountItemDto>> getEmployees() {
+        return ResponseEntity.ok(userAccountService.getEmployees().stream()
+            .map(it -> new UserAccountItemDto()
+                .id(it.getId())
+                .fullName(it.getFullName())
+            )
+            .toList()
+        );
+    }
+
+    @Override
     public ResponseEntity<List<BranchOfficeItemDto>> getAvailableBranchOffices() {
         return ResponseEntity.ok(branchOfficeService.findAll().stream()
             .map(it -> new BranchOfficeItemDto()

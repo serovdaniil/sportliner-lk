@@ -101,6 +101,13 @@ export const MainMenu: React.FC = () => {
             icon: <ScheduleOutlined/>
         },
         {
+            id: 'tasks',
+            title: 'Задачи',
+            page: AppRoutes.tasksPage,
+            pageUrl: AppRoutes.tasksPage.toUrl(),
+            icon: <ScheduleOutlined/>
+        },
+        {
             id: 'trialAttendances',
             title: 'Пробные занятия',
             page: AppRoutes.trialAttendances,

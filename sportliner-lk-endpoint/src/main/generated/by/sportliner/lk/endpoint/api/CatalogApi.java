@@ -71,6 +71,38 @@ public interface CatalogApi {
 
 
     /**
+     * GET /catalog/employees : Get employees
+     *
+     * @return List of users (status code 200)
+     *         or Not authenticated (status code 401)
+     *         or Access forbidden (status code 403)
+     */
+    @Operation(
+        operationId = "getEmployees",
+        summary = "Get employees",
+        tags = { "catalog" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "List of users", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserAccountItemDto.class)))
+            }),
+            @ApiResponse(responseCode = "401", description = "Not authenticated"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/catalog/employees",
+        produces = { "application/json" }
+    )
+    ResponseEntity<List<UserAccountItemDto>> getEmployees(
+        
+    ) throws Exception;
+
+
+    /**
      * GET /trainers : Get trainers
      *
      * @return List of trainers (status code 200)

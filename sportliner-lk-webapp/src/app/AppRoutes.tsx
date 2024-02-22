@@ -14,6 +14,9 @@ import AnalysisPage from "./logic/analysis/AnalysisPage";
 import TrialAttendanceListPage from "./logic/attendance/trialAttendance/list/TrialAttendanceListPage";
 import TrialAttendanceEditPage from "./logic/attendance/trialAttendance/edit/TrialAttendanceEditPage";
 import TelegramApplicationListPage from "./logic/telegram/TelegramApplicationListPage";
+import TaskListTable from "./logic/task/list/TaskListTable";
+import TaskListPage from "./logic/task/list/TaskListPage";
+import TaskEditPage from "./logic/task/edit/TaskEditPage";
 
 export const AppRoutes = {
 
@@ -107,6 +110,25 @@ export const AppRoutes = {
         path: '/telegramBot/application',
         render: () => <TelegramApplicationListPage/>,
         requiredAuthorities: Authorities.ADMINISTRATIVE
+    }),
+
+    tasksPage: new PageMeta<void>({
+        path: '/tasks',
+        render: () => <TaskListPage/>,
+        requiredAuthorities: Authorities.TRAINER
+    }),
+
+    taskCreatePage: new PageMeta<void>({
+        path: '/tasks/new',
+        render: () => <TaskEditPage/>,
+        requiredAuthorities: Authorities.TRAINER
+    }),
+
+    taskEditPage: new PageMeta<{ taskId: string }>({
+        path: '/tasks/:taskId',
+        render: (props) => <TaskEditPage id={props.params.taskId}/>,
+        renderParameters: (object) => ({taskId: object.taskId}),
+        requiredAuthorities: Authorities.TRAINER
     }),
 
     somethingWentWrongPage: new PageMeta<void>({

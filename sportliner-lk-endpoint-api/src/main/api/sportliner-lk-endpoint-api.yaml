@@ -29,6 +29,8 @@ tags:
     description: Analysis operations
   - name: telegram
     description: Telegram operations
+  - name: task
+    description: Task operations
   - name: catalog
     description: Some common operations
 
@@ -714,6 +716,25 @@ paths:
         403:
           description: Access forbidden
 
+  /catalog/employees:
+    get:
+      tags:
+        - catalog
+      operationId: getEmployees
+      summary: Get employees
+      responses:
+        200:
+          description: List of users
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/UserAccountItem"
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
   /analysis/{branchOfficeId}/{date}:
     get:
       tags:
@@ -781,6 +802,116 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TelegramBotApplication'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /task:
+    get:
+      tags:
+        - task
+      operationId: findAll
+      summary: Find all tasks
+      responses:
+        200:
+          description: Tasks
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Task'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    post:
+      tags:
+        - task
+      operationId: createTask
+      summary: Create task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        201:
+          description: Successfully created
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /task/:{id}:
+    get:
+      tags:
+        - task
+      operationId: getTaskById
+      summary: Get task by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    put:
+      tags:
+        - task
+      operationId: updateTask
+      summary: Update task
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        200:
+          description: Successfully saved
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
+  /task/:{id}/:{status}:
+    post:
+      tags:
+        - task
+      operationId: updateStatusTaskById
+      summary: Update status task by ID
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: status
+          in: path
+          schema:
+            $ref: '#/components/schemas/TaskStatus'
+          required: true
+      responses:
+        200:
+          description: Successfully updated
         401:
           description: Not authenticated
         403:
@@ -1346,6 +1477,45 @@ components:
         phone:
           description: Phone
           type: string
+
+    Task:
+      type: object
+      description: Task
+      required:
+        - id
+        - name
+        - description
+        - assignee
+        - reporter
+        - status
+      properties:
+        id:
+          description: ID
+          type: string
+          readOnly: true
+        name:
+          description: Name
+          type: string
+        description:
+          description: Description
+          type: string
+        assignee:
+          description: Assignee
+          $ref: '#/components/schemas/UserAccountItem'
+        reporter:
+          description: Reporter
+          $ref: '#/components/schemas/UserAccountItem'
+        status:
+          description: Task status
+          $ref: '#/components/schemas/TaskStatus'
+
+    TaskStatus:
+      description: Task status
+      type: string
+      enum:
+        - OPEN
+        - IN_PROGRESS
+        - CLOSED
 
     DayOfWeek:
       description: Day of week

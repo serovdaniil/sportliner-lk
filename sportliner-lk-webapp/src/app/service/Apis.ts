@@ -8,7 +8,7 @@ import {
     ErrorContext,
     HTTPQuery,
     Middleware,
-    ResponseContext, TelegramApi, UsersApi,
+    ResponseContext, TaskApi, TelegramApi, UsersApi,
 } from 'api';
 
 import {auth} from 'app/App';
@@ -184,5 +184,7 @@ export const usersApi = new UsersApi(configuration);
 export const analysisApi = new AnalysisApi(configuration);
 
 export const telegramApi = new TelegramApi(configuration);
+
+export const taskApi = new TaskApi(configuration);
 
 export const catalogApi = new CatalogApi(configuration);

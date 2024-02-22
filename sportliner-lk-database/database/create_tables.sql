@@ -134,3 +134,13 @@ CREATE TABLE application_settings
     value TEXT NOT NULL,
     CONSTRAINT pk_application_settings PRIMARY KEY (id)
 );
+
+CREATE TABLE task (
+    id          UUID NOT NULL,
+    assignee_id UUID NOT NULL,
+    reporter_id UUID NOT NULL,
+    name        TEXT NOT NULL,
+    description TEXT NOT NULL,
+    status      TEXT NOT NULL,
+    CONSTRAINT pk_task PRIMARY KEY (id)
+);

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -57,6 +58,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public List<UserAccount> getTrainers() {
         return userAccountRepository.findByRole(UserRole.TRAINER);
+    }
+
+    @Override
+    public List<UserAccount> getEmployees() {
+        return Stream.concat(
+                userAccountRepository.findByRole(UserRole.TRAINER).stream(),
+                userAccountRepository.findByRole(UserRole.ADMIN).stream())
+            .collect(Collectors.toList());
     }
 
     @Override

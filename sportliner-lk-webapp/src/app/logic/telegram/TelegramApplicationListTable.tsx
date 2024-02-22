@@ -1,4 +1,4 @@
-import {Button, Space, Table} from 'antd';
+import {Button, Space, Table, Typography} from 'antd';
 import {ColumnsType} from 'antd/es/table';
 import {TelegramBotApplication, TrialAttendance} from 'api';
 import React from 'react';
@@ -42,9 +42,11 @@ const TelegramApplicationListTable: React.FC<TelegramApplicationTableProps> = (p
             align: "left",
             sorter: false,
             width: '15vw',
-            render: (_, record) => {
-                DateUtils.formatDateLocalWithTime(record.createTimestamp)
-            }
+            render: (_, record) => 
+                <Typography.Text>
+                    {DateUtils.formatDateLocalWithTime(record.createTimestamp)}
+                </Typography.Text>
+
         },
         {
             title: 'Действие',

@@ -68,7 +68,7 @@ project.swaggerSources.register("endpointApi") {
     code(delegateClosureOf<org.hidetake.gradle.swagger.generator.GenerateSwaggerCode> {
         val packageDirs = "by.sportliner.lk.endpoint.api".replace('.', '/')
 
-        val genApiFile = project(":sportliner-lk-endpoint-api").file("src/api/sportliner-lk-endpoint-api.yaml")
+        val genApiFile = project(":sportliner-lk-endpoint-api").file("src/main/api/sportliner-lk-endpoint-api.yaml")
         val genConfigFile = file("$projectDir/openapi-generator-config.yaml")
         val genTargetDir = file("$projectDir/src/main/generated")
         val genBuildDir = file("$projectDir/build/generated-swagger/${"by.sportliner.lk.endpoint.api"}")

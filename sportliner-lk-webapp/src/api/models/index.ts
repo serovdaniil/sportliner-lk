@@ -32,6 +32,8 @@ export * from './PayingEntity';
 export * from './PaymentType';
 export * from './ReferenceViolationError';
 export * from './Tariff';
+export * from './Task';
+export * from './TaskStatus';
 export * from './TelegramBotApplication';
 export * from './TrialAttendance';
 export * from './TrialAttendanceStatus';

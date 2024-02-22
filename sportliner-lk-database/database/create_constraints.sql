@@ -15,3 +15,7 @@ ALTER TABLE transaction
 
 ALTER TABLE trial_attendance
     ADD CONSTRAINT fk_trial_attendance_branch_office FOREIGN KEY (branch_office_id) REFERENCES branch_office (id) ON DELETE CASCADE;
+
+ALTER TABLE task
+    ADD CONSTRAINT fk_task_assignee FOREIGN KEY (assignee_id) REFERENCES user_account (id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_task_reporter FOREIGN KEY (reporter_id) REFERENCES user_account (id) ON DELETE CASCADE;

@@ -16,6 +16,8 @@ public interface UserAccountService {
 
     List<UserAccount> getTrainers();
 
+    List<UserAccount> getEmployees();
+
     void deleteById(String id);
 
     UserAccount saveWithChildren(UserAccount userAccount, List<Child> children);

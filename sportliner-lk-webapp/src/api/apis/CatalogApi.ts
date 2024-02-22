@@ -65,6 +65,40 @@ export class CatalogApi extends runtime.BaseAPI {
     }
 
     /**
+     * Get employees
+     */
+    async getEmployeesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserAccountItem>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/catalog/employees`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserAccountItemFromJSON));
+    }
+
+    /**
+     * Get employees
+     */
+    async getEmployees(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserAccountItem>> {
+        const response = await this.getEmployeesRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Get trainers
      */
     async getTrainersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserAccountItem>>> {
