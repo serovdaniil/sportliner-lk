@@ -93,7 +93,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @Scheduled(cron = "0 30 12 18 * *")
+    @Scheduled(cron = "0 0 6 2 * *")
     public void monthlyBilling() {
         List<Child> children = childService.findAll();
         List<Transaction> transactions = new ArrayList<>();
