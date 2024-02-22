@@ -1,7 +1,7 @@
 CREATE TABLE task (
-    id          TEXT NOT NULL,
-    assignee_id TEXT NOT NULL,
-    reporter_id TEXT NOT NULL,
+    id          UUID NOT NULL,
+    assignee_id UUID NOT NULL,
+    reporter_id UUID NOT NULL,
     name        TEXT NOT NULL,
     description TEXT NOT NULL,
     status      TEXT NOT NULL,
