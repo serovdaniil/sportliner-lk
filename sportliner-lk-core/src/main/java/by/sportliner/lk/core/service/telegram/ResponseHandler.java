@@ -103,7 +103,7 @@ public class ResponseHandler {
             TelegramChat telegramChat = new TelegramChat();
 
             telegramChat.setChatId(message.getChatId());
-            telegramChat.setUsername(message.getChat().getUserName());
+            telegramChat.setUsername(message.getChat().getUserName() == null ? "" : message.getChat().getUserName());
             telegramChat.setCreateTimestamp(Instant.now());
 
             telegramChatRepository.save(telegramChat);
@@ -124,7 +124,7 @@ public class ResponseHandler {
 
         telegramChatRepository.save(telegramChat);
 
-        String messageText = "Расписание занятий на филиале: \n";
+        StringBuilder messageText = new StringBuilder("Расписание занятий на филиале: \n");
 
         for (DayOfWeek day : DayOfWeek.values()) {
             Function<DayOfWeek, String> renderDayOfWeek = (dayOfWeek) -> switch (dayOfWeek) {
@@ -154,15 +154,15 @@ public class ResponseHandler {
                 .replace("${day}", renderDayOfWeek.apply(day))
                 .replace("${schedules}", renderSchedules.apply(schedules));
 
-            messageText = messageText + "\n" + scheduleForDay;
+            messageText.append("\n").append(scheduleForDay);
         }
 
-        messageText = messageText + "\n\nПожалуйста, введите Ваш контактный телефон";
+        messageText.append("\n\nПожалуйста, введите Ваш контактный телефон");
 
         SendMessage responseMessage = new SendMessage();
         responseMessage.setChatId(chatId);
 
-        responseMessage.setText(messageText);
+        responseMessage.setText(messageText.toString());
         responseMessage.setReplyMarkup(KeyboardFactory.renderCancelButton());
         sender.execute(responseMessage);
         chatStates.put(chatId, AWAITING_PHONE);
