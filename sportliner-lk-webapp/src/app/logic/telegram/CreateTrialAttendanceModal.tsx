@@ -48,7 +48,7 @@ const AddTrialAttendanceModal: FC<Props> = observer((props: Props) => {
         telegramUsername: telegramBotApplication.telegramUsername,
         branchOffice: telegramBotApplication.branchOffice!,
         name: "",
-        phone: "",
+        phone: telegramBotApplication.phone!,
         date: "",
         diagnosis: "",
         status: TrialAttendanceStatus.UNPAID
