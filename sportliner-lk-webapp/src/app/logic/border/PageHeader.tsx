@@ -1,4 +1,4 @@
-import {LogoutOutlined, UserOutlined} from '@ant-design/icons';
+import {LogoutOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
 import {Avatar, Divider, Dropdown, Image, Layout, Menu, Row, Space, Typography} from 'antd';
 import {auth} from 'app/App';
 import logo from 'app/assets/logo.png';
@@ -6,6 +6,8 @@ import {MainMenu} from 'app/logic/border/MainMenu';
 import {observer} from 'mobx-react';
 import NProgress from 'nprogress';
 import React, {useEffect} from 'react';
+import {AppRoutes} from "../../AppRoutes";
+import {useNavigator} from "../Navigator";
 
 NProgress.configure({showSpinner: false});
 
@@ -19,16 +21,28 @@ interface AuthorizedPageHeaderProps {
  * Authorized page header
  */
 const PageHeader: React.FC<AuthorizedPageHeaderProps> = (props: AuthorizedPageHeaderProps) => {
+    const navigator = useNavigator();
 
     const logout = async () => {
         await auth.logout();
 
     };
 
+    const goApplicationSettings = () => {
+        navigator.safeNavigate(AppRoutes.applicationSettingsPage.toUrl());
+    }
+
     const dropDown = (
         <Menu>
             <Menu.Item
-                key="1"
+                key="settings"
+                onClick={goApplicationSettings}
+                icon={<SettingOutlined/>}
+            >
+                <Typography.Text>Настройки приложения</Typography.Text>
+            </Menu.Item>
+            <Menu.Item
+                key="logout"
                 onClick={logout}
                 icon={<LogoutOutlined/>}
             >

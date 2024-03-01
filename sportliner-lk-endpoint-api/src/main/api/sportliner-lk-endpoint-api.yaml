@@ -31,6 +31,8 @@ tags:
     description: Telegram operations
   - name: task
     description: Task operations
+  - name: settings
+    description: Settings operations
   - name: catalog
     description: Some common operations
 
@@ -917,6 +919,42 @@ paths:
         403:
           description: Access forbidden
 
+  /settings/payment:
+    get:
+      tags:
+        - settings
+      operationId: getPaymentSettings
+      summary: Get payment settings
+      responses:
+        200:
+          description: Tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentSettings'
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+    post:
+      tags:
+        - settings
+      operationId: updatePaymentSettings
+      summary: Update payment settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentSettings'
+      responses:
+        200:
+          description: Successfully updated
+        401:
+          description: Not authenticated
+        403:
+          description: Access forbidden
+
   /version:
     get:
       operationId: getVersions
@@ -1516,6 +1554,64 @@ components:
         - OPEN
         - IN_PROGRESS
         - CLOSED
+
+    PaymentSettings:
+      type: object
+      description: Payment settings
+      required:
+        - usePrevPrice
+        - currentPrice
+        - prevPrice
+      properties:
+        usePrevPrice:
+          description: Need to use prev price
+          type: boolean
+        currentPrice:
+          description: Current price
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceItem'
+        prevPrice:
+          description: Prev price
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceItem'
+
+    PriceItem:
+      type: object
+      description:  Price item
+      required:
+        - type
+        - normalPrice
+        - benefitsPrice
+      properties:
+        type:
+          description: Type
+          $ref: '#/components/schemas/PriceItemType'
+        normalPrice:
+          description: Normal price
+          type: number
+        benefitsPrice:
+          description: Benefits price
+          type: number
+
+    PriceItemType:
+      description: Price item type
+      type: string
+      enum:
+        - ONE_LESSON
+        - TWO_LESSONS
+        - THREE_LESSONS
+        - FOUR_LESSONS
+        - FIVE_LESSONS
+        - SIX_LESSONS
+        - SEVEN_LESSONS
+        - EIGHT_LESSONS
+        - NINE_LESSONS
+        - TEN_LESSONS
+        - ELEVEN_LESSONS
+        - TWELVE_LESSONS
+        - UNLIM
 
     DayOfWeek:
       description: Day of week

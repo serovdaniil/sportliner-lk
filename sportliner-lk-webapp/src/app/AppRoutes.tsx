@@ -14,9 +14,9 @@ import AnalysisPage from "./logic/analysis/AnalysisPage";
 import TrialAttendanceListPage from "./logic/attendance/trialAttendance/list/TrialAttendanceListPage";
 import TrialAttendanceEditPage from "./logic/attendance/trialAttendance/edit/TrialAttendanceEditPage";
 import TelegramApplicationListPage from "./logic/telegram/TelegramApplicationListPage";
-import TaskListTable from "./logic/task/list/TaskListTable";
 import TaskListPage from "./logic/task/list/TaskListPage";
 import TaskEditPage from "./logic/task/edit/TaskEditPage";
+import ApplicationSettingsPage from "./logic/settings/ApplicationSettingsPage";
 
 export const AppRoutes = {
 
@@ -129,6 +129,12 @@ export const AppRoutes = {
         render: (props) => <TaskEditPage id={props.params.taskId}/>,
         renderParameters: (object) => ({taskId: object.taskId}),
         requiredAuthorities: Authorities.TRAINER
+    }),
+
+    applicationSettingsPage: new PageMeta<{ taskId: string }>({
+        path: '/settings',
+        render: (props) => <ApplicationSettingsPage/>,
+        requiredAuthorities: Authorities.ADMINISTRATIVE
     }),
 
     somethingWentWrongPage: new PageMeta<void>({

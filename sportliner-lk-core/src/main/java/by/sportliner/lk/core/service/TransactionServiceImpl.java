@@ -1,9 +1,6 @@
 package by.sportliner.lk.core.service;
 
-import by.sportliner.lk.core.model.Child;
-import by.sportliner.lk.core.model.PaymentType;
-import by.sportliner.lk.core.model.Tariff;
-import by.sportliner.lk.core.model.Transaction;
+import by.sportliner.lk.core.model.*;
 import by.sportliner.lk.core.repository.TransactionRepository;
 import by.sportliner.lk.core.service.email.EmailService;
 import by.sportliner.lk.core.service.email.UpdatedInvoicesData;
@@ -20,13 +17,15 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
-    private static final double BENEFIT_DISCOUNT = 0.1;
+    @Autowired
+    private ApplicationSettingsService applicationSettingsService;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -64,18 +63,18 @@ public class TransactionServiceImpl implements TransactionService {
             BigDecimal allDay = BigDecimal.valueOf(YearMonth.now().lengthOfMonth());
 
             BigDecimal percentage = currentDay.divide(allDay, 2, RoundingMode.HALF_UP);
+            PaymentSettings.PriceItem subscriptionPrice = loadPaymentSettings().getCurrentPrice()
+                .get(PaymentSettings.Type.UNLIM);
 
-            totalAmount = BigDecimal.valueOf(Tariff.UNLIM.getPrice())
+            totalAmount = child.isBenefits() ? subscriptionPrice.benefitsPrice() : subscriptionPrice.normalPrice()
                 .multiply(BigDecimal.ONE.subtract(percentage));
         } else {
             int countWeeks = countWeeksBetweenCurrentDateAndEndDate();
             countLessons = countWeeks * childTariff.getLessonsPerWeek();
+            PaymentSettings.PriceItem subscriptionPrice = loadPaymentSettings().getCurrentPrice()
+                .get(PaymentSettings.Type.getByCountLessons(countLessons));
 
-            totalAmount = BigDecimal.valueOf(countLessons * childTariff.getPrice());
-        }
-
-        if (child.isBenefits()) {
-            totalAmount = totalAmount.divide(BigDecimal.valueOf(1 - BENEFIT_DISCOUNT), 2, RoundingMode.HALF_UP);
+            totalAmount = child.isBenefits() ? subscriptionPrice.benefitsPrice() : subscriptionPrice.normalPrice();
         }
 
         Transaction transaction = new Transaction();
@@ -93,7 +92,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @Scheduled(cron = "0 0 1 1 * *")
+    @Scheduled(cron = "0 0 1 3 * *")
     public void monthlyBilling() {
         List<Child> children = childService.findAll();
         List<Transaction> transactions = new ArrayList<>();
@@ -165,6 +164,10 @@ public class TransactionServiceImpl implements TransactionService {
         emailService.notifyAboutUnpaidInvoices(transactions);
     }
 
+    private PaymentSettings loadPaymentSettings() {
+        return applicationSettingsService.getPaymentSettings();
+    }
+
     private int countWeeksBetweenCurrentDateAndEndDate() {
         LocalDate currentDate = LocalDate.now();
         LocalDate endDate = YearMonth.now().atEndOfMonth();
@@ -193,16 +196,70 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private BigDecimal countInvoiceAmount(Child child) {
+        return switch (child.getPaymentType()) {
+            case PREPAYMENT -> countInvoiceAmountForPrepayment(child);
+            case POST_PAYMENT -> countInvoiceAmountForPostPaymentType(child);
+            case PER_LESSON ->
+                throw new TransactionException("Do not bill monthly for the \"Per lesson\" payment type.");
+        };
+    }
+
+    private BigDecimal countInvoiceAmountForPostPaymentType(Child child) {
         Tariff tariff = child.getTariff();
-        BigDecimal amount;
+        PaymentSettings paymentSettings = loadPaymentSettings();
+        Map<PaymentSettings.Type, PaymentSettings.PriceItem> subscriptionPrice = paymentSettings.isUsePrevPrice()
+            ? paymentSettings.getPrevPrice()
+            : paymentSettings.getCurrentPrice();
 
         if (tariff.equals(Tariff.UNLIM)) {
-            amount = BigDecimal.valueOf(tariff.getPrice());
-        } else {
-            amount = BigDecimal.valueOf(child.getAmountClassesForPay() * tariff.getPrice());
+            PaymentSettings.PriceItem priceItem = subscriptionPrice.get(PaymentSettings.Type.UNLIM);
+
+            return child.isBenefits() ? priceItem.benefitsPrice() : priceItem.normalPrice();
         }
 
-        return child.isBenefits() ? amount.multiply(BigDecimal.valueOf(1 - BENEFIT_DISCOUNT)) : amount;
+        int countLessons = child.getTuitionBalance() * -1; // need to convert to positive number
+
+        PaymentSettings.PriceItem priceItem = subscriptionPrice.get(PaymentSettings.Type.getByCountLessons(countLessons));
+
+        return child.isBenefits() ? priceItem.benefitsPrice() : priceItem.normalPrice();
+
+    }
+
+    private BigDecimal countInvoiceAmountForPrepayment(Child child) {
+        Tariff tariff = child.getTariff();
+        PaymentSettings paymentSettings = loadPaymentSettings();
+
+        if (tariff.equals(Tariff.UNLIM)) {
+            PaymentSettings.PriceItem priceItem = paymentSettings.getCurrentPrice().get(PaymentSettings.Type.UNLIM);
+
+            return child.isBenefits() ? priceItem.benefitsPrice() : priceItem.normalPrice();
+        }
+
+        if (child.getTuitionBalance() < 0 && paymentSettings.isUsePrevPrice()) {
+            BigDecimal amount = BigDecimal.ZERO;
+
+            int countLessonsByPrevPrice = child.getTuitionBalance() * -1; // need to convert to positive number
+
+            PaymentSettings.PriceItem prevPriceItem = paymentSettings.getPrevPrice()
+                .get(PaymentSettings.Type.getByCountLessons(countLessonsByPrevPrice));
+
+            amount = amount.add(child.isBenefits() ? prevPriceItem.benefitsPrice() : prevPriceItem.normalPrice());
+
+            int countLessonsByNewPrice = tariff.getLessonsPerWeek() * 4;
+            PaymentSettings.PriceItem currentPriceItem = paymentSettings.getCurrentPrice()
+                .get(PaymentSettings.Type.getByCountLessons(countLessonsByNewPrice));
+
+            amount = amount.add(child.isBenefits() ? currentPriceItem.benefitsPrice() : currentPriceItem.normalPrice());
+
+            return amount;
+        }
+
+        int numberLessonsForPaid = (tariff.getLessonsPerWeek() * 4) - child.getTuitionBalance();
+
+        PaymentSettings.PriceItem priceItem = paymentSettings.getCurrentPrice()
+            .get(PaymentSettings.Type.getByCountLessons(numberLessonsForPaid));
+
+        return child.isBenefits() ? priceItem.benefitsPrice() : priceItem.normalPrice();
     }
 
     private Transaction toTransaction(Child child) {
