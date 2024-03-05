@@ -96,7 +96,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @Scheduled(cron = "0 50 14 5 * *")
+    @Scheduled(cron = "0 15 19 5 * *")
     public void monthlyBilling() {
         LOGGER.debug("Automatic updating of accounts has been started");
 

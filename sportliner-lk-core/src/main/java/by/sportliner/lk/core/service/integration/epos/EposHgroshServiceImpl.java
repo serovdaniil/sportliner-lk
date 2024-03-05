@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import org.openapitools.jackson.nullable.JsonNullableModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -25,6 +27,8 @@ import java.util.List;
 
 @Service
 public class EposHgroshServiceImpl implements EposHgroshService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EposHgroshServiceImpl.class);
 
     @Value("${sportliner.lk.intergration.epos.eposBasePath}")
     private String eposBasePath;
@@ -69,6 +73,8 @@ public class EposHgroshServiceImpl implements EposHgroshService {
 
     @Override
     public String updateInvoiceFor(String number, Transaction transaction) {
+        LOGGER.debug("Update invoice for: {}", number);
+
         String apiKey = transaction.getChild().getPayingEntity().equals(PayingEntity.MICHALENIA)
             ? getApiKey(eposMichaleniaClientId, eposMichaleniaClientSecret)
             : getApiKey(eposSportlinerClientId, eposSportlinerClientSecret);
@@ -76,6 +82,8 @@ public class EposHgroshServiceImpl implements EposHgroshService {
         InvoiceApi api = invoiceApi(apiKey);
 
         Invoice invoice = api.getInvoiceInformationByNumber(number);
+
+        LOGGER.debug("Update invoice by id: {}", invoice.getId());
 
         api.cancelInvoiceToPayById(invoice.getId());
 
