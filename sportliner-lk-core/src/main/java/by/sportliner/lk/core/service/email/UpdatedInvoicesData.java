@@ -34,6 +34,10 @@ public class UpdatedInvoicesData {
         return recipients;
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
     public List<Pair<BranchOffice, BigDecimal>> getSportlinerTransactionsByBranchOffice() {
         return findTransactionByPayingEntity(PayingEntity.SPORTLINER).stream()
             .collect(Collectors.groupingBy(it -> it.getChild().getBranchOffice()))

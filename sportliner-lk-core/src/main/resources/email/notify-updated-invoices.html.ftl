@@ -101,6 +101,44 @@
         </tbody>
     </table>
 
+
+    <p>
+        Список транзакций:
+    </p>
+
+    <br/>
+
+    <table>
+        <thead>
+        <tr>
+            <td>ФИО ребенка</td>
+            <td>Сумма счета</td>
+            <td>Количество выставленных занятий в счете</td>
+            <td>Остаток занятий на момент выставления счета</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <#list data.getTransactions() as item>
+            <tr>
+                <td class="right-align">
+                    ${item.child.getFullName()}
+                </td>
+                <td class="right-align">
+                    ${item.invoiceAmount}
+                </td>
+                <td class="right-align">
+                    ${item.numberOfLessons}
+                </td>
+                <td class="right-align">
+                    ${item.child.tuitionBalance}
+                </td>
+            </tr>
+        </#list>
+
+        </tbody>
+    </table>
+
 </div>
 </body>
 </html>

@@ -5,6 +5,8 @@ import by.sportliner.lk.core.repository.TransactionRepository;
 import by.sportliner.lk.core.service.email.EmailService;
 import by.sportliner.lk.core.service.email.UpdatedInvoicesData;
 import by.sportliner.lk.core.service.integration.epos.EposHgroshService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import java.util.function.Predicate;
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
     @Autowired
     private ApplicationSettingsService applicationSettingsService;
@@ -92,8 +96,10 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @Scheduled(cron = "0 0 1 3 * *")
+    @Scheduled(cron = "0 50 14 5 * *")
     public void monthlyBilling() {
+        LOGGER.debug("Automatic updating of accounts has been started");
+
         List<Child> children = childService.findAll();
         List<Transaction> transactions = new ArrayList<>();
 
@@ -111,6 +117,8 @@ public class TransactionServiceImpl implements TransactionService {
             .data(transactions);
 
         emailService.notifyAboutUpdatedInvoices(updatedInvoicesData);
+
+        LOGGER.debug("Finished automatic updating of accounts");
     }
 
     @Scheduled(cron = "0 45 23 * * *")
