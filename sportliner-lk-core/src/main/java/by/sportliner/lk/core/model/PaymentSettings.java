@@ -85,7 +85,7 @@ public class PaymentSettings {
             return Stream.of(values())
                 .filter(it -> it.getCountLessons() == countLessons)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Not found lesson fees type"));
+                .orElseThrow(() -> new IllegalArgumentException("Not found lesson fees type:" + countLessons));
         }
 
     }
