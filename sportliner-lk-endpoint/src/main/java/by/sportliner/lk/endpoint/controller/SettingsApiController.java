@@ -50,7 +50,7 @@ public class SettingsApiController implements SettingsApi {
     public ResponseEntity<Void> updatePaymentSettings(PaymentSettingsDto paymentSettingsDto) {
         PaymentSettings paymentSettings = new PaymentSettings();
 
-        paymentSettings.setUsePrevPrice(paymentSettings.isUsePrevPrice());
+        paymentSettings.setUsePrevPrice(paymentSettingsDto.isUsePrevPrice());
         paymentSettings.setCurrentPrice(paymentSettingsDto.getCurrentPrice().stream()
             .collect(Collectors.toMap(
                 it -> PaymentSettings.Type.valueOf(it.getType().name()),
