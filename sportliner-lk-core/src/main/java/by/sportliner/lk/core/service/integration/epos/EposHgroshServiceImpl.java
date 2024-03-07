@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EposHgroshServiceImpl implements EposHgroshService {
@@ -110,7 +111,12 @@ public class EposHgroshServiceImpl implements EposHgroshService {
                 null, null, null, null
             );
 
-            transactions.addAll(transactionRecords.getRecords());
+            List<by.sportliner.lk.integration.epos.hgrosh.internal.api.Transaction> payingEntityTransactions =
+                transactionRecords.getRecords().stream()
+                    .filter(it -> it.getState().equals(TransactionStateEnum.NUMBER_20))
+                    .collect(Collectors.toList());
+
+            transactions.addAll(payingEntityTransactions);
         }
 
         return transactions;

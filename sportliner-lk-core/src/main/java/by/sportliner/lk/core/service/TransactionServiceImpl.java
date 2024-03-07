@@ -96,7 +96,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @Scheduled(cron = "0 58 20 5 * *")
+    @Scheduled(cron = "0 0 6 1 * *")
     public void monthlyBilling() {
         LOGGER.debug("Automatic updating of accounts has been started");
 
@@ -121,9 +121,11 @@ public class TransactionServiceImpl implements TransactionService {
         LOGGER.debug("Finished automatic updating of accounts");
     }
 
-    @Scheduled(cron = "0 45 23 * * *")
+    @Scheduled(cron = "0 55 7 * * *")
     public void dailyCheckInvoices() {
-        LocalDate currentDate = LocalDate.now();
+        LOGGER.debug("Automatic payment verification started");
+
+        LocalDate currentDate = LocalDate.now().minusDays(1);
         List<Transaction> transactions = transactionRepository.findByStatus(Transaction.Status.UNPAID);
         List<by.sportliner.lk.integration.epos.hgrosh.internal.api.Transaction> transactionRecords =
             eposHgroshService.findTransactionInvoices(currentDate);
@@ -132,8 +134,12 @@ public class TransactionServiceImpl implements TransactionService {
             .anyMatch(it -> it.getInvoice().getNumber().equals(child.getInvoiceNumber()));
 
         List<Transaction> paidTransactions = new ArrayList<>();
+
+        LOGGER.debug("Checking payments for registered transactions");
         for (Transaction transaction : transactions) {
             Child child = transaction.getChild();
+
+            LOGGER.debug("Transaction verification, transactionNumber: {}", transaction.getInvoiceAmount());
 
             if (containsInTransactionRecords.test(child)) {
                 transaction.setStatus(Transaction.Status.PAID);
@@ -148,9 +154,12 @@ public class TransactionServiceImpl implements TransactionService {
 
         emailService.notifyAboutPaidInvoices(paidTransactions);
 
+        LOGGER.debug("Checking payments with children who are paying for one class at a time.");
+
         List<Child> children = childService.findWithPerLessonPaymentTypeAndAttendanceForDay(currentDate);
 
         for (Child child : children) {
+            LOGGER.debug("Checking for child id: {}, invoiceNumber: {}", child.getId(), child.getFullInvoiceNumber());
             if (containsInTransactionRecords.test(child)) {
                 child.incrementTuitionBalance();
                 childService.save(child);
@@ -159,6 +168,7 @@ public class TransactionServiceImpl implements TransactionService {
             emailService.notifyAboutUnpaidPerLessonInvoice(child);
         }
 
+        LOGGER.debug("Automated payment verification is completed");
     }
 
     @Scheduled(cron = "0 0 9 16 * *")
