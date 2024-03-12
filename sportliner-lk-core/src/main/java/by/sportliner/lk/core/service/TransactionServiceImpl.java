@@ -131,7 +131,7 @@ public class TransactionServiceImpl implements TransactionService {
             eposHgroshService.findTransactionInvoices(currentDate);
 
         Predicate<Child> containsInTransactionRecords = child -> transactionRecords.stream()
-            .anyMatch(it -> it.getInvoice().getNumber().equals(child.getInvoiceNumber()));
+            .anyMatch(it -> it.getInvoice().getFullNumber().equals(child.getFullInvoiceNumber()));
 
         List<Transaction> paidTransactions = new ArrayList<>();
 

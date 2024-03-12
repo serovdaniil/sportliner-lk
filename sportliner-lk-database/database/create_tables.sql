@@ -83,7 +83,7 @@ CREATE TABLE children (
     invoice_number             TEXT     NOT NULL,
     tariff                     TEXT     NOT NULL,
     benefits                   BOOLEAN  NOT NULL,
-    paying_entity              TEXT     NOT NULL
+    paying_entity              TEXT     NOT NULL,
     notes                      TEXT     NULL,
     CONSTRAINT pk_children PRIMARY KEY (id)
 );
@@ -106,17 +106,17 @@ CREATE TABLE trial_attendance (
     status             TEXT NOT NULL,
     telegram_username  TEXT NULL,
     CONSTRAINT pk_trial_attendance PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE telegram_chat (
-    id               UUID       NOT NULL,
-    chat_id          int        NOT NULL,
-    username         TEXT       NOT NULL,
-    branch_office_id UUID       NOT NULL,
-    phone            TEXT       NOT NULL,
-    create_timestamp IMESTAMPTZ NOT NULL,
+    id               UUID        NOT NULL,
+    chat_id          int         NOT NULL,
+    username         TEXT        NOT NULL,
+    branch_office_id UUID        NOT NULL,
+    phone            TEXT        NOT NULL,
+    create_timestamp TIMESTAMPTZ NOT NULL,
     CONSTRAINT pk_telegram_chat PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE transaction (
     id                 UUID    NOT NULL,
